@@ -125,6 +125,8 @@
           '<div><dt>' + esc(t('new.model')) + '</dt><dd>' + esc(L(F.shortName)) + '</dd></div>' +
           '<div><dt>' + esc(t('header.assessment')) + '</dt><dd>' + esc(App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a)) + '</dd></div>' +
           '<div><dt>' + esc(t('report.date')) + '</dt><dd>' + esc(App.dateStr()) + '</dd></div>' +
+          (o.type ? '<div><dt>' + esc(t('profile.type')) + '</dt><dd>' + esc(App.orgTypeLabel(o)) + '</dd></div>' : '') +
+          (o.domain ? '<div><dt>' + esc(t('profile.domain')) + '</dt><dd>' + esc(App.domainLabel(o)) + '</dd></div>' : '') +
           (o.region || o.country ? '<div><dt>' + esc(t('profile.location')) + '</dt><dd>' + esc(App.locationText(o)) + '</dd></div>' : '') +
           (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(App.focalText(o)) + '</dd></div>' : '') +
         '</dl>' +

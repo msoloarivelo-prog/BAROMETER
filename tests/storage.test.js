@@ -137,3 +137,22 @@ test('profile country / focal title and evidence file metadata are kept; files t
   const parsed = Storage.parseImport({ type: 'barometer-organization', org: o, files: [{ id: 'f1', data: 'JVBERi0=' }] });
   assert.equal(parsed.files.length, 1);
 });
+
+test('organisation type and domain are stored as codes; old free text is mapped', () => {
+  const base = { assessments: [Storage.newAssessment(1, 2026)] };
+  const known = Storage.normalizeOrg(Object.assign({ organization: { type: 'Réseau d’associations', domain: 'Agriculture' } }, base));
+  assert.equal(known.organization.type, 'network');
+  assert.equal(known.organization.domain, 'agriculture');
+  const ngo = Storage.normalizeOrg(Object.assign({ organization: { type: 'ONG' } }, base));
+  assert.equal(ngo.organization.type, 'ngo');
+  assert.equal(ngo.organization.domain, '');
+  const custom = Storage.normalizeOrg(Object.assign({ organization: { type: 'Syndicat agricole', domain: 'other', domainOther: 'Pêche' } }, base));
+  assert.equal(custom.organization.type, 'other');
+  assert.equal(custom.organization.typeOther, 'Syndicat agricole');
+  assert.equal(custom.organization.domain, 'other');
+  assert.equal(custom.organization.domainOther, 'Pêche');
+  const coded = Storage.normalizeOrg(Object.assign({ organization: { type: 'cso', typeOther: 'stale' } }, base));
+  assert.equal(coded.organization.type, 'cso');
+  assert.equal(coded.organization.typeOther, '');
+  Storage.ORG_TYPES.concat(Storage.DOMAINS).forEach((x) => { assert.ok(x.label.fr && x.label.en, x.value); });
+});

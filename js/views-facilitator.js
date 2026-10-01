@@ -120,7 +120,7 @@
         }
         return '<tr' + (x.org.id === App.ws.activeOrgId ? ' class="current"' : '') + '>' +
           '<td><strong>' + esc(App.orgName(x.org)) + '</strong>' + (o.acronym ? ' <span class="muted">(' + esc(o.acronym) + ')</span>' : '') +
-            (o.region || o.country || o.type ? '<br><span class="muted small">' + esc([o.type, App.locationText(o)].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
+            (o.region || o.country || o.type || o.domain ? '<br><span class="muted small">' + esc([App.orgTypeLabel(o), App.domainLabel(o), App.locationText(o)].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
           '<td>' + esc(App.assessmentLabel(x.assessment)) + '</td>' +
           '<td><div class="progress mini"><div style="width:' + Math.round(x.scores.completion * 100) + '%"></div></div><span class="small">' + x.scores.answered + '/' + x.scores.totalComponents + '</span></td>' +
           '<td class="nowrap"><strong>' + App.fmt(x.scores.index, 2) + '</strong>' +
@@ -218,14 +218,14 @@
 
   A['fac-export-csv'] = function () {
     var fm = facModel();
-    var header = [t('profile.name'), t('profile.acronym'), t('profile.type'), t('profile.country'), t('profile.region'), t('fac.latest'),
+    var header = [t('profile.name'), t('profile.acronym'), t('profile.type'), t('profile.domain'), t('profile.country'), t('profile.region'), t('fac.latest'),
       t('profile.progress'), t('profile.index')].concat(F.PILLARS.map(function (p) { return L(p.name); }))
       .concat([t('cats.maintain'), t('cats.opportunity'), t('cats.address'), t('plan.activities'), t('status.done')]);
     var rows = [header];
     portfolio(fm.id).forEach(function (x) {
       if (!x.assessment) return;
       var o = x.org.organization;
-      rows.push([App.orgName(x.org), o.acronym, o.type, o.country, o.region, App.assessmentLabel(x.assessment),
+      rows.push([App.orgName(x.org), o.acronym, App.orgTypeLabel(o), App.domainLabel(o), o.country, o.region, App.assessmentLabel(x.assessment),
         x.scores.answered + '/' + x.scores.totalComponents, App.num(x.scores.index)]
         .concat(x.scores.pillars.map(function (p) { return App.num(p.score); }))
         .concat([x.scores.counts.maintain, x.scores.counts.opportunity, x.scores.counts.address, x.plan.total, x.plan.done]));

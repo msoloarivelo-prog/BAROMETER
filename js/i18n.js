@@ -7,7 +7,7 @@
 
   var DICT = {
     fr: {
-      'app.title': 'Baromètre de gouvernance',
+      'app.title': 'Outil de Diagnostic Organisationnel',
       'app.tagline': 'Auto-diagnostic et plan de renforcement des organisations',
       'nav.profile': 'Fiche',
       'nav.assessment': 'Diagnostic',
@@ -52,7 +52,7 @@
       'source.standard': 'Action suggérée',
       'source.custom': 'Proposée par l’organisation',
 
-      'home.title': 'Baromètre de gouvernance organisationnelle',
+      'home.title': 'Outil de Diagnostic Organisationnel',
       'home.intro': 'Outil d’auto-diagnostic et d’accompagnement des organisations, avec trois modèles : le Baromètre de gouvernance, l’ITOCA (capacités techniques et organisationnelles, dérivé de l’OCA/OCAT) et l’OPI (performance organisationnelle). Chaque indicateur est noté de 1 à 4 ; l’outil identifie les forces, opportunités et faiblesses, pré-remplit un plan d’action pour le changement (CAP), suit l’évolution dans le temps et produit des rapports PDF.',
       'home.components': 'composantes renseignées',
       'home.index': 'Indice moyen',
@@ -210,6 +210,9 @@
       'fac.empty': 'Aucune donnée',
 
       'help.title': 'Aide',
+      'profile.domain': 'Domaine d’intervention',
+      'profile.typeOther': 'Préciser le type',
+      'profile.domainOther': 'Préciser le domaine',
       'profile.country': 'Pays',
       'profile.location': 'Localisation',
       'profile.contact': 'Point focal et contacts',
@@ -327,7 +330,7 @@
     },
 
     en: {
-      'app.title': 'Governance Barometer',
+      'app.title': 'Organisational Diagnostic Tool',
       'app.tagline': 'Organisational self-assessment and strengthening plan',
       'nav.profile': 'Profile',
       'nav.assessment': 'Assessment',
@@ -372,7 +375,7 @@
       'source.standard': 'Suggested action',
       'source.custom': 'Proposed by the organisation',
 
-      'home.title': 'Organisational Governance Barometer',
+      'home.title': 'Organisational Diagnostic Tool',
       'home.intro': 'A self-assessment and support tool for organisations, with three models: the Governance barometer, ITOCA (technical and organisational capacity, derived from OCA/OCAT) and OPI (organisational performance). Each indicator is scored from 1 to 4; the tool identifies strengths, opportunities and weaknesses, pre-fills a change action plan (CAP), tracks progress over time and produces PDF reports.',
       'home.components': 'components answered',
       'home.index': 'Mean index',
@@ -530,6 +533,9 @@
       'fac.empty': 'No data',
 
       'help.title': 'Help',
+      'profile.domain': 'Field of work',
+      'profile.typeOther': 'Specify the type',
+      'profile.domainOther': 'Specify the field',
       'profile.country': 'Country',
       'profile.location': 'Location',
       'profile.contact': 'Focal point and contacts',

@@ -355,6 +355,17 @@
   /** "Name, Title" for the focal point. */
   App.focalText = function (o) { return [o.focalPoint, o.focalTitle].filter(Boolean).join(', '); };
 
+  function optionLabel(list, value, other) {
+    if (!value) return '';
+    if (value === 'other') return other || App.L(list[list.length - 1].label);
+    for (var i = 0; i < list.length; i++) if (list[i].value === value) return App.L(list[i].label);
+    return value;
+  }
+
+  /** Organisation type and domain in the current language ("Other" shows the detail typed). */
+  App.orgTypeLabel = function (o) { return optionLabel(Store.ORG_TYPES, o.type, o.typeOther); };
+  App.domainLabel = function (o) { return optionLabel(Store.DOMAINS, o.domain, o.domainOther); };
+
   /** "Region, Country". */
   App.locationText = function (o) { return [o.region, o.country].filter(Boolean).join(', '); };
 
@@ -381,6 +392,14 @@
       return '<label class="field"><span>' + App.esc(App.t('profile.' + id)) + '</span>' +
         '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"' + (extra || '') + '></label>';
     }
+    function choice(id, list) {
+      var opts = '<option value="">—</option>' + list.map(function (x) {
+        return '<option value="' + x.value + '"' + (x.value === o[id] ? ' selected' : '') + '>' + App.esc(App.L(x.label)) + '</option>';
+      }).join('');
+      return '<label class="field"><span>' + App.esc(App.t('profile.' + id)) + '</span>' +
+        '<select data-on="org-field" data-field="' + id + '">' + opts + '</select></label>' +
+        (o[id] === 'other' ? field(id + 'Other') : '');
+    }
     var thisYear = new Date().getFullYear();
     var years = '<option value="">—</option>';
     for (var y = thisYear; y >= 1900; y--) years += '<option value="' + y + '"' + (String(y) === String(o.founded) ? ' selected' : '') + '>' + y + '</option>';
@@ -388,7 +407,7 @@
     App.setView(
       '<h1>' + App.esc(App.t('profile.title')) + '</h1>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.org')) + '</h2><div class="form-grid">' +
-        field('name') + field('acronym') + field('type') +
+        field('name') + field('acronym') + choice('type', Store.ORG_TYPES) + choice('domain', Store.DOMAINS) +
         '<label class="field"><span>' + App.esc(App.t('profile.founded')) + '</span><select data-on="org-field" data-field="founded">' + years + '</select>' +
           '<small class="muted" id="org-age">' + App.esc(App.orgAgeText(o)) + '</small></label>' +
       '</div><h3>' + App.esc(App.t('profile.location')) + '</h3><div class="form-grid">' +
@@ -756,6 +775,13 @@
     if (el.dataset.field === 'founded') {
       var age = document.getElementById('org-age');
       if (age) age.textContent = App.orgAgeText(App.org().organization);
+    }
+    // Choosing "Other" shows (or hides) the field to specify it.
+    if (el.dataset.field === 'type' || el.dataset.field === 'domain') {
+      App.touch();
+      App.persist();
+      App.render();
+      return;
     }
     App.touch();
     if (el.dataset.field === 'name') App.renderHeader();

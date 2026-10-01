@@ -1,4 +1,4 @@
-# Governance Barometer — web app / Baromètre de gouvernance
+# Organisational Diagnostic Tool / Outil de Diagnostic Organisationnel
 
 Organisational assessment tool with three models, all bilingual (FR/EN):
 
@@ -78,7 +78,7 @@ npm run build
 
 | Step | Page | What happens |
 |---|---|---|
-| 0 | **Profile** | Organisation details, plus the assessment sequence and year |
+| 0 | **Profile** | Organisation details (type and field of work chosen from bilingual lists, with *Other* to specify), plus the assessment sequence and year |
 | 1 | **Assessment** | 33 components across 4 pillars; click the level (1–4) that matches the situation |
 | 2 | **Results** | Global index, total, pillar donuts and aspect bars, comparison with a previous assessment, and **strengths / opportunities / weaknesses** |
 | 3 | **Workplan** | Pre-filled with **standard activities**, which the organisation edits; it also adds **its own activities**. Shows a Gantt timeline over 24 months |
