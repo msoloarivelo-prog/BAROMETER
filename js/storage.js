@@ -78,6 +78,7 @@
       createdAt: new Date().toISOString(),
       answers: {},
       comments: {},
+      conclusionNote: '',
       plan: emptyPlan()
     };
   }
@@ -180,6 +181,7 @@
     Object.keys(a.comments || {}).forEach(function (k) {
       if (typeof a.comments[k] === 'string') base.comments[k] = a.comments[k];
     });
+    base.conclusionNote = str(a.conclusionNote);
     base.plan = normalizePlan(a.plan);
     return base;
   }

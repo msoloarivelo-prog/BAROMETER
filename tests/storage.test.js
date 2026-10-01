@@ -103,3 +103,9 @@ test('demo data builds three valid organisations in both languages', () => {
     assert.equal(ws.orgs.length, 3);
   }
 });
+
+test('facilitator conclusion note is kept', () => {
+  const ws = Storage.normalizeWorkspace({ orgs: [{ id: 'o', organization: {}, assessments: [{ id: 'a', conclusionNote: 'Restitution du 12 mars' }, { id: 'b', conclusionNote: 5 }] }] });
+  assert.equal(ws.orgs[0].assessments[0].conclusionNote, 'Restitution du 12 mars');
+  assert.equal(ws.orgs[0].assessments[1].conclusionNote, '');
+});

@@ -603,8 +603,6 @@ textarea { resize: vertical; }
 .report-table .level-badge { min-width: 1.35rem; height: 1.35rem; font-size: 8pt; }
 .report-table tr.total td { font-weight: 700; border-top: 2px solid #d8dfe6; }
 .report-table.compact td { padding: 1.2mm 2mm; }
-.plan-table td:first-child { width: 22%; }
-.plan-table td:nth-child(2) { width: 34%; }
 .cat-dot { font-size: 8pt; }
 .cat-dot.cat-maintain { color: var(--c-maintain); }
 .cat-dot.cat-opportunity { color: var(--c-opportunity); }
@@ -633,6 +631,74 @@ textarea { resize: vertical; }
 .sig-line { border-bottom: 1px solid #1d2733; height: 22mm; }
 .signature small { color: #5d6b7a; }
 
+/* ------------------------------------------------------------ report: light palette and layout */
+
+.report {
+  --l1: #f4b9b6;
+  --l2: #f7d8a2;
+  --l3: #cfe6ad;
+  --l4: #a9d9bd;
+  --accent: #5b8db5;
+}
+.report .level-badge { color: #1d2733; font-weight: 600; }
+.report .report-cover { border-bottom: 2px solid #c9dcec; }
+.report .report-header { border-bottom: 1.5px solid #c9dcec; }
+.report .report-kpi.main { background: #f5f9fc; border-color: #c9dcec; }
+.report .report-h3 { border-bottom-color: #e6ecf1; }
+.report .report-h3.pillar { border-bottom: 2px solid var(--pillar); }
+.report .report-h3.cat-maintain, .report .ffom-group.cat-maintain td { color: #2f7d55; }
+.report .report-h3.cat-opportunity, .report .ffom-group.cat-opportunity td { color: #2f6f9f; }
+.report .report-h3.cat-address, .report .ffom-group.cat-address td { color: #b2504b; }
+.report .report-swot-col.cat-maintain { border-top-color: #a9d9bd; background: #f6fbf8; }
+.report .report-swot-col.cat-opportunity { border-top-color: #a9cdea; background: #f5f9fd; }
+.report .report-swot-col.cat-address { border-top-color: #f4b9b6; background: #fdf6f5; }
+.report .bar-fill { opacity: .9; }
+.report .gantt-bar { background: #d6c6ea; }
+.report .cat-maintain .gantt-bar { background: #a9d9bd; }
+.report .cat-opportunity .gantt-bar { background: #a9cdea; }
+.report .cat-address .gantt-bar { background: #f4b9b6; }
+.report .status-done .gantt-bar { background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, .6) 0 3px, transparent 3px 6px); }
+
+.ffom-table, .plan-table { table-layout: fixed; }
+.ffom-table .c-comp { width: 22%; }
+.ffom-table .c-score { width: 7%; }
+.ffom-table .c-sit, .ffom-table .c-target { width: 35.5%; }
+.ffom-table.with-notes .c-sit, .ffom-table.with-notes .c-target { width: 26%; }
+.ffom-table.with-notes .c-notes { width: 19%; }
+.ffom-group td { background: #f6f8fa; font-size: 9.5pt; padding-top: 2.5mm !important; }
+.ffom-group.cat-maintain td { background: #f1f9f4; }
+.ffom-group.cat-opportunity td { background: #f0f6fc; }
+.ffom-group.cat-address td { background: #fdf2f1; }
+.ffom-group span { font-weight: 400; color: #5d6b7a; font-size: 8.5pt; }
+
+.report-page.landscape { width: 297mm; min-height: 210mm; }
+.report .landscape .gantt-chart { --name-w: 80mm; font-size: 8pt; }
+.report .landscape .gantt-title { white-space: normal; line-height: 1.25; }
+.report .landscape .gantt-line { min-height: 7mm; }
+.gantt-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 8pt; }
+.gantt-table .gt-name { width: 78mm; }
+.gantt-table th { font-weight: 600; color: #5d6b7a; text-align: center; padding: .8mm 0; border-left: 1px solid #e3e8ed; }
+.gantt-table .gt-years th { background: #f3f6f9; font-size: 8pt; border-left: 1.5px solid #9aa8b6; }
+.gantt-table .gt-months th { font-size: 6.5pt; font-weight: 500; border-bottom: 1px solid #d8dfe6; }
+.gantt-table td { border-left: 1px solid #eef2f5; border-bottom: 1px solid #eef2f5; padding: 0; height: 7mm; }
+.gantt-table td.gt-label { border-left: 0; padding: 1mm 2mm 1mm 0; line-height: 1.25; }
+.gantt-table tr { break-inside: avoid; }
+.gantt-table .gantt-title { display: block; }
+.gantt-table .gantt-sub { display: block; color: #5d6b7a; font-size: 7pt; }
+.gantt-table .gt-span { padding: 0 1px; }
+.gantt-table .gantt-bar { height: 3.2mm; border-radius: 3px; margin: 0; }
+.gantt-legend { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: 8.5pt; margin-bottom: 3mm; color: #5d6b7a; }
+.gantt-legend i { display: inline-block; width: 18px; height: 8px; border-radius: 3px; margin-right: .35rem; vertical-align: middle; background: #d6c6ea; }
+.gantt-legend .cat-maintain i { background: #a9d9bd; }
+.gantt-legend .cat-opportunity i { background: #a9cdea; }
+.gantt-legend .cat-address i { background: #f4b9b6; }
+.gantt-legend .status-done i { background: #ccc repeating-linear-gradient(45deg, rgba(255, 255, 255, .7) 0 3px, transparent 3px 6px); }
+
+.conclusion p { margin: 0 0 3mm; font-size: 10.5pt; text-align: justify; }
+.fac-note { width: 100%; font: inherit; font-size: 10pt; }
+.print-only { display: none; }
+.keep-together { break-inside: avoid; }
+
 /* ------------------------------------------------------------ responsive */
 
 @media (max-width: 1000px) {
@@ -651,7 +717,7 @@ textarea { resize: vertical; }
   .level-header { display: none; }
   .main-nav a.nav-facilitator { margin-left: 0; }
   .report { display: block; }
-  .report-page { width: auto; min-height: 0; padding: 6mm 5mm; margin-bottom: 1rem; overflow-x: auto; }
+  .report-page, .report-page.landscape { width: auto; min-height: 0; padding: 6mm 5mm; margin-bottom: 1rem; overflow-x: auto; }
 }
 
 @media (max-width: 600px) {
@@ -677,6 +743,7 @@ textarea { resize: vertical; }
 /* ------------------------------------------------------------ print / PDF */
 
 @page { size: A4; margin: 12mm; }
+@page landscape { size: A4 landscape; margin: 10mm; }
 
 @media print {
   :root { --surface: #fff; --surface-2: #eef2f5; --text: #1d2733; --muted: #5d6b7a; --border: #d8dfe6; }
@@ -688,6 +755,9 @@ textarea { resize: vertical; }
   .report { display: block; }
   .report-page { width: auto; min-height: 0; padding: 0; box-shadow: none; break-after: page; }
   .report-page.report-last { break-after: auto; }
+  .report-page.landscape { page: landscape; width: auto; min-height: 0; }
+  .print-only { display: block; }
+  .fac-note-print { font-size: 10pt; min-height: 15mm; }
   .report-table tr, .report-item { break-inside: avoid; }
   .table-wrap { overflow: visible; }
   .portfolio th:last-child, .portfolio td:last-child { display: none; }
@@ -905,10 +975,10 @@ textarea { resize: vertical; }
       'report.scores': 'Scores détaillés',
       'report.aspect': 'Aspect',
       'report.component': 'Composante',
-      'report.analysis': 'Forces, opportunités et faiblesses',
+      'report.analysis': 'Analyse FFOM : forces, opportunités et faiblesses',
       'report.currentLevel': 'Niveau actuel',
       'report.nextLevel': 'Niveau visé',
-      'report.workplan': 'Plan de travail et chronogramme',
+      'report.workplan': 'Plan d’action',
       'report.period': 'Période',
       'report.validation': 'Validation',
       'report.preparedBy': 'Préparé par',
@@ -956,6 +1026,24 @@ textarea { resize: vertical; }
       'fac.empty': 'Aucune donnée',
 
       'help.title': 'Aide',
+      'report.situation': 'Situation actuelle',
+      'report.target': 'Niveau visé',
+      'report.challengeComment': 'Défi / commentaire',
+      'report.maintainTarget': 'Maintenir ce niveau',
+      'report.conclusion': 'Conclusion',
+      'report.facNote': 'Observations et recommandations du facilitateur',
+      'report.facNotePh': 'Saisissez ici vos observations, recommandations ou décisions prises lors de la restitution. Ce texte apparaîtra dans le rapport PDF.',
+      'conc.overall': 'Au terme du diagnostic de {period}, {org} obtient un indice moyen de développement de {index} sur 4, ce qui correspond au stade « {stage} » (placement total : {total} / {max}).',
+      'conc.pillars': 'Le pilier le plus avancé est « {best} » ({bestScore} / 4) ; le pilier qui demande le plus d’attention est « {worst} » ({worstScore} / 4).',
+      'conc.ffom': 'L’analyse identifie {m} force(s) à maintenir, {o} opportunité(s) à saisir et {a} faiblesse(s) à corriger.',
+      'conc.strengths': 'Les acquis à préserver concernent notamment : {list}.',
+      'conc.weaknesses': 'Les priorités de renforcement portent sur : {list}.',
+      'conc.opportunities': 'Des progrès rapides sont possibles sur : {list}.',
+      'conc.evolutionUp': 'Par rapport au diagnostic de {prev}, l’indice a évolué de {delta} ; {resolved} faiblesse(s) ont été corrigée(s) et {newWeak} nouvelle(s) faiblesse(s) sont apparue(s).',
+      'conc.evolutionDown': 'Par rapport au diagnostic de {prev}, l’indice a reculé de {delta} ; {resolved} faiblesse(s) ont été corrigée(s) mais {newWeak} nouvelle(s) faiblesse(s) sont apparue(s), ce qui appelle une attention particulière.',
+      'conc.plan': 'Le plan d’action comporte {n} activité(s) sur 24 mois, dont {essential} jugée(s) essentielle(s) et {own} proposée(s) par l’organisation elle-même.',
+      'conc.firstActions': 'Les premières actions à engager sont : {list}.',
+      'conc.next': 'Il est recommandé de faire le point sur l’avancement du plan chaque trimestre et de renouveler le diagnostic dans 6 à 12 mois afin de mesurer les progrès accomplis.',
       'nav.evolution': 'Évolution',
       'seq.n': 'Diagnostic n°{n}',
       'profile.month': 'Mois (facultatif)',
@@ -993,6 +1081,8 @@ textarea { resize: vertical; }
       'evo.followUpSentence': 'Plan de travail de « {period} » : {done} activité(s) réalisée(s) et {ongoing} en cours sur {total}, soit {rate} % de réalisation.',
       'evo.doneList': 'Activités réalisées',
       'evo.reportTitle': 'Rapport d’évolution organisationnelle',
+      'evo.concPillars': 'Le pilier qui a le plus progressé est « {best} » ({bestD}) ; celui qui a le moins progressé est « {worst} » ({worstD}).',
+      'evo.concPlan': 'Le plan de travail de {period} a été réalisé à {rate} %.',
       'evo.summarySentence': 'L’indice moyen de développement de {org} est passé de {first} ({from}) à {last} ({to}). Entre les deux dernières périodes comparées, {resolved} faiblesse(s) ont été corrigée(s) et {newWeak} nouvelle(s) faiblesse(s) sont apparue(s).',
       'demo.load': 'Charger des données de démonstration',
       'demo.help': 'Pour tester l’outil rapidement, chargez trois organisations fictives (diagnostics, plans et rapports déjà remplis).',
@@ -1157,10 +1247,10 @@ textarea { resize: vertical; }
       'report.scores': 'Detailed scores',
       'report.aspect': 'Aspect',
       'report.component': 'Component',
-      'report.analysis': 'Strengths, opportunities and weaknesses',
+      'report.analysis': 'SWOT analysis: strengths, opportunities and weaknesses',
       'report.currentLevel': 'Current level',
       'report.nextLevel': 'Target level',
-      'report.workplan': 'Workplan and timeline',
+      'report.workplan': 'Action plan',
       'report.period': 'Period',
       'report.validation': 'Validation',
       'report.preparedBy': 'Prepared by',
@@ -1208,6 +1298,24 @@ textarea { resize: vertical; }
       'fac.empty': 'No data',
 
       'help.title': 'Help',
+      'report.situation': 'Current situation',
+      'report.target': 'Target level',
+      'report.challengeComment': 'Challenge / comment',
+      'report.maintainTarget': 'Maintain this level',
+      'report.conclusion': 'Conclusion',
+      'report.facNote': 'Facilitator’s observations and recommendations',
+      'report.facNotePh': 'Enter your observations, recommendations or decisions taken during the feedback session. This text will appear in the PDF report.',
+      'conc.overall': 'Following the {period} assessment, {org} has a mean development index of {index} out of 4, which corresponds to the “{stage}” stage (total score: {total} / {max}).',
+      'conc.pillars': 'The most advanced pillar is “{best}” ({bestScore} / 4); the pillar needing most attention is “{worst}” ({worstScore} / 4).',
+      'conc.ffom': 'The analysis identifies {m} strength(s) to maintain, {o} opportunity(ies) to catch and {a} weakness(es) to address.',
+      'conc.strengths': 'Achievements to preserve include: {list}.',
+      'conc.weaknesses': 'Strengthening priorities are: {list}.',
+      'conc.opportunities': 'Quick progress is possible on: {list}.',
+      'conc.evolutionUp': 'Compared with the {prev} assessment, the index changed by {delta}; {resolved} weakness(es) were resolved and {newWeak} new weakness(es) appeared.',
+      'conc.evolutionDown': 'Compared with the {prev} assessment, the index fell by {delta}; {resolved} weakness(es) were resolved but {newWeak} new weakness(es) appeared, which calls for particular attention.',
+      'conc.plan': 'The action plan contains {n} activity(ies) over 24 months, of which {essential} are essential and {own} were proposed by the organisation itself.',
+      'conc.firstActions': 'The first actions to start are: {list}.',
+      'conc.next': 'It is recommended to review progress on the plan every quarter and to repeat the assessment in 6 to 12 months to measure the progress made.',
       'nav.evolution': 'Progress',
       'seq.n': 'Assessment #{n}',
       'profile.month': 'Month (optional)',
@@ -1245,6 +1353,8 @@ textarea { resize: vertical; }
       'evo.followUpSentence': 'Workplan of “{period}”: {done} activity(ies) done and {ongoing} ongoing out of {total}, i.e. {rate}% completed.',
       'evo.doneList': 'Activities completed',
       'evo.reportTitle': 'Organisational progress report',
+      'evo.concPillars': 'The pillar that progressed most is “{best}” ({bestD}); the one that progressed least is “{worst}” ({worstD}).',
+      'evo.concPlan': 'The {period} workplan was {rate}% completed.',
       'evo.summarySentence': 'The mean development index of {org} went from {first} ({from}) to {last} ({to}). Between the two periods compared, {resolved} weakness(es) were resolved and {newWeak} new weakness(es) appeared.',
       'demo.load': 'Load demo data',
       'demo.help': 'To try the tool quickly, load three fictitious organisations (assessments, workplans and reports already filled in).',
@@ -2693,6 +2803,7 @@ textarea { resize: vertical; }
       createdAt: new Date().toISOString(),
       answers: {},
       comments: {},
+      conclusionNote: '',
       plan: emptyPlan()
     };
   }
@@ -2795,6 +2906,7 @@ textarea { resize: vertical; }
     Object.keys(a.comments || {}).forEach(function (k) {
       if (typeof a.comments[k] === 'string') base.comments[k] = a.comments[k];
     });
+    base.conclusionNote = str(a.conclusionNote);
     base.plan = normalizePlan(a.plan);
     return base;
   }
@@ -3508,7 +3620,29 @@ textarea { resize: vertical; }
     return wrap;
   }
 
-  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, lines: lines, fmt: fmt };
+  /**
+   * Gantt as an HTML table (for printed reports): the year and month header
+   * rows repeat at the top of every printed page.
+   */
+  function ganttTable(rows, header, esc) {
+    var n = header.labels.length;
+    var html = '<table class="gantt-table"><colgroup><col class="gt-name">';
+    for (var c = 0; c < n; c++) html += '<col>';
+    html += '</colgroup><thead><tr class="gt-years"><th></th>' +
+      header.groups.map(function (g) { return '<th colspan="' + g.span + '">' + esc(g.label) + '</th>'; }).join('') + '</tr>' +
+      '<tr class="gt-months"><th></th>' + header.labels.map(function (m) { return '<th>' + esc(m) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      html += '<tr class="cat-' + r.category + ' status-' + r.status + '"><td class="gt-label"><span class="gantt-title">' + esc(r.label) + '</span>' +
+        (r.sub ? '<span class="gantt-sub">' + esc(r.sub) + '</span>' : '') + '</td>';
+      for (var m = 1; m < r.start; m++) html += '<td></td>';
+      html += '<td colspan="' + (r.end - r.start + 1) + '" class="gt-span"><div class="gantt-bar"></div></td>';
+      for (var k = r.end + 1; k <= n; k++) html += '<td></td>';
+      html += '</tr>';
+    });
+    return html + '</tbody></table>';
+  }
+
+  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, ganttTable: ganttTable, lines: lines, fmt: fmt };
 })(this);
 
 </script>
@@ -3540,6 +3674,8 @@ textarea { resize: vertical; }
     Plan: window.BarometerPlan,
     Activities: window.BarometerActivities,
     PILLAR_COLORS: { gov: '#2f6f9f', plan: '#3f8f5f', hr: '#c9822b', fin: '#8a4f9e' },
+    // Lighter tones used in the printed report.
+    REPORT_COLORS: { gov: '#7fb0d6', plan: '#86c49c', hr: '#ecb877', fin: '#b99ad0' },
     CAT_ICONS: { maintain: '▲', opportunity: '◆', address: '▼', other: '●' },
     ws: Store.load(),
     ui: { compareWith: null, planFilter: 'all', flash: null },
@@ -4667,6 +4803,41 @@ textarea { resize: vertical; }
         '<button class="btn primary" data-click="report-pdf">⤓ ' + esc(t('report.export')) + '</button></div></div>';
   }
 
+  /** Automatic conclusion summarising the whole report. */
+  function conclusion(org, a, r, groups, stage, prev, cmp, st, lang) {
+    if (r.index === null) return '<p class="muted">' + esc(t('plan.empty')) + '</p>';
+    var scored = r.pillars.filter(function (p) { return p.score !== null; });
+    var best = scored.slice().sort(function (x, y) { return y.score - x.score; })[0];
+    var worst = scored.slice().sort(function (x, y) { return x.score - y.score; })[0];
+    var names = function (list, n) {
+      return list.slice(0, n).map(function (it) { return L(it.component.name); }).join(', ') + (list.length > n ? ' (+' + (list.length - n) + ')' : '');
+    };
+    var paras = [];
+    paras.push(t('conc.overall', { org: App.orgName(org), period: App.periodLabel(a), index: App.fmt(r.index, 2), stage: stage ? L(stage.label).toLowerCase() : '—', total: r.total, max: r.maxTotal }));
+    if (best && worst && best !== worst) {
+      paras.push(t('conc.pillars', { best: L(best.name), bestScore: App.fmt(best.score), worst: L(worst.name), worstScore: App.fmt(worst.score) }));
+    }
+    paras.push(t('conc.ffom', { m: groups.maintain.length, o: groups.opportunity.length, a: groups.address.length }) +
+      (groups.maintain.length ? ' ' + t('conc.strengths', { list: names(groups.maintain, 3) }) : '') +
+      (groups.address.length ? ' ' + t('conc.weaknesses', { list: names(groups.address, 3) }) : '') +
+      (groups.opportunity.length ? ' ' + t('conc.opportunities', { list: names(groups.opportunity, 3) }) : ''));
+    if (cmp && cmp.index !== null) {
+      var ch = window.BarometerEvolution.componentChanges(F, prev.answers, a.answers);
+      paras.push(t(cmp.index >= 0 ? 'conc.evolutionUp' : 'conc.evolutionDown', {
+        prev: App.periodLabel(prev), delta: (cmp.index > 0 ? '+' : '') + App.fmt(cmp.index, 2), resolved: ch.resolvedWeaknesses.length, newWeak: ch.newWeaknesses.length
+      }));
+    }
+    if (st.total) {
+      var essentials = a.plan.activities.filter(function (x) { return x.priority === 'essential'; });
+      var first = essentials.slice().sort(function (x, y) { return x.start - y.start; }).slice(0, 3)
+        .map(function (x) { return Plan.resolveTexts(x, lang).title; }).filter(Boolean);
+      paras.push(t('conc.plan', { n: st.total, essential: essentials.length, own: st.custom }) +
+        (first.length ? ' ' + t('conc.firstActions', { list: first.join(' ; ') }) : ''));
+    }
+    paras.push(t('conc.next'));
+    return '<div class="conclusion">' + paras.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') + '</div>';
+  }
+
   App.views.report = function () {
     if (App.ui.reportMode === 'evolution') {
       App.renderEvolutionReport(reportHead());
@@ -4724,7 +4895,7 @@ textarea { resize: vertical; }
         m: groups.maintain.length, o: groups.opportunity.length, a: groups.address.length
       })) + '</p>' +
       '<div class="report-donuts">' + F.PILLARS.map(function (p) {
-        return '<div class="report-donut" style="--pillar:' + App.PILLAR_COLORS[p.id] + '"><div data-rdonut="' + p.id + '"></div><span>' + esc(L(p.shortName)) + '</span></div>';
+        return '<div class="report-donut" style="--pillar:' + App.REPORT_COLORS[p.id] + '"><div data-rdonut="' + p.id + '"></div><span>' + esc(L(p.shortName)) + '</span></div>';
       }).join('') + '</div>' +
       '<h3 class="report-h3">' + esc(t('report.keyFindings')) + '</h3>' +
       '<div class="report-swot">' + ['maintain', 'opportunity', 'address'].map(function (cat) {
@@ -4733,7 +4904,7 @@ textarea { resize: vertical; }
       }).join('') + '</div>';
 
     if (cmp && prevScores) {
-      html += '<h3 class="report-h3">' + esc(t('report.evolution')) + ' (' + esc(App.assessmentLabel(prev)) + ')</h3>' +
+      html += '<div class="keep-together"><h3 class="report-h3">' + esc(t('report.evolution')) + ' (' + esc(App.assessmentLabel(prev)) + ')</h3>' +
         '<table class="report-table compact"><thead><tr><th></th><th>' + esc(App.assessmentLabel(prev)) + '</th><th>' + esc(App.assessmentLabel(a)) + '</th><th>Δ</th></tr></thead><tbody>' +
         r.pillars.map(function (p, i) {
           var d = cmp.pillars[i].delta;
@@ -4742,7 +4913,7 @@ textarea { resize: vertical; }
         }).join('') +
         '<tr class="total"><td>' + esc(t('results.index')) + '</td><td>' + App.fmt(prevScores.index, 2) + '</td><td>' + App.fmt(r.index, 2) + '</td>' +
         '<td class="delta ' + (cmp.index > 0 ? 'up' : cmp.index < 0 ? 'down' : 'flat') + '">' + (cmp.index === null ? '—' : (cmp.index > 0 ? '+' : '') + App.fmt(cmp.index, 2)) + '</td></tr>' +
-        '</tbody></table>';
+        '</tbody></table></div>';
     }
 
     html += '<h3 class="report-h3">' + esc(t('report.planSummary')) + '</h3>' +
@@ -4756,7 +4927,7 @@ textarea { resize: vertical; }
     html += '<section class="report-page">' + header(org, a, t('report.scores')) +
       '<div class="report-pillar-bars" id="report-pillar-bars"></div>';
     r.pillars.forEach(function (p) {
-      html += '<h3 class="report-h3 pillar" style="--pillar:' + App.PILLAR_COLORS[p.id] + '">' + esc(L(p.name)) + ' <span>' + App.fmt(p.score) + ' / 4</span></h3>' +
+      html += '<h3 class="report-h3 pillar" style="--pillar:' + App.REPORT_COLORS[p.id] + '">' + esc(L(p.name)) + ' <span>' + App.fmt(p.score) + ' / 4</span></h3>' +
         '<table class="report-table"><thead><tr><th>' + esc(t('report.aspect')) + '</th><th>' + esc(t('report.component')) + '</th><th>' + esc(t('score')) + '</th><th></th></tr></thead><tbody>';
       p.aspects.forEach(function (asp) {
         asp.components.forEach(function (c, j) {
@@ -4768,32 +4939,38 @@ textarea { resize: vertical; }
     });
     html += '<p class="muted small">' + esc(t('results.method.' + r.indexMethod)) + '</p></section>';
 
-    // ---------------------------------------------------------------- page 3
-    html += '<section class="report-page">' + header(org, a, t('report.analysis'));
+    // ---------------------------------------------------------------- page 3: FFOM table
+    var hasNotes = F.allComponents().some(function (e) { return a.plan.challenges[e.component.id] || a.comments[e.component.id]; });
+    var ncol = hasNotes ? 5 : 4;
+    html += '<section class="report-page">' + header(org, a, t('report.analysis')) +
+      '<table class="report-table ffom-table' + (hasNotes ? ' with-notes' : '') + '"><colgroup><col class="c-comp"><col class="c-score"><col class="c-sit"><col class="c-target">' + (hasNotes ? '<col class="c-notes">' : '') + '</colgroup>' +
+      '<thead><tr><th>' + esc(t('report.component')) + '</th><th class="center">' + esc(t('score')) +
+      '</th><th>' + esc(t('report.situation')) + '</th><th>' + esc(t('report.target')) + '</th>' + (hasNotes ? '<th>' + esc(t('report.challengeComment')) + '</th>' : '') + '</tr></thead>';
     ['maintain', 'opportunity', 'address'].forEach(function (cat) {
-      html += '<h3 class="report-h3 cat-' + cat + '">' + App.CAT_ICONS[cat] + ' ' + esc(t('cats.' + cat)) + ' (' + groups[cat].length + ')</h3>' +
-        '<p class="muted small">' + esc(t('catHelp.' + cat)) + '</p>';
-      if (!groups[cat].length) { html += '<p class="muted">' + esc(t('results.noItems')) + '</p>'; return; }
-      html += '<div class="report-items">' + groups[cat].map(function (it) {
+      html += '<tbody><tr class="ffom-group cat-' + cat + '"><td colspan="' + ncol + '">' + App.CAT_ICONS[cat] + ' <strong>' + esc(t('cats.' + cat)) +
+        ' (' + groups[cat].length + ')</strong> <span>— ' + esc(t('catHelp.' + cat)) + '</span></td></tr>';
+      if (!groups[cat].length) {
+        html += '<tr><td colspan="' + ncol + '" class="muted">' + esc(t('results.noItems')) + '</td></tr>';
+      }
+      groups[cat].forEach(function (it) {
         var c = it.component;
-        var challenge = a.plan.challenges[c.id];
-        return '<div class="report-item cat-' + cat + '"><div class="report-item-head">' + App.levelBadge(it.score) +
-          '<strong>' + esc(L(c.name)) + '</strong><span class="muted small">' + esc(L(it.pillar.shortName)) + ' · ' + esc(L(it.aspect.name)) + '</span></div>' +
-          '<p><em>' + esc(t('report.currentLevel')) + ' :</em> ' + esc(L(c.levels[it.score - 1])) + '</p>' +
-          (it.score < 4 ? '<p><em>' + esc(t('report.nextLevel')) + ' :</em> ' + esc(L(c.levels[it.score])) + '</p>' : '') +
-          (challenge ? '<p><em>' + esc(t('plan.challenge')) + ' :</em> ' + esc(challenge) + '</p>' : '') +
-          (a.comments[c.id] ? '<p class="muted"><em>' + esc(t('diag.comment')) + ' :</em> ' + esc(a.comments[c.id]) + '</p>' : '') +
-          '</div>';
-      }).join('') + '</div>';
+        var notes = [a.plan.challenges[c.id], a.comments[c.id]].filter(Boolean).join(' — ');
+        html += '<tr><td><strong>' + esc(L(c.name)) + '</strong><br><span class="muted small">' + esc(L(it.pillar.shortName)) + ' · ' + esc(L(it.aspect.name)) + '</span></td>' +
+          '<td class="center">' + App.levelBadge(it.score) + '</td>' +
+          '<td>' + esc(L(c.levels[it.score - 1])) + '</td>' +
+          '<td>' + (it.score < 4 ? esc(L(c.levels[it.score])) : '<em class="muted">' + esc(t('report.maintainTarget')) + '</em>') + '</td>' +
+          (hasNotes ? '<td>' + esc(notes) + '</td>' : '') + '</tr>';
+      });
+      html += '</tbody>';
     });
-    html += '</section>';
+    html += '</table></section>';
 
-    // ---------------------------------------------------------------- page 4
+    // ---------------------------------------------------------------- page 4: action plan (new page)
     html += '<section class="report-page">' + header(org, a, t('report.workplan'));
     if (!a.plan.activities.length) {
       html += '<p class="muted">' + esc(t('plan.empty')) + '</p>';
     } else {
-      html += '<table class="report-table plan-table"><thead><tr><th>' + esc(t('report.component')) + '</th><th>' + esc(t('plan.activity')) + '</th><th>' +
+      html += '<table class="report-table plan-table"><colgroup><col style="width:17%"><col style="width:33%"><col style="width:12%"><col style="width:13%"><col style="width:9%"><col style="width:16%"></colgroup><thead><tr><th>' + esc(t('report.component')) + '</th><th>' + esc(t('plan.activity')) + '</th><th>' +
         esc(t('plan.lead')) + '</th><th>' + esc(t('report.period')) + '</th><th>' + esc(t('plan.priority')) + '</th><th>' + esc(t('plan.indicator')) + '</th></tr></thead><tbody>';
       a.plan.activities.forEach(function (act) {
         var e = act.componentId ? App.findComponent(act.componentId) : null;
@@ -4807,14 +4984,26 @@ textarea { resize: vertical; }
           '<td>' + esc(act.lead) + '</td><td class="nowrap">' + esc(labels[act.start - 1]) + (act.end !== act.start ? ' – ' + esc(labels[act.end - 1]) : '') + '</td>' +
           '<td>' + esc(pr ? L(pr.label) : '') + '</td><td>' + esc(ind) + '</td></tr>';
       });
-      html += '</tbody></table>' +
-        '<h3 class="report-h3 report-gantt-title">' + esc(t('plan.timeline')) + '</h3>' +
-        App.Charts.gantt(App.activityRows(a), App.timelineHeader(a.plan), esc);
+      html += '</tbody></table>';
     }
     html += '</section>';
 
-    // ---------------------------------------------------------------- page 5
-    html += '<section class="report-page report-last">' + header(org, a, t('report.validation'));
+    // ---------------------------------------------------------------- page 5: timeline (new page, landscape)
+    if (a.plan.activities.length) {
+      html += '<section class="report-page landscape">' + header(org, a, t('plan.timeline')) +
+        '<div class="gantt-legend">' + ['address', 'opportunity', 'maintain', 'other'].map(function (c) {
+          return '<span class="cat-' + c + '"><i></i>' + esc(t('cat.' + c)) + '</span>';
+        }).join('') + '<span class="status-done"><i></i>' + esc(t('status.done')) + ' ✓</span></div>' +
+        App.Charts.ganttTable(App.activityRows(a), App.timelineHeader(a.plan), esc) +
+        '</section>';
+    }
+
+    // ---------------------------------------------------------------- page 6: conclusion and validation
+    html += '<section class="report-page report-last">' + header(org, a, t('report.conclusion')) +
+      conclusion(org, a, r, groups, stage, prev, cmp, st, lang) +
+      '<h3 class="report-h3">' + esc(t('report.facNote')) + '</h3>' +
+      '<textarea class="no-print fac-note" rows="5" data-on="conclusion-note" placeholder="' + esc(t('report.facNotePh')) + '">' + esc(a.conclusionNote || '') + '</textarea>' +
+      '<div class="print-only fac-note-print">' + (a.conclusionNote ? esc(a.conclusionNote).replace(/\n/g, '<br>') : '<span class="muted">—</span>') + '</div>';
     var commented = F.allComponents().filter(function (e) { return a.comments[e.component.id]; });
     if (commented.length) {
       html += '<h3 class="report-h3">' + esc(t('report.comments')) + '</h3><table class="report-table compact"><tbody>' +
@@ -4822,7 +5011,7 @@ textarea { resize: vertical; }
           return '<tr><td><strong>' + esc(L(e.component.name)) + '</strong><br><span class="muted small">' + esc(L(e.pillar.shortName)) + '</span></td><td>' + esc(a.comments[e.component.id]) + '</td></tr>';
         }).join('') + '</tbody></table>';
     }
-    html += '<div class="signatures">' +
+    html += '<h3 class="report-h3">' + esc(t('report.validation')) + '</h3><div class="signatures">' +
       ['report.preparedBy', 'report.validatedBy'].map(function (k) {
         return '<div class="signature"><span>' + esc(t(k)) + '</span><div class="sig-line"></div><small>' + esc(t('report.signature')) + '</small></div>';
       }).join('') + '</div></section>';
@@ -4832,11 +5021,19 @@ textarea { resize: vertical; }
 
     r.pillars.forEach(function (p) {
       var slot = App.viewEl.querySelector('[data-rdonut="' + p.id + '"]');
-      slot.appendChild(App.Charts.donut(p.score, F.MAX_SCORE, { color: App.PILLAR_COLORS[p.id], size: 110, stroke: 13, label: L(p.name) }));
+      slot.appendChild(App.Charts.donut(p.score, F.MAX_SCORE, { color: App.REPORT_COLORS[p.id], size: 110, stroke: 13, label: L(p.name) }));
     });
     document.getElementById('report-pillar-bars').appendChild(App.Charts.bars(r.pillars.map(function (p) {
-      return { label: L(p.name), value: p.score, color: App.PILLAR_COLORS[p.id] };
+      return { label: L(p.name), value: p.score, color: App.REPORT_COLORS[p.id] };
     }), F.MAX_SCORE));
+  };
+
+  A['conclusion-note'] = function (el) {
+    App.assessment().conclusionNote = el.value;
+    var printed = App.viewEl.querySelector('.fac-note-print');
+    if (printed) printed.innerHTML = el.value ? esc(el.value).replace(/\n/g, '<br>') : '<span class="muted">—</span>';
+    App.touch();
+    App.persist();
   };
 
   A['report-mode'] = function (el) {
@@ -5172,11 +5369,12 @@ textarea { resize: vertical; }
     return html;
   }
 
-  function chart(tl) {
+  function chart(tl, palette) {
+    palette = palette || App.PILLAR_COLORS;
     var labels = tl.map(function (x) { return App.periodShort(x.assessment); });
     var series = [{ label: t('results.index'), color: '#1d2733', width: 3.5, showValues: true, values: tl.map(function (x) { return x.scores.index; }) }];
     F.PILLARS.forEach(function (p, i) {
-      series.push({ label: L(p.shortName), color: App.PILLAR_COLORS[p.id], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
+      series.push({ label: L(p.shortName), color: palette[p.id], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
     });
     return App.Charts.lines(series, labels, F.MAX_SCORE, { label: t('evo.chart') });
   }
@@ -5331,15 +5529,31 @@ textarea { resize: vertical; }
       '<p><strong>' + esc(App.assessmentLabel(p.from)) + '</strong> → <strong>' + esc(App.assessmentLabel(p.to)) + '</strong></p>' +
       changesSection(ch, 'report-table compact') + '</section>';
 
+    var bestGain = F.PILLARS.map(function (pl, i) {
+      var a0 = tl[0].scores.pillars[i].score, a1 = tl[tl.length - 1].scores.pillars[i].score;
+      return { name: L(pl.name), d: a0 === null || a1 === null ? null : a1 - a0 };
+    }).filter(function (x) { return x.d !== null; }).sort(function (x, y) { return y.d - x.d; });
+    var fu = Evo.planFollowUp(p.from);
+    var concl = [t('evo.summarySentence', {
+      org: App.orgName(org), first: App.fmt(first, 2), last: App.fmt(last, 2), from: App.periodLabel(p.list[0]), to: App.periodLabel(p.list[p.list.length - 1]),
+      resolved: ch.resolvedWeaknesses.length, newWeak: ch.newWeaknesses.length
+    })];
+    if (bestGain.length > 1) {
+      concl.push(t('evo.concPillars', { best: bestGain[0].name, bestD: (bestGain[0].d > 0 ? '+' : '') + App.fmt(bestGain[0].d), worst: bestGain[bestGain.length - 1].name, worstD: (bestGain[bestGain.length - 1].d > 0 ? '+' : '') + App.fmt(bestGain[bestGain.length - 1].d) }));
+    }
+    if (fu.rate !== null) concl.push(t('evo.concPlan', { period: App.periodLabel(p.from), rate: App.fmt(fu.rate * 100, 0) }));
+    concl.push(t('conc.next'));
+
     html += '<section class="report-page report-last">' + header(t('evo.followUp')) +
       '<h3 class="report-h3">' + esc(App.assessmentLabel(p.from)) + '</h3>' + followUpSection(p.from) +
+      '<h3 class="report-h3">' + esc(t('report.conclusion')) + '</h3><div class="conclusion">' + concl.map(function (x) { return '<p>' + esc(x) + '</p>'; }).join('') + '</div>' +
       '<div class="signatures">' + ['report.preparedBy', 'report.validatedBy'].map(function (k) {
         return '<div class="signature"><span>' + esc(t(k)) + '</span><div class="sig-line"></div><small>' + esc(t('report.signature')) + '</small></div>';
       }).join('') + '</div></section>';
 
     html += '</div>';
     App.setView(html);
-    document.getElementById('evo-report-chart').appendChild(chart(tl));
+    document.getElementById('evo-report-chart').appendChild(chart(tl, App.REPORT_COLORS));
   };
 
   A['evo-from'] = function (el) { App.ui.evoFrom = el.value; App.render(); };

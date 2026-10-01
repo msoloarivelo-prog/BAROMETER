@@ -71,11 +71,12 @@
     return html;
   }
 
-  function chart(tl) {
+  function chart(tl, palette) {
+    palette = palette || App.PILLAR_COLORS;
     var labels = tl.map(function (x) { return App.periodShort(x.assessment); });
     var series = [{ label: t('results.index'), color: '#1d2733', width: 3.5, showValues: true, values: tl.map(function (x) { return x.scores.index; }) }];
     F.PILLARS.forEach(function (p, i) {
-      series.push({ label: L(p.shortName), color: App.PILLAR_COLORS[p.id], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
+      series.push({ label: L(p.shortName), color: palette[p.id], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
     });
     return App.Charts.lines(series, labels, F.MAX_SCORE, { label: t('evo.chart') });
   }
@@ -230,15 +231,31 @@
       '<p><strong>' + esc(App.assessmentLabel(p.from)) + '</strong> → <strong>' + esc(App.assessmentLabel(p.to)) + '</strong></p>' +
       changesSection(ch, 'report-table compact') + '</section>';
 
+    var bestGain = F.PILLARS.map(function (pl, i) {
+      var a0 = tl[0].scores.pillars[i].score, a1 = tl[tl.length - 1].scores.pillars[i].score;
+      return { name: L(pl.name), d: a0 === null || a1 === null ? null : a1 - a0 };
+    }).filter(function (x) { return x.d !== null; }).sort(function (x, y) { return y.d - x.d; });
+    var fu = Evo.planFollowUp(p.from);
+    var concl = [t('evo.summarySentence', {
+      org: App.orgName(org), first: App.fmt(first, 2), last: App.fmt(last, 2), from: App.periodLabel(p.list[0]), to: App.periodLabel(p.list[p.list.length - 1]),
+      resolved: ch.resolvedWeaknesses.length, newWeak: ch.newWeaknesses.length
+    })];
+    if (bestGain.length > 1) {
+      concl.push(t('evo.concPillars', { best: bestGain[0].name, bestD: (bestGain[0].d > 0 ? '+' : '') + App.fmt(bestGain[0].d), worst: bestGain[bestGain.length - 1].name, worstD: (bestGain[bestGain.length - 1].d > 0 ? '+' : '') + App.fmt(bestGain[bestGain.length - 1].d) }));
+    }
+    if (fu.rate !== null) concl.push(t('evo.concPlan', { period: App.periodLabel(p.from), rate: App.fmt(fu.rate * 100, 0) }));
+    concl.push(t('conc.next'));
+
     html += '<section class="report-page report-last">' + header(t('evo.followUp')) +
       '<h3 class="report-h3">' + esc(App.assessmentLabel(p.from)) + '</h3>' + followUpSection(p.from) +
+      '<h3 class="report-h3">' + esc(t('report.conclusion')) + '</h3><div class="conclusion">' + concl.map(function (x) { return '<p>' + esc(x) + '</p>'; }).join('') + '</div>' +
       '<div class="signatures">' + ['report.preparedBy', 'report.validatedBy'].map(function (k) {
         return '<div class="signature"><span>' + esc(t(k)) + '</span><div class="sig-line"></div><small>' + esc(t('report.signature')) + '</small></div>';
       }).join('') + '</div></section>';
 
     html += '</div>';
     App.setView(html);
-    document.getElementById('evo-report-chart').appendChild(chart(tl));
+    document.getElementById('evo-report-chart').appendChild(chart(tl, App.REPORT_COLORS));
   };
 
   A['evo-from'] = function (el) { App.ui.evoFrom = el.value; App.render(); };

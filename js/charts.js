@@ -181,5 +181,27 @@
     return wrap;
   }
 
-  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, lines: lines, fmt: fmt };
+  /**
+   * Gantt as an HTML table (for printed reports): the year and month header
+   * rows repeat at the top of every printed page.
+   */
+  function ganttTable(rows, header, esc) {
+    var n = header.labels.length;
+    var html = '<table class="gantt-table"><colgroup><col class="gt-name">';
+    for (var c = 0; c < n; c++) html += '<col>';
+    html += '</colgroup><thead><tr class="gt-years"><th></th>' +
+      header.groups.map(function (g) { return '<th colspan="' + g.span + '">' + esc(g.label) + '</th>'; }).join('') + '</tr>' +
+      '<tr class="gt-months"><th></th>' + header.labels.map(function (m) { return '<th>' + esc(m) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      html += '<tr class="cat-' + r.category + ' status-' + r.status + '"><td class="gt-label"><span class="gantt-title">' + esc(r.label) + '</span>' +
+        (r.sub ? '<span class="gantt-sub">' + esc(r.sub) + '</span>' : '') + '</td>';
+      for (var m = 1; m < r.start; m++) html += '<td></td>';
+      html += '<td colspan="' + (r.end - r.start + 1) + '" class="gt-span"><div class="gantt-bar"></div></td>';
+      for (var k = r.end + 1; k <= n; k++) html += '<td></td>';
+      html += '</tr>';
+    });
+    return html + '</tbody></table>';
+  }
+
+  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, ganttTable: ganttTable, lines: lines, fmt: fmt };
 })(this);

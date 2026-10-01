@@ -24,6 +24,8 @@
     Plan: window.BarometerPlan,
     Activities: window.BarometerActivities,
     PILLAR_COLORS: { gov: '#2f6f9f', plan: '#3f8f5f', hr: '#c9822b', fin: '#8a4f9e' },
+    // Lighter tones used in the printed report.
+    REPORT_COLORS: { gov: '#7fb0d6', plan: '#86c49c', hr: '#ecb877', fin: '#b99ad0' },
     CAT_ICONS: { maintain: '▲', opportunity: '◆', address: '▼', other: '●' },
     ws: Store.load(),
     ui: { compareWith: null, planFilter: 'all', flash: null },

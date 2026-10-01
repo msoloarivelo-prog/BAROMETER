@@ -47,6 +47,41 @@
         '<button class="btn primary" data-click="report-pdf">⤓ ' + esc(t('report.export')) + '</button></div></div>';
   }
 
+  /** Automatic conclusion summarising the whole report. */
+  function conclusion(org, a, r, groups, stage, prev, cmp, st, lang) {
+    if (r.index === null) return '<p class="muted">' + esc(t('plan.empty')) + '</p>';
+    var scored = r.pillars.filter(function (p) { return p.score !== null; });
+    var best = scored.slice().sort(function (x, y) { return y.score - x.score; })[0];
+    var worst = scored.slice().sort(function (x, y) { return x.score - y.score; })[0];
+    var names = function (list, n) {
+      return list.slice(0, n).map(function (it) { return L(it.component.name); }).join(', ') + (list.length > n ? ' (+' + (list.length - n) + ')' : '');
+    };
+    var paras = [];
+    paras.push(t('conc.overall', { org: App.orgName(org), period: App.periodLabel(a), index: App.fmt(r.index, 2), stage: stage ? L(stage.label).toLowerCase() : '—', total: r.total, max: r.maxTotal }));
+    if (best && worst && best !== worst) {
+      paras.push(t('conc.pillars', { best: L(best.name), bestScore: App.fmt(best.score), worst: L(worst.name), worstScore: App.fmt(worst.score) }));
+    }
+    paras.push(t('conc.ffom', { m: groups.maintain.length, o: groups.opportunity.length, a: groups.address.length }) +
+      (groups.maintain.length ? ' ' + t('conc.strengths', { list: names(groups.maintain, 3) }) : '') +
+      (groups.address.length ? ' ' + t('conc.weaknesses', { list: names(groups.address, 3) }) : '') +
+      (groups.opportunity.length ? ' ' + t('conc.opportunities', { list: names(groups.opportunity, 3) }) : ''));
+    if (cmp && cmp.index !== null) {
+      var ch = window.BarometerEvolution.componentChanges(F, prev.answers, a.answers);
+      paras.push(t(cmp.index >= 0 ? 'conc.evolutionUp' : 'conc.evolutionDown', {
+        prev: App.periodLabel(prev), delta: (cmp.index > 0 ? '+' : '') + App.fmt(cmp.index, 2), resolved: ch.resolvedWeaknesses.length, newWeak: ch.newWeaknesses.length
+      }));
+    }
+    if (st.total) {
+      var essentials = a.plan.activities.filter(function (x) { return x.priority === 'essential'; });
+      var first = essentials.slice().sort(function (x, y) { return x.start - y.start; }).slice(0, 3)
+        .map(function (x) { return Plan.resolveTexts(x, lang).title; }).filter(Boolean);
+      paras.push(t('conc.plan', { n: st.total, essential: essentials.length, own: st.custom }) +
+        (first.length ? ' ' + t('conc.firstActions', { list: first.join(' ; ') }) : ''));
+    }
+    paras.push(t('conc.next'));
+    return '<div class="conclusion">' + paras.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') + '</div>';
+  }
+
   App.views.report = function () {
     if (App.ui.reportMode === 'evolution') {
       App.renderEvolutionReport(reportHead());
@@ -104,7 +139,7 @@
         m: groups.maintain.length, o: groups.opportunity.length, a: groups.address.length
       })) + '</p>' +
       '<div class="report-donuts">' + F.PILLARS.map(function (p) {
-        return '<div class="report-donut" style="--pillar:' + App.PILLAR_COLORS[p.id] + '"><div data-rdonut="' + p.id + '"></div><span>' + esc(L(p.shortName)) + '</span></div>';
+        return '<div class="report-donut" style="--pillar:' + App.REPORT_COLORS[p.id] + '"><div data-rdonut="' + p.id + '"></div><span>' + esc(L(p.shortName)) + '</span></div>';
       }).join('') + '</div>' +
       '<h3 class="report-h3">' + esc(t('report.keyFindings')) + '</h3>' +
       '<div class="report-swot">' + ['maintain', 'opportunity', 'address'].map(function (cat) {
@@ -113,7 +148,7 @@
       }).join('') + '</div>';
 
     if (cmp && prevScores) {
-      html += '<h3 class="report-h3">' + esc(t('report.evolution')) + ' (' + esc(App.assessmentLabel(prev)) + ')</h3>' +
+      html += '<div class="keep-together"><h3 class="report-h3">' + esc(t('report.evolution')) + ' (' + esc(App.assessmentLabel(prev)) + ')</h3>' +
         '<table class="report-table compact"><thead><tr><th></th><th>' + esc(App.assessmentLabel(prev)) + '</th><th>' + esc(App.assessmentLabel(a)) + '</th><th>Δ</th></tr></thead><tbody>' +
         r.pillars.map(function (p, i) {
           var d = cmp.pillars[i].delta;
@@ -122,7 +157,7 @@
         }).join('') +
         '<tr class="total"><td>' + esc(t('results.index')) + '</td><td>' + App.fmt(prevScores.index, 2) + '</td><td>' + App.fmt(r.index, 2) + '</td>' +
         '<td class="delta ' + (cmp.index > 0 ? 'up' : cmp.index < 0 ? 'down' : 'flat') + '">' + (cmp.index === null ? '—' : (cmp.index > 0 ? '+' : '') + App.fmt(cmp.index, 2)) + '</td></tr>' +
-        '</tbody></table>';
+        '</tbody></table></div>';
     }
 
     html += '<h3 class="report-h3">' + esc(t('report.planSummary')) + '</h3>' +
@@ -136,7 +171,7 @@
     html += '<section class="report-page">' + header(org, a, t('report.scores')) +
       '<div class="report-pillar-bars" id="report-pillar-bars"></div>';
     r.pillars.forEach(function (p) {
-      html += '<h3 class="report-h3 pillar" style="--pillar:' + App.PILLAR_COLORS[p.id] + '">' + esc(L(p.name)) + ' <span>' + App.fmt(p.score) + ' / 4</span></h3>' +
+      html += '<h3 class="report-h3 pillar" style="--pillar:' + App.REPORT_COLORS[p.id] + '">' + esc(L(p.name)) + ' <span>' + App.fmt(p.score) + ' / 4</span></h3>' +
         '<table class="report-table"><thead><tr><th>' + esc(t('report.aspect')) + '</th><th>' + esc(t('report.component')) + '</th><th>' + esc(t('score')) + '</th><th></th></tr></thead><tbody>';
       p.aspects.forEach(function (asp) {
         asp.components.forEach(function (c, j) {
@@ -148,32 +183,38 @@
     });
     html += '<p class="muted small">' + esc(t('results.method.' + r.indexMethod)) + '</p></section>';
 
-    // ---------------------------------------------------------------- page 3
-    html += '<section class="report-page">' + header(org, a, t('report.analysis'));
+    // ---------------------------------------------------------------- page 3: FFOM table
+    var hasNotes = F.allComponents().some(function (e) { return a.plan.challenges[e.component.id] || a.comments[e.component.id]; });
+    var ncol = hasNotes ? 5 : 4;
+    html += '<section class="report-page">' + header(org, a, t('report.analysis')) +
+      '<table class="report-table ffom-table' + (hasNotes ? ' with-notes' : '') + '"><colgroup><col class="c-comp"><col class="c-score"><col class="c-sit"><col class="c-target">' + (hasNotes ? '<col class="c-notes">' : '') + '</colgroup>' +
+      '<thead><tr><th>' + esc(t('report.component')) + '</th><th class="center">' + esc(t('score')) +
+      '</th><th>' + esc(t('report.situation')) + '</th><th>' + esc(t('report.target')) + '</th>' + (hasNotes ? '<th>' + esc(t('report.challengeComment')) + '</th>' : '') + '</tr></thead>';
     ['maintain', 'opportunity', 'address'].forEach(function (cat) {
-      html += '<h3 class="report-h3 cat-' + cat + '">' + App.CAT_ICONS[cat] + ' ' + esc(t('cats.' + cat)) + ' (' + groups[cat].length + ')</h3>' +
-        '<p class="muted small">' + esc(t('catHelp.' + cat)) + '</p>';
-      if (!groups[cat].length) { html += '<p class="muted">' + esc(t('results.noItems')) + '</p>'; return; }
-      html += '<div class="report-items">' + groups[cat].map(function (it) {
+      html += '<tbody><tr class="ffom-group cat-' + cat + '"><td colspan="' + ncol + '">' + App.CAT_ICONS[cat] + ' <strong>' + esc(t('cats.' + cat)) +
+        ' (' + groups[cat].length + ')</strong> <span>— ' + esc(t('catHelp.' + cat)) + '</span></td></tr>';
+      if (!groups[cat].length) {
+        html += '<tr><td colspan="' + ncol + '" class="muted">' + esc(t('results.noItems')) + '</td></tr>';
+      }
+      groups[cat].forEach(function (it) {
         var c = it.component;
-        var challenge = a.plan.challenges[c.id];
-        return '<div class="report-item cat-' + cat + '"><div class="report-item-head">' + App.levelBadge(it.score) +
-          '<strong>' + esc(L(c.name)) + '</strong><span class="muted small">' + esc(L(it.pillar.shortName)) + ' · ' + esc(L(it.aspect.name)) + '</span></div>' +
-          '<p><em>' + esc(t('report.currentLevel')) + ' :</em> ' + esc(L(c.levels[it.score - 1])) + '</p>' +
-          (it.score < 4 ? '<p><em>' + esc(t('report.nextLevel')) + ' :</em> ' + esc(L(c.levels[it.score])) + '</p>' : '') +
-          (challenge ? '<p><em>' + esc(t('plan.challenge')) + ' :</em> ' + esc(challenge) + '</p>' : '') +
-          (a.comments[c.id] ? '<p class="muted"><em>' + esc(t('diag.comment')) + ' :</em> ' + esc(a.comments[c.id]) + '</p>' : '') +
-          '</div>';
-      }).join('') + '</div>';
+        var notes = [a.plan.challenges[c.id], a.comments[c.id]].filter(Boolean).join(' — ');
+        html += '<tr><td><strong>' + esc(L(c.name)) + '</strong><br><span class="muted small">' + esc(L(it.pillar.shortName)) + ' · ' + esc(L(it.aspect.name)) + '</span></td>' +
+          '<td class="center">' + App.levelBadge(it.score) + '</td>' +
+          '<td>' + esc(L(c.levels[it.score - 1])) + '</td>' +
+          '<td>' + (it.score < 4 ? esc(L(c.levels[it.score])) : '<em class="muted">' + esc(t('report.maintainTarget')) + '</em>') + '</td>' +
+          (hasNotes ? '<td>' + esc(notes) + '</td>' : '') + '</tr>';
+      });
+      html += '</tbody>';
     });
-    html += '</section>';
+    html += '</table></section>';
 
-    // ---------------------------------------------------------------- page 4
+    // ---------------------------------------------------------------- page 4: action plan (new page)
     html += '<section class="report-page">' + header(org, a, t('report.workplan'));
     if (!a.plan.activities.length) {
       html += '<p class="muted">' + esc(t('plan.empty')) + '</p>';
     } else {
-      html += '<table class="report-table plan-table"><thead><tr><th>' + esc(t('report.component')) + '</th><th>' + esc(t('plan.activity')) + '</th><th>' +
+      html += '<table class="report-table plan-table"><colgroup><col style="width:17%"><col style="width:33%"><col style="width:12%"><col style="width:13%"><col style="width:9%"><col style="width:16%"></colgroup><thead><tr><th>' + esc(t('report.component')) + '</th><th>' + esc(t('plan.activity')) + '</th><th>' +
         esc(t('plan.lead')) + '</th><th>' + esc(t('report.period')) + '</th><th>' + esc(t('plan.priority')) + '</th><th>' + esc(t('plan.indicator')) + '</th></tr></thead><tbody>';
       a.plan.activities.forEach(function (act) {
         var e = act.componentId ? App.findComponent(act.componentId) : null;
@@ -187,14 +228,26 @@
           '<td>' + esc(act.lead) + '</td><td class="nowrap">' + esc(labels[act.start - 1]) + (act.end !== act.start ? ' – ' + esc(labels[act.end - 1]) : '') + '</td>' +
           '<td>' + esc(pr ? L(pr.label) : '') + '</td><td>' + esc(ind) + '</td></tr>';
       });
-      html += '</tbody></table>' +
-        '<h3 class="report-h3 report-gantt-title">' + esc(t('plan.timeline')) + '</h3>' +
-        App.Charts.gantt(App.activityRows(a), App.timelineHeader(a.plan), esc);
+      html += '</tbody></table>';
     }
     html += '</section>';
 
-    // ---------------------------------------------------------------- page 5
-    html += '<section class="report-page report-last">' + header(org, a, t('report.validation'));
+    // ---------------------------------------------------------------- page 5: timeline (new page, landscape)
+    if (a.plan.activities.length) {
+      html += '<section class="report-page landscape">' + header(org, a, t('plan.timeline')) +
+        '<div class="gantt-legend">' + ['address', 'opportunity', 'maintain', 'other'].map(function (c) {
+          return '<span class="cat-' + c + '"><i></i>' + esc(t('cat.' + c)) + '</span>';
+        }).join('') + '<span class="status-done"><i></i>' + esc(t('status.done')) + ' ✓</span></div>' +
+        App.Charts.ganttTable(App.activityRows(a), App.timelineHeader(a.plan), esc) +
+        '</section>';
+    }
+
+    // ---------------------------------------------------------------- page 6: conclusion and validation
+    html += '<section class="report-page report-last">' + header(org, a, t('report.conclusion')) +
+      conclusion(org, a, r, groups, stage, prev, cmp, st, lang) +
+      '<h3 class="report-h3">' + esc(t('report.facNote')) + '</h3>' +
+      '<textarea class="no-print fac-note" rows="5" data-on="conclusion-note" placeholder="' + esc(t('report.facNotePh')) + '">' + esc(a.conclusionNote || '') + '</textarea>' +
+      '<div class="print-only fac-note-print">' + (a.conclusionNote ? esc(a.conclusionNote).replace(/\n/g, '<br>') : '<span class="muted">—</span>') + '</div>';
     var commented = F.allComponents().filter(function (e) { return a.comments[e.component.id]; });
     if (commented.length) {
       html += '<h3 class="report-h3">' + esc(t('report.comments')) + '</h3><table class="report-table compact"><tbody>' +
@@ -202,7 +255,7 @@
           return '<tr><td><strong>' + esc(L(e.component.name)) + '</strong><br><span class="muted small">' + esc(L(e.pillar.shortName)) + '</span></td><td>' + esc(a.comments[e.component.id]) + '</td></tr>';
         }).join('') + '</tbody></table>';
     }
-    html += '<div class="signatures">' +
+    html += '<h3 class="report-h3">' + esc(t('report.validation')) + '</h3><div class="signatures">' +
       ['report.preparedBy', 'report.validatedBy'].map(function (k) {
         return '<div class="signature"><span>' + esc(t(k)) + '</span><div class="sig-line"></div><small>' + esc(t('report.signature')) + '</small></div>';
       }).join('') + '</div></section>';
@@ -212,11 +265,19 @@
 
     r.pillars.forEach(function (p) {
       var slot = App.viewEl.querySelector('[data-rdonut="' + p.id + '"]');
-      slot.appendChild(App.Charts.donut(p.score, F.MAX_SCORE, { color: App.PILLAR_COLORS[p.id], size: 110, stroke: 13, label: L(p.name) }));
+      slot.appendChild(App.Charts.donut(p.score, F.MAX_SCORE, { color: App.REPORT_COLORS[p.id], size: 110, stroke: 13, label: L(p.name) }));
     });
     document.getElementById('report-pillar-bars').appendChild(App.Charts.bars(r.pillars.map(function (p) {
-      return { label: L(p.name), value: p.score, color: App.PILLAR_COLORS[p.id] };
+      return { label: L(p.name), value: p.score, color: App.REPORT_COLORS[p.id] };
     }), F.MAX_SCORE));
+  };
+
+  A['conclusion-note'] = function (el) {
+    App.assessment().conclusionNote = el.value;
+    var printed = App.viewEl.querySelector('.fac-note-print');
+    if (printed) printed.innerHTML = el.value ? esc(el.value).replace(/\n/g, '<br>') : '<span class="muted">—</span>';
+    App.touch();
+    App.persist();
   };
 
   A['report-mode'] = function (el) {

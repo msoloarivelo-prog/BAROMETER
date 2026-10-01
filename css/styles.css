@@ -594,8 +594,6 @@ textarea { resize: vertical; }
 .report-table .level-badge { min-width: 1.35rem; height: 1.35rem; font-size: 8pt; }
 .report-table tr.total td { font-weight: 700; border-top: 2px solid #d8dfe6; }
 .report-table.compact td { padding: 1.2mm 2mm; }
-.plan-table td:first-child { width: 22%; }
-.plan-table td:nth-child(2) { width: 34%; }
 .cat-dot { font-size: 8pt; }
 .cat-dot.cat-maintain { color: var(--c-maintain); }
 .cat-dot.cat-opportunity { color: var(--c-opportunity); }
@@ -624,6 +622,74 @@ textarea { resize: vertical; }
 .sig-line { border-bottom: 1px solid #1d2733; height: 22mm; }
 .signature small { color: #5d6b7a; }
 
+/* ------------------------------------------------------------ report: light palette and layout */
+
+.report {
+  --l1: #f4b9b6;
+  --l2: #f7d8a2;
+  --l3: #cfe6ad;
+  --l4: #a9d9bd;
+  --accent: #5b8db5;
+}
+.report .level-badge { color: #1d2733; font-weight: 600; }
+.report .report-cover { border-bottom: 2px solid #c9dcec; }
+.report .report-header { border-bottom: 1.5px solid #c9dcec; }
+.report .report-kpi.main { background: #f5f9fc; border-color: #c9dcec; }
+.report .report-h3 { border-bottom-color: #e6ecf1; }
+.report .report-h3.pillar { border-bottom: 2px solid var(--pillar); }
+.report .report-h3.cat-maintain, .report .ffom-group.cat-maintain td { color: #2f7d55; }
+.report .report-h3.cat-opportunity, .report .ffom-group.cat-opportunity td { color: #2f6f9f; }
+.report .report-h3.cat-address, .report .ffom-group.cat-address td { color: #b2504b; }
+.report .report-swot-col.cat-maintain { border-top-color: #a9d9bd; background: #f6fbf8; }
+.report .report-swot-col.cat-opportunity { border-top-color: #a9cdea; background: #f5f9fd; }
+.report .report-swot-col.cat-address { border-top-color: #f4b9b6; background: #fdf6f5; }
+.report .bar-fill { opacity: .9; }
+.report .gantt-bar { background: #d6c6ea; }
+.report .cat-maintain .gantt-bar { background: #a9d9bd; }
+.report .cat-opportunity .gantt-bar { background: #a9cdea; }
+.report .cat-address .gantt-bar { background: #f4b9b6; }
+.report .status-done .gantt-bar { background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, .6) 0 3px, transparent 3px 6px); }
+
+.ffom-table, .plan-table { table-layout: fixed; }
+.ffom-table .c-comp { width: 22%; }
+.ffom-table .c-score { width: 7%; }
+.ffom-table .c-sit, .ffom-table .c-target { width: 35.5%; }
+.ffom-table.with-notes .c-sit, .ffom-table.with-notes .c-target { width: 26%; }
+.ffom-table.with-notes .c-notes { width: 19%; }
+.ffom-group td { background: #f6f8fa; font-size: 9.5pt; padding-top: 2.5mm !important; }
+.ffom-group.cat-maintain td { background: #f1f9f4; }
+.ffom-group.cat-opportunity td { background: #f0f6fc; }
+.ffom-group.cat-address td { background: #fdf2f1; }
+.ffom-group span { font-weight: 400; color: #5d6b7a; font-size: 8.5pt; }
+
+.report-page.landscape { width: 297mm; min-height: 210mm; }
+.report .landscape .gantt-chart { --name-w: 80mm; font-size: 8pt; }
+.report .landscape .gantt-title { white-space: normal; line-height: 1.25; }
+.report .landscape .gantt-line { min-height: 7mm; }
+.gantt-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 8pt; }
+.gantt-table .gt-name { width: 78mm; }
+.gantt-table th { font-weight: 600; color: #5d6b7a; text-align: center; padding: .8mm 0; border-left: 1px solid #e3e8ed; }
+.gantt-table .gt-years th { background: #f3f6f9; font-size: 8pt; border-left: 1.5px solid #9aa8b6; }
+.gantt-table .gt-months th { font-size: 6.5pt; font-weight: 500; border-bottom: 1px solid #d8dfe6; }
+.gantt-table td { border-left: 1px solid #eef2f5; border-bottom: 1px solid #eef2f5; padding: 0; height: 7mm; }
+.gantt-table td.gt-label { border-left: 0; padding: 1mm 2mm 1mm 0; line-height: 1.25; }
+.gantt-table tr { break-inside: avoid; }
+.gantt-table .gantt-title { display: block; }
+.gantt-table .gantt-sub { display: block; color: #5d6b7a; font-size: 7pt; }
+.gantt-table .gt-span { padding: 0 1px; }
+.gantt-table .gantt-bar { height: 3.2mm; border-radius: 3px; margin: 0; }
+.gantt-legend { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font-size: 8.5pt; margin-bottom: 3mm; color: #5d6b7a; }
+.gantt-legend i { display: inline-block; width: 18px; height: 8px; border-radius: 3px; margin-right: .35rem; vertical-align: middle; background: #d6c6ea; }
+.gantt-legend .cat-maintain i { background: #a9d9bd; }
+.gantt-legend .cat-opportunity i { background: #a9cdea; }
+.gantt-legend .cat-address i { background: #f4b9b6; }
+.gantt-legend .status-done i { background: #ccc repeating-linear-gradient(45deg, rgba(255, 255, 255, .7) 0 3px, transparent 3px 6px); }
+
+.conclusion p { margin: 0 0 3mm; font-size: 10.5pt; text-align: justify; }
+.fac-note { width: 100%; font: inherit; font-size: 10pt; }
+.print-only { display: none; }
+.keep-together { break-inside: avoid; }
+
 /* ------------------------------------------------------------ responsive */
 
 @media (max-width: 1000px) {
@@ -642,7 +708,7 @@ textarea { resize: vertical; }
   .level-header { display: none; }
   .main-nav a.nav-facilitator { margin-left: 0; }
   .report { display: block; }
-  .report-page { width: auto; min-height: 0; padding: 6mm 5mm; margin-bottom: 1rem; overflow-x: auto; }
+  .report-page, .report-page.landscape { width: auto; min-height: 0; padding: 6mm 5mm; margin-bottom: 1rem; overflow-x: auto; }
 }
 
 @media (max-width: 600px) {
@@ -668,6 +734,7 @@ textarea { resize: vertical; }
 /* ------------------------------------------------------------ print / PDF */
 
 @page { size: A4; margin: 12mm; }
+@page landscape { size: A4 landscape; margin: 10mm; }
 
 @media print {
   :root { --surface: #fff; --surface-2: #eef2f5; --text: #1d2733; --muted: #5d6b7a; --border: #d8dfe6; }
@@ -679,6 +746,9 @@ textarea { resize: vertical; }
   .report { display: block; }
   .report-page { width: auto; min-height: 0; padding: 0; box-shadow: none; break-after: page; }
   .report-page.report-last { break-after: auto; }
+  .report-page.landscape { page: landscape; width: auto; min-height: 0; }
+  .print-only { display: block; }
+  .fac-note-print { font-size: 10pt; min-height: 15mm; }
   .report-table tr, .report-item { break-inside: avoid; }
   .table-wrap { overflow: visible; }
   .portfolio th:last-child, .portfolio td:last-child { display: none; }

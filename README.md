@@ -52,13 +52,21 @@ Each component falls into a category based on its score:
 
 ### PDF report
 
-The report contains:
+The report uses a light colour palette and contains:
 
 1. **Overview**: key figures, pillar donuts, top strengths, opportunities and weaknesses, change since the previous assessment, and a workplan summary.
 2. Detailed scores by pillar, aspect and component.
-3. Strengths, opportunities and weaknesses, each with its current level, target level and the organisation's challenge.
-4. The workplan table and the Gantt timeline.
-5. Assessment comments and signature blocks.
+3. **SWOT (FFOM) analysis as a table**: one row per component, grouped into strengths, opportunities and weaknesses, with the current situation, the target level and the challenge or comment.
+4. **Action plan**, starting on a new page.
+5. **Timeline (Gantt)** on its own **landscape** pages; the year and month header repeats on every page.
+6. **Conclusion** generated from the results:
+   - overall level and the strongest and weakest pillars;
+   - strengths, priorities and quick wins;
+   - change since the previous assessment;
+   - the action plan and its first actions;
+   - next steps.
+
+   It is followed by an editable *facilitator's observations and recommendations* box, the assessment comments and signature blocks.
 
 **Export to PDF** opens the browser's print dialog; choose *Save as PDF*. The PDF keeps selectable text and needs no internet connection.
 
