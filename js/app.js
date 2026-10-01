@@ -1,0 +1,756 @@
+/*
+ * Application core: state, routing, header, and the Profile, Assessment,
+ * Results and Help views. The Workplan, Report and Facilitator views live in
+ * views-*.js and register themselves on window.App.
+ *
+ * Event handling is delegated: elements carry data-on="action" (inputs) or
+ * data-click="action" (buttons); handlers live in App.actions.
+ */
+(function () {
+  'use strict';
+
+  var F = window.BarometerFramework;
+  var S = window.BarometerScoring;
+  var Store = window.BarometerStorage;
+  var I18n = window.BarometerI18n;
+  var Charts = window.BarometerCharts;
+
+  var App = {
+    F: F,
+    S: S,
+    Store: Store,
+    I18n: I18n,
+    Charts: Charts,
+    Plan: window.BarometerPlan,
+    Activities: window.BarometerActivities,
+    PILLAR_COLORS: { gov: '#2f6f9f', plan: '#3f8f5f', hr: '#c9822b', fin: '#8a4f9e' },
+    CAT_ICONS: { maintain: '▲', opportunity: '◆', address: '▼', other: '●' },
+    ws: Store.load(),
+    ui: { compareWith: null, planFilter: 'all', flash: null },
+    views: {},
+    actions: {}
+  };
+  window.App = App;
+
+  var view = document.getElementById('view');
+  var saveTimer = null;
+
+  // ------------------------------------------------------------------ helpers
+
+  App.t = I18n.t;
+  App.L = I18n.L;
+
+  App.esc = function (value) {
+    return String(value === undefined || value === null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+
+  App.fmt = Charts.fmt;
+
+  App.settings = function () { return App.ws.settings; };
+
+  App.org = function () {
+    return App.ws.orgs.filter(function (o) { return o.id === App.ws.activeOrgId; })[0] || App.ws.orgs[0];
+  };
+
+  App.assessment = function (org) {
+    org = org || App.org();
+    return org.assessments.filter(function (a) { return a.id === org.activeAssessmentId; })[0] || org.assessments[0];
+  };
+
+  /** Most recent assessment: highest sequence, then most recently created. */
+  App.latestAssessment = function (org) {
+    return org.assessments.slice().sort(function (a, b) {
+      return b.sequence - a.sequence || String(b.createdAt).localeCompare(String(a.createdAt));
+    })[0];
+  };
+
+  /** Previous assessment of the same organisation, used as default comparison. */
+  App.previousAssessment = function (org, a) {
+    var older = org.assessments.filter(function (x) { return x.id !== a.id && x.sequence < a.sequence; });
+    older.sort(function (x, y) { return y.sequence - x.sequence; });
+    return older[0] || null;
+  };
+
+  App.scores = function (a) { return S.computeScores(F, a.answers, App.settings()); };
+
+  App.orgName = function (org) {
+    var o = (org || App.org()).organization;
+    return o.name || App.t('unnamedOrg');
+  };
+
+  App.sequenceLabel = function (seq) {
+    var s = F.SEQUENCES.filter(function (x) { return x.value === seq; })[0];
+    return s ? App.L(s.label) : '#' + seq;
+  };
+
+  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + a.year; };
+
+  App.levelBadge = function (score) {
+    return score ? '<span class="level-badge level-' + score + '">' + score + '</span>' : '<span class="tag">' + App.esc(App.t('notAnswered')) + '</span>';
+  };
+
+  App.catTag = function (cat) {
+    if (!cat) return '';
+    return '<span class="cat-tag cat-' + cat + '">' + App.CAT_ICONS[cat] + ' ' + App.esc(App.t('cat.' + cat)) + '</span>';
+  };
+
+  App.findComponent = function (id) {
+    return F.allComponents().filter(function (e) { return e.component.id === id; })[0] || null;
+  };
+
+  App.pillarById = function (id) {
+    return F.PILLARS.filter(function (p) { return p.id === id; })[0] || F.PILLARS[0];
+  };
+
+  App.dateStr = function (d) {
+    try {
+      return (d || new Date()).toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) {
+      return (d || new Date()).toISOString().slice(0, 10);
+    }
+  };
+
+  App.touch = function (org) { (org || App.org()).updatedAt = new Date().toISOString(); };
+
+  App.persist = function (immediate) {
+    clearTimeout(saveTimer);
+    var run = function () {
+      var ok = Store.save(App.ws);
+      var badge = document.getElementById('save-status');
+      if (badge) {
+        badge.textContent = ok ? App.t('saved') : App.t('saveFailed');
+        badge.className = 'save-status ' + (ok ? 'ok' : 'err');
+      }
+    };
+    if (immediate) run(); else saveTimer = setTimeout(run, 400);
+  };
+
+  App.download = function (filename, content, type) {
+    var blob = new Blob([content], { type: type });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  };
+
+  App.slug = function (s) {
+    return (s || 'organisation').normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'organisation';
+  };
+
+  App.csv = function (rows) {
+    return '﻿' + rows.map(function (r) {
+      return r.map(function (cell) {
+        var s = cell === null || cell === undefined ? '' : String(cell);
+        return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(';');
+    }).join('\r\n');
+  };
+
+  App.num = function (v, d) { return v === null || v === undefined ? '' : App.fmt(v, d === undefined ? 2 : d); };
+
+  App.readJsonFiles = function (files, done) {
+    var list = Array.prototype.slice.call(files || []);
+    var results = [];
+    var pending = list.length;
+    if (!pending) return;
+    list.forEach(function (file, i) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        try { results[i] = { file: file, data: JSON.parse(reader.result) }; }
+        catch (e) { results[i] = { file: file, error: e }; }
+        if (--pending === 0) done(results);
+      };
+      reader.readAsText(file);
+    });
+  };
+
+  App.errMsg = function (e) {
+    var key = 'err.' + (e && e.message);
+    var msg = App.t(key);
+    return msg === key ? App.t('err.invalid') : msg;
+  };
+
+  App.flash = function (msg) { App.ui.flash = msg; };
+
+  // ------------------------------------------------------------------ header
+
+  App.renderHeader = function () {
+    var lang = I18n.getLang();
+    document.documentElement.lang = lang;
+    document.title = App.t('app.title');
+    document.querySelectorAll('[data-i18n]').forEach(function (node) {
+      node.textContent = App.t(node.getAttribute('data-i18n'));
+    });
+
+    var orgSel = document.getElementById('org-select');
+    orgSel.innerHTML = App.ws.orgs.map(function (o) {
+      return '<option value="' + App.esc(o.id) + '"' + (o.id === App.ws.activeOrgId ? ' selected' : '') + '>' + App.esc(App.orgName(o)) + '</option>';
+    }).join('');
+
+    var org = App.org();
+    var aSel = document.getElementById('assessment-select');
+    aSel.innerHTML = org.assessments.map(function (a) {
+      return '<option value="' + App.esc(a.id) + '"' + (a.id === org.activeAssessmentId ? ' selected' : '') + '>' + App.esc(App.assessmentLabel(a)) + '</option>';
+    }).join('');
+
+    document.querySelectorAll('.lang-switch button').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+    });
+
+    var route = App.route();
+    document.querySelectorAll('.main-nav a').forEach(function (link) {
+      link.classList.toggle('active', link.getAttribute('data-route') === route.name);
+    });
+    document.body.classList.toggle('mode-facilitator', route.name === 'facilitator');
+  };
+
+  // ------------------------------------------------------------------ routing
+
+  App.route = function () {
+    var hash = (location.hash || '#home').slice(1).split('/');
+    return { name: hash[0] || 'home', param: hash[1] || null };
+  };
+
+  App.render = function () {
+    I18n.setLang(App.settings().lang);
+    var route = App.route();
+    App.renderHeader();
+    var fn = App.views[route.name] || App.views.home;
+    fn(route.param);
+    if (App.ui.flash) {
+      var note = document.createElement('div');
+      note.className = 'flash';
+      note.setAttribute('role', 'status');
+      note.textContent = App.ui.flash;
+      view.prepend(note);
+      App.ui.flash = null;
+    }
+  };
+
+  App.setView = function (html) { view.innerHTML = html; };
+  App.viewEl = view;
+
+  App.pillarTabs = function (routeName, activeId, scores) {
+    return '<div class="pillar-tabs" role="tablist">' + F.PILLARS.map(function (p, i) {
+      var ps = scores.pillars[i];
+      return '<a role="tab" href="#' + routeName + '/' + p.id + '" class="pillar-tab' + (p.id === activeId ? ' active' : '') +
+        '" style="--pillar:' + App.PILLAR_COLORS[p.id] + '"' + (p.id === activeId ? ' aria-selected="true"' : '') + '>' +
+        '<span>' + App.esc(App.L(p.shortName)) + '</span>' +
+        '<small data-pillar-progress="' + p.id + '">' + ps.answered + '/' + ps.total + '</small></a>';
+    }).join('') + '</div>';
+  };
+
+  // ------------------------------------------------------------------ home
+
+  App.views.home = function () {
+    var a = App.assessment();
+    var r = App.scores(a);
+    var steps = [
+      { n: 0, route: '#profile', title: 'nav.profile', text: 'step.profile' },
+      { n: 1, route: '#assessment/gov', title: 'nav.assessment', text: 'step.assessment' },
+      { n: 2, route: '#results', title: 'nav.results', text: 'step.results' },
+      { n: 3, route: '#plan', title: 'nav.plan', text: 'step.plan' },
+      { n: 4, route: '#report', title: 'nav.report', text: 'step.report' }
+    ];
+    App.setView(
+      '<section class="hero">' +
+        '<h1>' + App.esc(App.t('home.title')) + '</h1>' +
+        '<p>' + App.esc(App.t('home.intro')) + '</p>' +
+        '<div class="hero-status">' +
+          '<span><strong>' + App.esc(App.orgName()) + '</strong> — ' + App.esc(App.assessmentLabel(a)) + '</span>' +
+          '<span>' + r.answered + ' / ' + r.totalComponents + ' ' + App.esc(App.t('home.components')) + '</span>' +
+          (r.index !== null ? '<span>' + App.esc(App.t('home.index')) + ' : <strong>' + App.fmt(r.index, 2) + ' / 4</strong></span>' : '') +
+        '</div>' +
+      '</section>' +
+      '<ol class="process">' + steps.map(function (s) {
+        return '<li><a href="' + s.route + '" class="process-step">' +
+          '<span class="step-n">' + s.n + '</span>' +
+          '<span class="step-body"><strong>' + App.esc(App.t(s.title)) + '</strong><span>' + App.esc(App.t(s.text)) + '</span></span></a></li>';
+      }).join('') + '</ol>' +
+      '<a href="#facilitator" class="process-step facilitator-link"><span class="step-n">★</span><span class="step-body"><strong>' +
+        App.esc(App.t('nav.facilitator')) + '</strong><span>' + App.esc(App.t('step.facilitator')) + '</span></span></a>' +
+      '<section class="card demo-card"><p>' + App.esc(App.t('demo.help')) + '</p>' +
+        '<button class="btn" data-click="load-demo">▶ ' + App.esc(App.t('demo.load')) + '</button></section>' +
+      '<section class="card"><h2>' + App.esc(App.t('home.levels')) + '</h2><ol class="levels-legend">' +
+      F.LEVELS.map(function (l) {
+        return '<li><span class="level-badge level-' + l.value + '">' + l.value + '</span>' + App.esc(App.L(l.label)) + '</li>';
+      }).join('') + '</ol></section>'
+    );
+  };
+
+  // ------------------------------------------------------------------ profile
+
+  App.views.profile = function () {
+    var org = App.org();
+    var o = org.organization;
+    var a = App.assessment();
+    function field(id, type) {
+      return '<label class="field"><span>' + App.esc(App.t('profile.' + id)) + '</span>' +
+        '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"></label>';
+    }
+    App.setView(
+      '<h1>' + App.esc(App.t('profile.title')) + '</h1>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.org')) + '</h2><div class="form-grid">' +
+        field('name') + field('acronym') + field('type') + field('region') + field('address') +
+        field('focalPoint') + field('phone', 'tel') + field('email', 'email') +
+      '</div></section>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
+        '<label class="field"><span>' + App.esc(App.t('profile.sequence')) + '</span><select data-on="assess-sequence">' +
+          F.SEQUENCES.map(function (s) {
+            return '<option value="' + s.value + '"' + (s.value === a.sequence ? ' selected' : '') + '>' + App.esc(App.L(s.label)) + '</option>';
+          }).join('') +
+        '</select></label>' +
+        '<label class="field"><span>' + App.esc(App.t('profile.year')) + '</span>' +
+          '<input type="number" min="2000" max="2100" data-on="assess-year" value="' + App.esc(a.year) + '"></label>' +
+      '</div></section>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.history')) + '</h2>' +
+        '<p class="muted">' + App.esc(App.t('profile.historyHelp')) + '</p>' +
+        '<div class="table-wrap"><table class="table"><thead><tr><th>' + App.esc(App.t('header.assessment')) + '</th><th>' + App.esc(App.t('profile.progress')) +
+        '</th><th>' + App.esc(App.t('profile.index')) + '</th><th></th></tr></thead><tbody>' +
+        org.assessments.map(function (x) {
+          var r = App.scores(x);
+          return '<tr' + (x.id === a.id ? ' class="current"' : '') + '><td>' + App.esc(App.assessmentLabel(x)) + '</td>' +
+            '<td>' + r.answered + ' / ' + r.totalComponents + '</td>' +
+            '<td>' + App.fmt(r.index, 2) + '</td>' +
+            '<td class="row-actions">' +
+              (x.id === a.id ? '<span class="tag">' + App.esc(App.t('active')) + '</span>' : '<button class="btn small" data-click="activate-assessment" data-id="' + App.esc(x.id) + '">' + App.esc(App.t('open')) + '</button>') +
+              (org.assessments.length > 1 ? ' <button class="btn small danger" data-click="delete-assessment" data-id="' + App.esc(x.id) + '">' + App.esc(App.t('delete')) + '</button>' : '') +
+            '</td></tr>';
+        }).join('') +
+        '</tbody></table></div>' +
+        '<div class="actions"><button class="btn primary" data-click="new-assessment">' + App.esc(App.t('header.newAssessment')) + '</button></div>' +
+      '</section>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.share')) + '</h2>' +
+        '<p class="muted">' + App.esc(App.t('profile.shareHelp')) + '</p>' +
+        '<div class="actions">' +
+          '<button class="btn primary" data-click="export-org">' + App.esc(App.t('profile.export')) + '</button>' +
+          '<label class="btn">' + App.esc(App.t('profile.import')) + '<input type="file" accept=".json,application/json" multiple data-on="import-files" hidden></label>' +
+          (App.ws.orgs.length > 1 ? '<button class="btn danger" data-click="delete-org" data-id="' + App.esc(org.id) + '">' + App.esc(App.t('profile.deleteOrg')) + '</button>' : '') +
+        '</div>' +
+      '</section>'
+    );
+  };
+
+  // ------------------------------------------------------------------ assessment
+
+  App.views.assessment = function (pillarId) {
+    var pillar = App.pillarById(pillarId);
+    var a = App.assessment();
+    var r = App.scores(a);
+    var idx = F.PILLARS.indexOf(pillar);
+    var prev = F.PILLARS[idx - 1];
+    var next = F.PILLARS[idx + 1];
+
+    var html = '<h1>' + App.esc(App.t('diag.title')) + ' — ' + App.esc(App.L(pillar.name)) + '</h1>' +
+      App.pillarTabs('assessment', pillar.id, r) +
+      '<p class="muted">' + App.esc(App.t('diag.help')) + '</p>' +
+      '<div class="level-header" aria-hidden="true">' +
+        F.LEVELS.map(function (l) { return '<span><b>' + l.value + '</b> ' + App.esc(App.L(l.label)) + '</span>'; }).join('') +
+      '</div>';
+
+    pillar.aspects.forEach(function (aspect) {
+      html += '<section class="aspect card"><h2>' + App.esc(App.L(aspect.name)) + '</h2>';
+      aspect.components.forEach(function (c) {
+        var selected = a.answers[c.id];
+        var title = App.L(c.name) === App.L(aspect.name) ? App.L(aspect.name) : App.L(c.name);
+        html += '<fieldset class="component" data-component="' + App.esc(c.id) + '">' +
+          '<legend>' + App.esc(title) + '<span class="component-score">' + componentScoreText(selected) + '</span></legend>' +
+          '<div class="levels">' +
+          c.levels.map(function (text, i) {
+            var v = i + 1;
+            return '<label class="level-option level-' + v + '">' +
+              '<input type="radio" name="' + App.esc(c.id) + '" value="' + v + '" data-on="answer"' + (selected === v ? ' checked' : '') + '>' +
+              '<span class="level-n">' + v + '</span><span class="level-text">' + App.esc(App.L(text)) + '</span></label>';
+          }).join('') +
+          '</div>' +
+          '<details class="comment"' + (a.comments[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('diag.comment')) + '</summary>' +
+          '<textarea data-on="comment" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('diag.commentPh')) + '">' + App.esc(a.comments[c.id] || '') + '</textarea></details>' +
+          '</fieldset>';
+      });
+      html += '</section>';
+    });
+
+    html += '<nav class="pager">' +
+      (prev ? '<a class="btn" href="#assessment/' + prev.id + '">← ' + App.esc(App.L(prev.shortName)) + '</a>' : '<span></span>') +
+      (next ? '<a class="btn primary" href="#assessment/' + next.id + '">' + App.esc(App.L(next.shortName)) + ' →</a>'
+            : '<a class="btn primary" href="#results">' + App.esc(App.t('diag.next')) + ' →</a>') +
+      '</nav>';
+    App.setView(html);
+  };
+
+  function componentScoreText(selected) {
+    if (!selected) return App.esc(App.t('notAnswered'));
+    return App.esc(App.t('score')) + ' : ' + selected + ' / 4 · ' + App.catTag(S.categoryFor(selected));
+  }
+
+  // ------------------------------------------------------------------ results
+
+  App.views.results = function () {
+    var org = App.org();
+    var a = App.assessment();
+    var r = App.scores(a);
+    var others = org.assessments.filter(function (x) { return x.id !== a.id; });
+    if (App.ui.compareWith === null) {
+      var prev = App.previousAssessment(org, a);
+      App.ui.compareWith = prev ? prev.id : '';
+    }
+    if (App.ui.compareWith && !others.some(function (x) { return x.id === App.ui.compareWith; })) App.ui.compareWith = '';
+    var baseline = others.filter(function (x) { return x.id === App.ui.compareWith; })[0];
+    var cmp = baseline ? S.compareScores(r, App.scores(baseline)) : null;
+    var stage = S.stageFor(F, r.index);
+    var groups = S.classify(F, a.answers);
+
+    var html = '<div class="page-head"><div><h1>' + App.esc(App.t('results.title')) + '</h1>' +
+      '<p class="muted">' + App.esc(App.orgName()) + ' — ' + App.esc(App.assessmentLabel(a)) + '</p></div>' +
+      '<div class="actions no-print">' +
+        (others.length ? '<label class="inline-field">' + App.esc(App.t('results.compare')) + ' <select data-on="compare"><option value="">—</option>' +
+          others.map(function (x) {
+            return '<option value="' + App.esc(x.id) + '"' + (x.id === App.ui.compareWith ? ' selected' : '') + '>' + App.esc(App.assessmentLabel(x)) + '</option>';
+          }).join('') + '</select></label>' : '') +
+        '<button class="btn" data-click="export-results">' + App.esc(App.t('exportCsv')) + '</button>' +
+        '<a class="btn primary" href="#report">' + App.esc(App.t('results.toReport')) + '</a>' +
+      '</div></div>';
+
+    if (!r.complete) {
+      html += '<div class="notice">' + App.esc(App.t('results.incomplete', { n: r.answered, total: r.totalComponents })) +
+        ' <a href="#assessment/' + firstIncompletePillar(r) + '">' + App.esc(App.t('results.complete')) + '</a></div>';
+    }
+
+    html += '<section class="summary">' +
+      '<div class="kpi"><span class="kpi-label">' + App.esc(App.t('results.index')) + '</span><span class="kpi-value">' + App.fmt(r.index, 2) + '<small> / 4</small></span>' +
+        (cmp && cmp.index !== null ? deltaTag(cmp.index) : '') +
+        (stage ? '<span class="kpi-sub">' + App.esc(App.t('results.stage')) + ' : ' + App.esc(App.L(stage.label)) + '</span>' : '') +
+        '<span class="kpi-sub small">' + App.esc(App.t('results.method.' + r.indexMethod)) + '</span></div>' +
+      '<div class="kpi"><span class="kpi-label">' + App.esc(App.t('results.total')) + '</span><span class="kpi-value">' + r.total + '<small> / ' + r.maxTotal + '</small></span>' +
+        (cmp && cmp.total !== null ? deltaTag(cmp.total, 0) : '') +
+        '<span class="kpi-sub">' + (r.total ? App.fmt((r.total / r.maxTotal) * 100, 0) + ' ' + App.esc(App.t('results.ofMax')) : '—') + '</span></div>' +
+      '<div class="kpi kpi-wide"><span class="kpi-label">' + App.esc(App.t('results.pillars')) + '</span><div id="pillar-overview"></div></div>' +
+      '</section>';
+
+    html += '<section class="swot-grid">' + ['maintain', 'opportunity', 'address'].map(function (cat) {
+      var items = groups[cat];
+      return '<article class="card swot cat-' + cat + '"><header><h2>' + App.CAT_ICONS[cat] + ' ' + App.esc(App.t('cats.' + cat)) +
+        '</h2><span class="swot-count">' + items.length + '</span></header>' +
+        '<p class="muted small">' + App.esc(App.t('catHelp.' + cat)) + '</p>' +
+        (items.length ? '<ul class="swot-list">' + items.map(function (it) {
+          return '<li>' + App.levelBadge(it.score) + '<span><strong>' + App.esc(App.L(it.component.name)) + '</strong><small>' +
+            App.esc(App.L(it.pillar.shortName)) + ' · ' + App.esc(App.L(it.aspect.name)) + '</small></span></li>';
+        }).join('') + '</ul>' : '<p class="muted">' + App.esc(App.t('results.noItems')) + '</p>') +
+        '</article>';
+    }).join('') + '</section>';
+
+    html += '<section class="pillar-grid">' + F.PILLARS.map(function (p) {
+      return '<article class="pillar-card card" style="--pillar:' + App.PILLAR_COLORS[p.id] + '">' +
+        '<h2>' + App.esc(App.L(p.name)) + '</h2>' +
+        '<div class="pillar-body"><div class="donut-slot" data-donut="' + p.id + '"></div><div class="bars-slot" data-bars="' + p.id + '"></div></div>' +
+        '<p class="muted small">' + App.esc(App.t('results.weightNote')) + '</p></article>';
+    }).join('') + '</section>' +
+    '<div class="actions no-print"><a class="btn primary" href="#plan">' + App.esc(App.t('results.toPlan')) + ' →</a></div>';
+
+    App.setView(html);
+
+    document.getElementById('pillar-overview').appendChild(Charts.bars(r.pillars.map(function (p, i) {
+      return { label: App.L(p.shortName), value: p.score, delta: cmp ? cmp.pillars[i].delta : undefined, color: App.PILLAR_COLORS[p.id] };
+    }), F.MAX_SCORE));
+
+    r.pillars.forEach(function (p, i) {
+      var color = App.PILLAR_COLORS[p.id];
+      view.querySelector('[data-donut="' + p.id + '"]').appendChild(Charts.donut(p.score, F.MAX_SCORE, { color: color, label: App.L(p.name) }));
+      view.querySelector('[data-bars="' + p.id + '"]').appendChild(Charts.bars(p.aspects.map(function (asp, j) {
+        return { label: App.L(asp.name), value: asp.score, delta: cmp ? cmp.pillars[i].aspects[j].delta : undefined };
+      }), F.MAX_SCORE, { color: color }));
+    });
+  };
+
+  function deltaTag(value, digits) {
+    var cls = value > 0 ? 'up' : value < 0 ? 'down' : 'flat';
+    return '<span class="delta ' + cls + '">' + (value > 0 ? '+' : '') + App.fmt(value, digits === undefined ? 2 : digits) + ' ' + App.esc(App.t('results.vsRef')) + '</span>';
+  }
+  App.deltaTag = deltaTag;
+
+  function firstIncompletePillar(r) {
+    var p = r.pillars.filter(function (x) { return x.answered < x.total; })[0];
+    return p ? p.id : F.PILLARS[0].id;
+  }
+
+  // ------------------------------------------------------------------ help
+
+  App.views.help = function () {
+    var w = S.effectiveWeights(F, { indexMethod: 'components' });
+    var weights = F.PILLARS.map(function (p) {
+      var n = p.aspects.reduce(function (s, a) { return s + a.components.length; }, 0);
+      return '<li>' + App.esc(App.L(p.name)) + ' : ' + n + ' / 33 → ' + App.fmt(w[p.id], 1) + ' %</li>';
+    }).join('');
+    var fr = I18n.getLang() === 'fr';
+    App.setView('<h1>' + App.esc(App.t('help.title')) + '</h1>' + (fr ? helpFr(weights) : helpEn(weights)));
+  };
+
+  function helpFr(weights) {
+    return '<section class="card"><h2>1. Déroulement</h2><ol>' +
+      '<li><strong>Fiche</strong> : identité de l’organisation, séquence et année du diagnostic. À remplir en premier.</li>' +
+      '<li><strong>Diagnostic</strong> : pour chacune des 33 composantes, cliquez sur la description qui correspond le mieux à la situation actuelle (stades 1 à 4).</li>' +
+      '<li><strong>Résultats</strong> : indice global, scores par pilier et par aspect, forces, opportunités et faiblesses.</li>' +
+      '<li><strong>Plan de travail</strong> : activités standard proposées automatiquement, à adapter, et vos propres activités, avec un chronogramme.</li>' +
+      '<li><strong>Rapport</strong> : rapport individuel de l’organisation, à exporter en PDF.</li></ol></section>' +
+      '<section class="card"><h2>2. Forces, opportunités et faiblesses</h2><ul>' +
+      '<li><strong>▲ Force à maintenir</strong> : composante notée 4.</li>' +
+      '<li><strong>◆ Opportunité à saisir</strong> : composante notée 3, à un pas du niveau maximal.</li>' +
+      '<li><strong>▼ Faiblesse à corriger</strong> : composante notée 1 ou 2.</li></ul></section>' +
+      '<section class="card"><h2>3. Méthode de calcul</h2><ul>' +
+      '<li>Composante : note du niveau choisi (1 à 4).</li><li>Aspect : moyenne de ses composantes.</li>' +
+      '<li>Pilier : moyenne de ses aspects.</li><li>Placement total : somme des 33 composantes (maximum 132).</li>' +
+      '<li>Indice moyen de développement : moyenne des 33 composantes (méthode Excel, par défaut).</li></ul>' +
+      '<h3>Le poids des piliers</h3>' +
+      '<p>Dans le fichier Excel, aucun poids n’est saisi : l’indice global est la simple moyenne des 33 composantes. Mais comme les piliers n’ont pas le même nombre de composantes, ils ne pèsent pas autant dans l’indice :</p><ul>' + weights + '</ul>' +
+      '<p>La gestion des ressources et l’évaluation compte donc presque deux fois plus que la gouvernance. Si vous souhaitez que chaque pilier compte autant (25 % chacun) ou fixer vos propres poids, choisissez « Moyenne pondérée des 4 piliers » dans l’Espace facilitateur → Paramètres de calcul. Les scores des composantes, aspects et piliers ne changent pas : seul l’indice global change.</p></section>' +
+      '<section class="card"><h2>4. Plan de travail</h2><ol>' +
+      '<li>Le plan est pré-rempli : 2 activités par faiblesse, 1 par opportunité, 1 activité de maintien par force.</li>' +
+      '<li>Modifiez le texte, le responsable, la période (mois de début et de fin), la priorité et le statut. Les activités modifiées sont conservées lors des mises à jour.</li>' +
+      '<li>Ajoutez vos propres activités sous chaque composante, ou des activités générales.</li>' +
+      '<li>Formulez des indicateurs clairs, avec valeur de base, valeur cible et source de vérification.</li>' +
+      '<li>Si le diagnostic change, cliquez sur « Mettre à jour les activités standard ».</li></ol></section>' +
+      '<section class="card"><h2>5. Rapport PDF</h2><p>La page Rapport présente le rapport individuel : vue d’ensemble, scores détaillés, forces / opportunités / faiblesses, plan et chronogramme. Cliquez sur « Exporter en PDF » puis choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section>' +
+      '<section class="card"><h2>6. Espace facilitateur</h2><p>Chaque organisation exporte son fichier (.json) depuis sa Fiche et l’envoie au facilitateur. Dans l’Espace facilitateur, importez plusieurs fichiers à la fois : le tableau de bord compare toutes les organisations, calcule les moyennes du portefeuille et liste les faiblesses les plus fréquentes. Un fichier ré-importé met à jour l’organisation correspondante.</p>' +
+      '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>';
+  }
+
+  function helpEn(weights) {
+    return '<section class="card"><h2>1. Steps</h2><ol>' +
+      '<li><strong>Profile</strong>: organisation details, assessment sequence and year. Fill this in first.</li>' +
+      '<li><strong>Assessment</strong>: for each of the 33 components, click the description that best matches the current situation (stages 1 to 4).</li>' +
+      '<li><strong>Results</strong>: global index, scores by pillar and aspect, strengths, opportunities and weaknesses.</li>' +
+      '<li><strong>Workplan</strong>: standard activities proposed automatically, to be adapted, plus your own activities, with a timeline.</li>' +
+      '<li><strong>Report</strong>: the organisation’s individual report, to export to PDF.</li></ol></section>' +
+      '<section class="card"><h2>2. Strengths, opportunities and weaknesses</h2><ul>' +
+      '<li><strong>▲ Strength to maintain</strong>: component scored 4.</li>' +
+      '<li><strong>◆ Opportunity to catch</strong>: component scored 3, one step from the top level.</li>' +
+      '<li><strong>▼ Weakness to address</strong>: component scored 1 or 2.</li></ul></section>' +
+      '<section class="card"><h2>3. How scores are calculated</h2><ul>' +
+      '<li>Component: score of the chosen level (1 to 4).</li><li>Aspect: mean of its components.</li>' +
+      '<li>Pillar: mean of its aspects.</li><li>Total score: sum of the 33 components (maximum 132).</li>' +
+      '<li>Mean development index: mean of the 33 components (Excel method, default).</li></ul>' +
+      '<h3>Pillar weights</h3>' +
+      '<p>The Excel file has no weights to enter: the global index is the simple mean of the 33 components. But because pillars have different numbers of components, they do not weigh the same in the index:</p><ul>' + weights + '</ul>' +
+      '<p>Resource management and evaluation therefore counts almost twice as much as governance. If you want each pillar to count equally (25% each) or set your own weights, choose “Weighted mean of the 4 pillars” in Facilitator space → Calculation settings. Component, aspect and pillar scores do not change: only the global index does.</p></section>' +
+      '<section class="card"><h2>4. Workplan</h2><ol>' +
+      '<li>The plan is pre-filled: 2 activities per weakness, 1 per opportunity, 1 maintenance activity per strength.</li>' +
+      '<li>Edit the text, lead, period (start and end month), priority and status. Edited activities are kept when the plan is updated.</li>' +
+      '<li>Add your own activities under each component, or general activities.</li>' +
+      '<li>Write clear indicators with a baseline, a target and a means of verification.</li>' +
+      '<li>If the assessment changes, click “Update standard activities”.</li></ol></section>' +
+      '<section class="card"><h2>5. PDF report</h2><p>The Report page shows the individual report: overview, detailed scores, strengths / opportunities / weaknesses, workplan and timeline. Click “Export to PDF” and choose “Save as PDF” in the print dialog.</p></section>' +
+      '<section class="card"><h2>6. Facilitator space</h2><p>Each organisation exports its file (.json) from its Profile page and sends it to the facilitator. In the Facilitator space, import several files at once: the dashboard compares all organisations, computes portfolio averages and lists the most common weaknesses. Re-importing a file updates the matching organisation.</p>' +
+      '<p>Data is stored in this browser only: back up the space regularly.</p></section>';
+  }
+
+  // ------------------------------------------------------------------ actions
+
+  var A = App.actions;
+
+  A['org-field'] = function (el) {
+    App.org().organization[el.dataset.field] = el.value;
+    App.touch();
+    if (el.dataset.field === 'name') App.renderHeader();
+    App.persist();
+  };
+
+  A['assess-sequence'] = function (el) {
+    App.assessment().sequence = Number(el.value);
+    App.touch();
+    App.persist(true);
+    App.render();
+  };
+
+  A['assess-year'] = function (el) {
+    var y = Number(el.value);
+    if (y >= 2000 && y <= 2100) {
+      App.assessment().year = y;
+      App.touch();
+      App.persist(true);
+      App.renderHeader();
+    }
+  };
+
+  A.answer = function (el) {
+    var a = App.assessment();
+    a.answers[el.name] = Number(el.value);
+    App.touch();
+    var fs = el.closest('.component');
+    fs.querySelector('.component-score').innerHTML = componentScoreText(Number(el.value));
+    App.scores(a).pillars.forEach(function (p) {
+      var badge = view.querySelector('[data-pillar-progress="' + p.id + '"]');
+      if (badge) badge.textContent = p.answered + '/' + p.total;
+    });
+    App.persist(true);
+  };
+
+  A.comment = function (el) {
+    App.assessment().comments[el.dataset.id] = el.value;
+    App.touch();
+    App.persist();
+  };
+
+  A.compare = function (el) {
+    App.ui.compareWith = el.value;
+    App.render();
+  };
+
+  A['activate-assessment'] = function (el) {
+    App.org().activeAssessmentId = el.dataset.id;
+    App.ui.compareWith = null;
+    App.persist(true);
+    App.render();
+  };
+
+  A['delete-assessment'] = function (el) {
+    var org = App.org();
+    var a = org.assessments.filter(function (x) { return x.id === el.dataset.id; })[0];
+    if (!a || org.assessments.length <= 1) return;
+    if (!confirm(App.t('confirm.deleteAssessment', { name: App.assessmentLabel(a) }))) return;
+    org.assessments = org.assessments.filter(function (x) { return x.id !== a.id; });
+    if (org.activeAssessmentId === a.id) org.activeAssessmentId = org.assessments[org.assessments.length - 1].id;
+    App.touch();
+    App.persist(true);
+    App.render();
+  };
+
+  A['new-assessment'] = function () {
+    var org = App.org();
+    var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
+    var a = Store.newAssessment(Math.min(maxSeq + 1, F.SEQUENCES.length), new Date().getFullYear());
+    org.assessments.push(a);
+    org.activeAssessmentId = a.id;
+    App.ui.compareWith = null;
+    App.touch();
+    App.persist(true);
+    if (location.hash === '#profile') App.render(); else location.hash = '#profile';
+  };
+
+  A['export-org'] = function () {
+    var org = App.org();
+    var date = new Date().toISOString().slice(0, 10);
+    App.download('barometer-' + App.slug(org.organization.acronym || org.organization.name) + '-' + date + '.json',
+      JSON.stringify(Store.exportOrg(org), null, 2), 'application/json');
+  };
+
+  A['import-files'] = function (el) {
+    App.readJsonFiles(el.files, function (results) {
+      var orgs = [];
+      var errors = [];
+      results.forEach(function (r) {
+        if (r.error) { errors.push(r.file.name + ': ' + App.t('err.invalid')); return; }
+        try { orgs = orgs.concat(Store.parseImport(r.data).orgs); }
+        catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
+      });
+      if (orgs.length) {
+        var res = Store.mergeOrgs(App.ws, orgs);
+        App.ws.activeOrgId = orgs[orgs.length - 1].id;
+        App.persist(true);
+        App.flash(App.t('fac.imported', res) + (errors.length ? ' — ' + errors.join(' ; ') : ''));
+      } else if (errors.length) {
+        App.flash(App.t('fac.importError', { msg: errors.join(' ; ') }));
+      }
+      App.render();
+    });
+    el.value = '';
+  };
+
+  A['delete-org'] = function (el) {
+    var org = App.ws.orgs.filter(function (o) { return o.id === el.dataset.id; })[0];
+    if (!org || App.ws.orgs.length <= 1) return;
+    if (!confirm(App.t('fac.confirmDelete', { name: App.orgName(org) }))) return;
+    App.ws.orgs = App.ws.orgs.filter(function (o) { return o.id !== org.id; });
+    if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
+    App.persist(true);
+    App.render();
+  };
+
+  A['load-demo'] = function () {
+    var orgs = window.BarometerDemo.build(I18n.getLang());
+    Store.mergeOrgs(App.ws, orgs);
+    App.ws.activeOrgId = orgs[0].id;
+    App.ui.compareWith = null;
+    App.persist(true);
+    App.flash(App.t('demo.loaded', { n: orgs.length }));
+    if (location.hash === '#facilitator') App.render(); else location.hash = '#facilitator';
+  };
+
+  A['export-results'] = function () {
+    var a = App.assessment();
+    var r = App.scores(a);
+    var rows = [[App.t('profile.name'), App.orgName()], [App.t('header.assessment'), App.assessmentLabel(a)], [],
+      ['Pillar / Pilier', App.t('report.aspect'), App.t('report.component'), App.t('score'), App.t('report.currentLevel'), 'Category', App.t('diag.comment')]];
+    F.allComponents().forEach(function (e) {
+      var s = a.answers[e.component.id];
+      rows.push([App.L(e.pillar.name), App.L(e.aspect.name), App.L(e.component.name), s || '',
+        s ? App.L(F.LEVELS[s - 1].label) : '', s ? App.t('cat.' + S.categoryFor(s)) : '', a.comments[e.component.id] || '']);
+    });
+    rows.push([]);
+    r.pillars.forEach(function (p) {
+      p.aspects.forEach(function (asp) { rows.push([App.L(p.name), App.L(asp.name), '', App.num(asp.score)]); });
+      rows.push([App.L(p.name), '', '', App.num(p.score)]);
+    });
+    rows.push([]);
+    rows.push([App.t('results.total'), '', '', r.total + ' / ' + r.maxTotal]);
+    rows.push([App.t('results.index'), '', '', App.num(r.index)]);
+    App.download('results-' + App.slug(App.orgName()) + '-' + a.year + '.csv', App.csv(rows), 'text/csv;charset=utf-8');
+  };
+
+  // ------------------------------------------------------------------ events
+
+  function dispatch(el, e) {
+    var fn = A[el.dataset.on];
+    if (fn) fn(el, e);
+  }
+
+  var TEXT_INPUTS = 'textarea, input[type=text], input[type=email], input[type=tel]';
+
+  view.addEventListener('input', function (e) {
+    var el = e.target;
+    if (el.dataset && el.dataset.on && el.matches(TEXT_INPUTS)) dispatch(el, e);
+  });
+
+  view.addEventListener('change', function (e) {
+    var el = e.target;
+    if (el.dataset && el.dataset.on && !el.matches(TEXT_INPUTS)) dispatch(el, e);
+  });
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-click]');
+    if (!el) return;
+    var fn = A[el.dataset.click];
+    if (fn) { e.preventDefault(); fn(el, e); }
+  });
+
+  App.start = function () {
+    document.getElementById('org-select').addEventListener('change', function (e) {
+      App.ws.activeOrgId = e.target.value;
+      App.ui.compareWith = null;
+      App.persist(true);
+      App.render();
+    });
+    document.getElementById('assessment-select').addEventListener('change', function (e) {
+      App.org().activeAssessmentId = e.target.value;
+      App.ui.compareWith = null;
+      App.persist(true);
+      App.render();
+    });
+    document.querySelectorAll('.lang-switch button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        App.settings().lang = b.getAttribute('data-lang');
+        App.persist(true);
+        App.render();
+      });
+    });
+    window.addEventListener('hashchange', function () { App.render(); window.scrollTo(0, 0); });
+    App.render();
+  };
+})();
