@@ -72,6 +72,7 @@
       '<div class="actions no-print">' +
         '<label class="btn primary">⤒ ' + esc(t('fac.import')) + '<input type="file" accept=".json,application/json" multiple data-on="import-files" hidden></label>' +
         '<button class="btn" data-click="fac-new-org">' + esc(t('fac.newOrg')) + '</button>' +
+        '<button class="btn" data-click="load-demo">▶ ' + esc(t('demo.load')) + '</button>' +
         '<button class="btn" data-click="fac-export-csv">' + esc(t('fac.exportCsv')) + '</button>' +
         '<button class="btn" data-click="fac-print">' + esc(t('print')) + '</button>' +
       '</div></div>';

@@ -276,6 +276,8 @@ textarea { resize: vertical; }
 .step-body { display: flex; flex-direction: column; gap: .2rem; }
 .step-body span { color: var(--muted); font-size: .9rem; }
 .facilitator-link { margin-bottom: 1rem; }
+.demo-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem 1rem; background: var(--c-opportunity-bg); border-color: var(--c-opportunity); }
+.demo-card p { margin: 0; }
 .facilitator-link .step-n { background: #f4e7c5; color: #7a5a00; }
 
 .levels-legend { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }

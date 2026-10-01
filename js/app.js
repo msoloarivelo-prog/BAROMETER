@@ -277,6 +277,8 @@
       }).join('') + '</ol>' +
       '<a href="#facilitator" class="process-step facilitator-link"><span class="step-n">★</span><span class="step-body"><strong>' +
         App.esc(App.t('nav.facilitator')) + '</strong><span>' + App.esc(App.t('step.facilitator')) + '</span></span></a>' +
+      '<section class="card demo-card"><p>' + App.esc(App.t('demo.help')) + '</p>' +
+        '<button class="btn" data-click="load-demo">▶ ' + App.esc(App.t('demo.load')) + '</button></section>' +
       '<section class="card"><h2>' + App.esc(App.t('home.levels')) + '</h2><ol class="levels-legend">' +
       F.LEVELS.map(function (l) {
         return '<li><span class="level-badge level-' + l.value + '">' + l.value + '</span>' + App.esc(App.L(l.label)) + '</li>';
@@ -669,6 +671,16 @@
     if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
     App.persist(true);
     App.render();
+  };
+
+  A['load-demo'] = function () {
+    var orgs = window.BarometerDemo.build(I18n.getLang());
+    Store.mergeOrgs(App.ws, orgs);
+    App.ws.activeOrgId = orgs[0].id;
+    App.ui.compareWith = null;
+    App.persist(true);
+    App.flash(App.t('demo.loaded', { n: orgs.length }));
+    if (location.hash === '#facilitator') App.render(); else location.hash = '#facilitator';
   };
 
   A['export-results'] = function () {

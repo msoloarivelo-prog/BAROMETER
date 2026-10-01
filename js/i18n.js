@@ -211,6 +211,9 @@
       'fac.empty': 'Aucune donnée',
 
       'help.title': 'Aide',
+      'demo.load': 'Charger des données de démonstration',
+      'demo.help': 'Pour tester l’outil rapidement, chargez trois organisations fictives (diagnostics, plans et rapports déjà remplis).',
+      'demo.loaded': '{n} organisations de démonstration chargées.',
       'confirm.deleteAssessment': 'Supprimer définitivement « {name} » ?',
       'err.invalid': 'fichier non reconnu',
       'err.no-assessment': 'aucun diagnostic dans le fichier',
@@ -422,6 +425,9 @@
       'fac.empty': 'No data',
 
       'help.title': 'Help',
+      'demo.load': 'Load demo data',
+      'demo.help': 'To try the tool quickly, load three fictitious organisations (assessments, workplans and reports already filled in).',
+      'demo.loaded': '{n} demo organisations loaded.',
       'confirm.deleteAssessment': 'Permanently delete “{name}”?',
       'err.invalid': 'file not recognised',
       'err.no-assessment': 'no assessment in the file',

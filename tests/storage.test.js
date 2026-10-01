@@ -87,3 +87,19 @@ test('activity months are clamped and ordered', () => {
   assert.deepEqual([acts[0].start, acts[0].end], [9, 9]);
   assert.deepEqual([acts[1].start, acts[1].end], [1, 24]);
 });
+
+test('demo data builds three valid organisations in both languages', () => {
+  const Demo = require('../js/demo.js');
+  for (const lang of ['fr', 'en']) {
+    const orgs = Demo.build(lang);
+    assert.equal(orgs.length, 3);
+    const ws = Storage.newWorkspace();
+    Storage.mergeOrgs(ws, orgs.map((o) => Storage.normalizeOrg(JSON.parse(JSON.stringify(o)))));
+    assert.equal(ws.orgs.length, 3);
+    assert.equal(ws.orgs[0].assessments.length, 2);
+    assert.ok(ws.orgs[0].assessments[1].plan.activities.some((a) => a.source === 'custom'));
+    // Reloading the demo replaces the demo organisations instead of duplicating them
+    Storage.mergeOrgs(ws, Demo.build(lang));
+    assert.equal(ws.orgs.length, 3);
+  }
+});

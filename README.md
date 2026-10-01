@@ -8,6 +8,24 @@ The interface is available in **French and English** (FR / EN switch in the head
 
 No installation is needed. Open `index.html` in a recent browser (Chrome, Edge, Firefox or Safari). The tool works offline. To host it, copy the folder to any static host (GitHub Pages, Netlify, an internal server…).
 
+## Offline test version (single file)
+
+`dist/barometre-offline.html` is the whole tool in **one file** (about 240 KB). Copy it to a USB key or send it by e-mail, then double-click it. It needs no internet access and no other files.
+
+To test quickly, click **Load demo data** on the Home page or in the Facilitator space. This loads three fictitious organisations:
+
+- one with two assessments, an edited workplan and its own activities;
+- one well-established organisation;
+- one whose assessment is still in progress.
+
+You can then explore the results, workplans, reports and the facilitator dashboard. Loading the demo again replaces only the demo organisations.
+
+After changing the source files, regenerate the offline file with:
+
+```
+npm run build
+```
+
 ## Workflow for an organisation
 
 | Step | Page | What happens |
@@ -107,12 +125,15 @@ js/activities.js         standard activity library (bilingual)
 js/scoring.js            scoring, categories, pillar weights (no browser dependency)
 js/storage.js            workspace model, migration, import/export
 js/plan.js               workplan generation and sync
+js/demo.js               demo organisations for testing
 js/charts.js             SVG charts and Gantt timeline
 js/app.js                core, Profile / Assessment / Results / Help views
 js/views-plan.js         Workplan view
 js/views-report.js       Report view and PDF export
 js/views-facilitator.js  Facilitator space
 tests/                   unit tests
+scripts/build-offline.js builds the single-file offline version
+dist/                    offline single-file build (generated)
 ```
 
 ## Tests
