@@ -14,7 +14,7 @@ No installation is needed. Open `index.html` in a recent browser (Chrome, Edge, 
 
 To test quickly, click **Load demo data** on the Home page or in the Facilitator space. This loads three fictitious organisations:
 
-- one with two assessments, an edited workplan and its own activities;
+- one with three half-yearly assessments (to see progress over time), an edited workplan and its own activities;
 - one well-established organisation;
 - one whose assessment is still in progress.
 
@@ -61,6 +61,20 @@ The report contains:
 5. Assessment comments and signature blocks.
 
 **Export to PDF** opens the browser's print dialog; choose *Save as PDF*. The PDF keeps selectable text and needs no internet connection.
+
+## Regular assessments and progress over time
+
+The barometer is meant to be repeated regularly, for example every 6 or 12 months:
+
+- **New assessment** numbers assessments without limit and records the period (year, plus an optional month). It can **pre-fill** the answers from the latest assessment so the organisation only updates what changed.
+- The **Progress** page shows:
+  - the trend of the global index and of each pillar across all periods (line chart);
+  - a comparison table of every period: index, pillars, total, number of strengths, opportunities and weaknesses, and workplan completion, with the change from first to last;
+  - a comparison between **any two periods**: components that improved, declined or stayed stable, weaknesses resolved and new weaknesses;
+  - the follow-up of the earlier period's workplan: completion rate and activities done.
+- The **Report** page offers two modes:
+  - *Assessment report*, for a single period;
+  - *Progress report*, a comparative PDF over the chosen periods.
 
 ## Facilitator space
 
@@ -125,12 +139,14 @@ js/activities.js         standard activity library (bilingual)
 js/scoring.js            scoring, categories, pillar weights (no browser dependency)
 js/storage.js            workspace model, migration, import/export
 js/plan.js               workplan generation and sync
+js/evolution.js          chronology and period-to-period comparison
 js/demo.js               demo organisations for testing
 js/charts.js             SVG charts and Gantt timeline
 js/app.js                core, Profile / Assessment / Results / Help views
 js/views-plan.js         Workplan view
 js/views-report.js       Report view and PDF export
 js/views-facilitator.js  Facilitator space
+js/views-evolution.js    Progress page and comparative report
 tests/                   unit tests
 scripts/build-offline.js builds the single-file offline version
 dist/                    offline single-file build (generated)

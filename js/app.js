@@ -59,18 +59,20 @@
     return org.assessments.filter(function (a) { return a.id === org.activeAssessmentId; })[0] || org.assessments[0];
   };
 
-  /** Most recent assessment: highest sequence, then most recently created. */
+  /** Assessments of an organisation, oldest first (period, year, then sequence). */
+  App.chronological = function (org) { return window.BarometerEvolution.chronological(org.assessments); };
+
+  /** Most recent assessment. */
   App.latestAssessment = function (org) {
-    return org.assessments.slice().sort(function (a, b) {
-      return b.sequence - a.sequence || String(b.createdAt).localeCompare(String(a.createdAt));
-    })[0];
+    var list = App.chronological(org);
+    return list[list.length - 1];
   };
 
-  /** Previous assessment of the same organisation, used as default comparison. */
+  /** Assessment just before `a` in time, used as default comparison. */
   App.previousAssessment = function (org, a) {
-    var older = org.assessments.filter(function (x) { return x.id !== a.id && x.sequence < a.sequence; });
-    older.sort(function (x, y) { return y.sequence - x.sequence; });
-    return older[0] || null;
+    var list = App.chronological(org);
+    var i = list.indexOf(a);
+    return i > 0 ? list[i - 1] : null;
   };
 
   App.scores = function (a) { return S.computeScores(F, a.answers, App.settings()); };
@@ -82,10 +84,30 @@
 
   App.sequenceLabel = function (seq) {
     var s = F.SEQUENCES.filter(function (x) { return x.value === seq; })[0];
-    return s ? App.L(s.label) : '#' + seq;
+    return s ? App.L(s.label) : App.t('seq.n', { n: seq });
   };
 
-  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + a.year; };
+  /** "mars 2027" when a month is set, otherwise the year. */
+  App.periodLabel = function (a) {
+    if (a.period) {
+      var d = new Date(Number(a.period.slice(0, 4)), Number(a.period.slice(5, 7)) - 1, 1);
+      try { return d.toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { month: 'long', year: 'numeric' }); }
+      catch (e) { return a.period; }
+    }
+    return String(a.year);
+  };
+
+  /** Short period label for chart axes. */
+  App.periodShort = function (a) {
+    if (a.period) {
+      var d = new Date(Number(a.period.slice(0, 4)), Number(a.period.slice(5, 7)) - 1, 1);
+      try { return d.toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { month: 'short', year: 'numeric' }); }
+      catch (e) { return a.period; }
+    }
+    return String(a.year);
+  };
+
+  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a); };
 
   App.levelBadge = function (score) {
     return score ? '<span class="level-badge level-' + score + '">' + score + '</span>' : '<span class="tag">' + App.esc(App.t('notAnswered')) + '</span>';
@@ -304,18 +326,18 @@
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
         '<label class="field"><span>' + App.esc(App.t('profile.sequence')) + '</span><select data-on="assess-sequence">' +
-          F.SEQUENCES.map(function (s) {
-            return '<option value="' + s.value + '"' + (s.value === a.sequence ? ' selected' : '') + '>' + App.esc(App.L(s.label)) + '</option>';
-          }).join('') +
+          seqOptions(org, a) +
         '</select></label>' +
         '<label class="field"><span>' + App.esc(App.t('profile.year')) + '</span>' +
           '<input type="number" min="2000" max="2100" data-on="assess-year" value="' + App.esc(a.year) + '"></label>' +
+        '<label class="field"><span>' + App.esc(App.t('profile.month')) + '</span><select data-on="assess-month">' +
+          monthOptions(a) + '</select></label>' +
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.history')) + '</h2>' +
         '<p class="muted">' + App.esc(App.t('profile.historyHelp')) + '</p>' +
         '<div class="table-wrap"><table class="table"><thead><tr><th>' + App.esc(App.t('header.assessment')) + '</th><th>' + App.esc(App.t('profile.progress')) +
         '</th><th>' + App.esc(App.t('profile.index')) + '</th><th></th></tr></thead><tbody>' +
-        org.assessments.map(function (x) {
+        App.chronological(org).map(function (x) {
           var r = App.scores(x);
           return '<tr' + (x.id === a.id ? ' class="current"' : '') + '><td>' + App.esc(App.assessmentLabel(x)) + '</td>' +
             '<td>' + r.answered + ' / ' + r.totalComponents + '</td>' +
@@ -338,6 +360,27 @@
       '</section>'
     );
   };
+
+  function seqOptions(org, a) {
+    var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
+    var out = '';
+    for (var s = 1; s <= Math.max(maxSeq + 1, 4); s++) {
+      out += '<option value="' + s + '"' + (s === a.sequence ? ' selected' : '') + '>' + App.esc(App.sequenceLabel(s)) + '</option>';
+    }
+    return out;
+  }
+
+  function monthOptions(a) {
+    var current = a.period ? Number(a.period.slice(5, 7)) : 0;
+    var out = '<option value="">—</option>';
+    for (var m = 1; m <= 12; m++) {
+      var name;
+      try { name = new Date(2000, m - 1, 1).toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { month: 'long' }); }
+      catch (e) { name = String(m); }
+      out += '<option value="' + m + '"' + (m === current ? ' selected' : '') + '>' + App.esc(name) + '</option>';
+    }
+    return out;
+  }
 
   // ------------------------------------------------------------------ assessment
 
@@ -517,6 +560,7 @@
       '<li>Ajoutez vos propres activités sous chaque composante, ou des activités générales.</li>' +
       '<li>Formulez des indicateurs clairs, avec valeur de base, valeur cible et source de vérification.</li>' +
       '<li>Si le diagnostic change, cliquez sur « Mettre à jour les activités standard ».</li></ol></section>' +
+      '<section class="card"><h2>Diagnostic régulier et évolution</h2><p>Refaites le diagnostic à intervalle régulier (par exemple tous les 6 ou 12 mois) avec « Nouveau diagnostic » : vous pouvez partir des réponses précédentes puis les ajuster. La page <strong>Évolution</strong> montre la courbe de l’indice et des piliers, le tableau comparatif de toutes les périodes, les composantes en progrès ou en recul entre deux périodes au choix, et le taux de réalisation du plan de travail. Le <strong>Rapport d’évolution</strong> (page Rapport) reprend ces éléments en PDF.</p></section>' +
       '<section class="card"><h2>5. Rapport PDF</h2><p>La page Rapport présente le rapport individuel : vue d’ensemble, scores détaillés, forces / opportunités / faiblesses, plan et chronogramme. Cliquez sur « Exporter en PDF » puis choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section>' +
       '<section class="card"><h2>6. Espace facilitateur</h2><p>Chaque organisation exporte son fichier (.json) depuis sa Fiche et l’envoie au facilitateur. Dans l’Espace facilitateur, importez plusieurs fichiers à la fois : le tableau de bord compare toutes les organisations, calcule les moyennes du portefeuille et liste les faiblesses les plus fréquentes. Un fichier ré-importé met à jour l’organisation correspondante.</p>' +
       '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>';
@@ -546,6 +590,7 @@
       '<li>Add your own activities under each component, or general activities.</li>' +
       '<li>Write clear indicators with a baseline, a target and a means of verification.</li>' +
       '<li>If the assessment changes, click “Update standard activities”.</li></ol></section>' +
+      '<section class="card"><h2>Regular assessments and progress</h2><p>Repeat the assessment at regular intervals (for example every 6 or 12 months) with “New assessment”: you can start from the previous answers and adjust them. The <strong>Progress</strong> page shows the trend of the index and pillars, a comparison table of all periods, the components that improved or declined between any two periods, and how much of the workplan was completed. The <strong>Progress report</strong> (Report page) puts this into a PDF.</p></section>' +
       '<section class="card"><h2>5. PDF report</h2><p>The Report page shows the individual report: overview, detailed scores, strengths / opportunities / weaknesses, workplan and timeline. Click “Export to PDF” and choose “Save as PDF” in the print dialog.</p></section>' +
       '<section class="card"><h2>6. Facilitator space</h2><p>Each organisation exports its file (.json) from its Profile page and sends it to the facilitator. In the Facilitator space, import several files at once: the dashboard compares all organisations, computes portfolio averages and lists the most common weaknesses. Re-importing a file updates the matching organisation.</p>' +
       '<p>Data is stored in this browser only: back up the space regularly.</p></section>';
@@ -572,11 +617,22 @@
   A['assess-year'] = function (el) {
     var y = Number(el.value);
     if (y >= 2000 && y <= 2100) {
-      App.assessment().year = y;
+      var a = App.assessment();
+      a.year = y;
+      if (a.period) a.period = y + a.period.slice(4);
       App.touch();
       App.persist(true);
       App.renderHeader();
     }
+  };
+
+  A['assess-month'] = function (el) {
+    var a = App.assessment();
+    var m = Number(el.value);
+    a.period = m >= 1 && m <= 12 ? a.year + '-' + (m < 10 ? '0' : '') + m : '';
+    App.touch();
+    App.persist(true);
+    App.renderHeader();
   };
 
   A.answer = function (el) {
@@ -625,7 +681,13 @@
   A['new-assessment'] = function () {
     var org = App.org();
     var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
-    var a = Store.newAssessment(Math.min(maxSeq + 1, F.SEQUENCES.length), new Date().getFullYear());
+    var a = Store.newAssessment(maxSeq + 1, new Date().getFullYear());
+    var now = new Date();
+    a.period = now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1);
+    var last = App.latestAssessment(org);
+    if (last && Object.keys(last.answers).length && confirm(App.t('confirm.prefill', { name: App.assessmentLabel(last) }))) {
+      Object.keys(last.answers).forEach(function (k) { a.answers[k] = last.answers[k]; });
+    }
     org.assessments.push(a);
     org.activeAssessmentId = a.id;
     App.ui.compareWith = null;

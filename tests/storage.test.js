@@ -96,8 +96,8 @@ test('demo data builds three valid organisations in both languages', () => {
     const ws = Storage.newWorkspace();
     Storage.mergeOrgs(ws, orgs.map((o) => Storage.normalizeOrg(JSON.parse(JSON.stringify(o)))));
     assert.equal(ws.orgs.length, 3);
-    assert.equal(ws.orgs[0].assessments.length, 2);
-    assert.ok(ws.orgs[0].assessments[1].plan.activities.some((a) => a.source === 'custom'));
+    assert.equal(ws.orgs[0].assessments.length, 3);
+    assert.ok(ws.orgs[0].assessments[2].plan.activities.some((a) => a.source === 'custom'));
     // Reloading the demo replaces the demo organisations instead of duplicating them
     Storage.mergeOrgs(ws, Demo.build(lang));
     assert.equal(ws.orgs.length, 3);

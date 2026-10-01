@@ -129,5 +129,57 @@
     return html + '</div>';
   }
 
-  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, fmt: fmt };
+  /**
+   * Line chart over periods (SVG).
+   * series: [{ label, color, values: [number|null], width?, dashed? }]; xLabels: [string]; max: y maximum.
+   */
+  function lines(series, xLabels, max, options) {
+    options = options || {};
+    var W = options.width || 720;
+    var H = options.height || 260;
+    var padL = 34, padR = 16, padT = 14, padB = 40;
+    var n = xLabels.length;
+    var plotW = W - padL - padR;
+    var plotH = H - padT - padB;
+    function x(i) { return padL + (n <= 1 ? plotW / 2 : (i / (n - 1)) * plotW); }
+    function y(v) { return padT + plotH - (v / max) * plotH; }
+
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart-lines', role: 'img', 'aria-label': options.label || '' });
+    for (var g = 0; g <= max; g++) {
+      svg.appendChild(el('line', { x1: padL, x2: W - padR, y1: y(g), y2: y(g), class: 'grid' }));
+      svg.appendChild(el('text', { x: padL - 8, y: y(g) + 4, 'text-anchor': 'end', class: 'axis' }, String(g)));
+    }
+    xLabels.forEach(function (lab, i) {
+      svg.appendChild(el('text', { x: x(i), y: H - padB + 18, 'text-anchor': 'middle', class: 'axis' }, lab));
+    });
+    series.forEach(function (s) {
+      var pts = [];
+      s.values.forEach(function (v, i) { if (v !== null && v !== undefined) pts.push([x(i), y(v), v]); });
+      if (pts.length > 1) {
+        svg.appendChild(el('polyline', {
+          points: pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' '),
+          fill: 'none', stroke: s.color, 'stroke-width': s.width || 2.5,
+          'stroke-dasharray': s.dashed ? '6 4' : 'none', 'stroke-linejoin': 'round', 'stroke-linecap': 'round'
+        }));
+      }
+      pts.forEach(function (p) {
+        svg.appendChild(el('circle', { cx: p[0], cy: p[1], r: s.width ? s.width + 1.5 : 4, fill: s.color }));
+        if (s.showValues) {
+          svg.appendChild(el('text', { x: p[0], y: p[1] - 10, 'text-anchor': 'middle', class: 'point-value', fill: s.color }, fmt(p[2], 2)));
+        }
+      });
+    });
+    var wrap = document.createElement('div');
+    wrap.className = 'lines-wrap';
+    wrap.appendChild(svg);
+    var legend = document.createElement('div');
+    legend.className = 'chart-legend';
+    legend.innerHTML = series.map(function (s) {
+      return '<span><i style="background:' + s.color + (s.dashed ? ';opacity:.6' : '') + '"></i>' + String(s.label).replace(/</g, '&lt;') + '</span>';
+    }).join('');
+    wrap.appendChild(legend);
+    return wrap;
+  }
+
+  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, lines: lines, fmt: fmt };
 })(this);

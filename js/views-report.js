@@ -35,7 +35,23 @@
     }).join('') + (items.length > n ? '<li class="muted small">+ ' + (items.length - n) + '</li>' : '') + '</ul>';
   }
 
+  function reportHead() {
+    var mode = App.ui.reportMode === 'evolution' ? 'evolution' : 'single';
+    return '<div class="page-head no-print"><div><h1>' + esc(t('nav.report')) + '</h1>' +
+      '<p class="muted">' + esc(t('report.exportHelp')) + '</p></div>' +
+      '<div class="actions">' +
+        '<div class="segmented" role="group">' +
+          '<button class="' + (mode === 'single' ? 'active' : '') + '" data-click="report-mode" data-mode="single">' + esc(t('report.modeSingle')) + '</button>' +
+          '<button class="' + (mode === 'evolution' ? 'active' : '') + '" data-click="report-mode" data-mode="evolution">' + esc(t('report.modeEvolution')) + '</button>' +
+        '</div>' +
+        '<button class="btn primary" data-click="report-pdf">⤓ ' + esc(t('report.export')) + '</button></div></div>';
+  }
+
   App.views.report = function () {
+    if (App.ui.reportMode === 'evolution') {
+      App.renderEvolutionReport(reportHead());
+      return;
+    }
     var org = App.org();
     var o = org.organization;
     var a = App.assessment();
@@ -53,9 +69,7 @@
     var st = Plan.stats(a.plan);
     var labels = App.monthLabels(a.plan);
 
-    var html = '<div class="page-head no-print"><div><h1>' + esc(t('nav.report')) + '</h1>' +
-      '<p class="muted">' + esc(t('report.exportHelp')) + '</p></div>' +
-      '<div class="actions"><button class="btn primary" data-click="report-pdf">⤓ ' + esc(t('report.export')) + '</button></div></div>';
+    var html = reportHead();
 
     if (!r.complete) {
       html += '<div class="notice no-print">' + esc(t('results.incomplete', { n: r.answered, total: r.totalComponents })) +
@@ -205,10 +219,16 @@
     }), F.MAX_SCORE));
   };
 
+  A['report-mode'] = function (el) {
+    App.ui.reportMode = el.dataset.mode === 'evolution' ? 'evolution' : 'single';
+    if (location.hash === '#report') App.render(); else location.hash = '#report';
+  };
+
   A['report-pdf'] = function () {
     var a = App.assessment();
     var previous = document.title;
-    document.title = (t('nav.report') + '-' + App.slug(App.org().organization.acronym || App.orgName()) + '-' + a.year).replace(/\s+/g, '-');
+    var kind = App.ui.reportMode === 'evolution' ? t('report.modeEvolution') : t('nav.report');
+    document.title = (kind + '-' + App.slug(App.org().organization.acronym || App.orgName()) + '-' + a.year).replace(/\s+/g, '-');
     var restore = function () { document.title = previous; window.removeEventListener('afterprint', restore); };
     window.addEventListener('afterprint', restore);
     window.print();

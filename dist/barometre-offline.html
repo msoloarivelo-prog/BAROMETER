@@ -501,6 +501,41 @@ textarea { resize: vertical; }
 .weights input { width: 5rem; }
 .dot { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; margin-right: .5rem; vertical-align: middle; }
 
+/* ------------------------------------------------------------ evolution */
+
+.evo-summary { grid-template-columns: repeat(4, 1fr); }
+.segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.segmented button { border: 0; background: var(--surface); color: var(--text); padding: .45rem .8rem; font: inherit; font-size: .9rem; cursor: pointer; }
+.segmented button + button { border-left: 1px solid var(--border); }
+.segmented button.active { background: var(--accent); color: var(--accent-text); }
+.evo-selectors { display: flex; flex-wrap: wrap; gap: .6rem 1rem; margin-bottom: .6rem; }
+.evo-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; margin-bottom: .6rem; }
+.evo-kpi { border: 1px solid var(--border); border-radius: 8px; padding: .6rem .8rem; display: flex; flex-direction: column; }
+.evo-kpi strong { font-size: 1.6rem; line-height: 1.1; }
+.evo-kpi span { font-size: .8rem; color: var(--muted); }
+.evo-kpi.up strong { color: var(--ok); }
+.evo-kpi.down strong { color: var(--danger); }
+.evo-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .6rem; }
+.evo-list h3 { margin: .4rem 0; display: flex; gap: .5rem; align-items: baseline; }
+.evo-list.up h3 { color: var(--ok); }
+.evo-list.down h3 { color: var(--danger); }
+.evo-list .level-badge { min-width: 1.35rem; height: 1.35rem; font-size: .75rem; }
+.period-table td, .period-table th { white-space: nowrap; }
+.period-table td:first-child { white-space: normal; }
+.done-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .3rem; }
+.lines-wrap { width: 100%; }
+.chart-lines { width: 100%; height: auto; display: block; }
+.chart-lines .grid { stroke: var(--border); stroke-width: 1; }
+.chart-lines .axis { fill: var(--muted); font-size: 12px; }
+.chart-lines .point-value { font-size: 12px; font-weight: 700; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .85rem; margin-top: .3rem; }
+.chart-legend i { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-right: .4rem; vertical-align: middle; }
+.report .evo-kpi strong { font-size: 15pt; }
+.report .evo-kpis { gap: 2mm; }
+.report .evo-columns { gap: 4mm; }
+.report .evo-list h3 { font-size: 10.5pt; }
+.report .chart-lines .axis { font-size: 11px; }
+
 /* ------------------------------------------------------------ report (screen = A4 preview) */
 
 .report { display: grid; gap: 1.5rem; justify-content: center; }
@@ -607,7 +642,9 @@ textarea { resize: vertical; }
 
 @media (max-width: 900px) {
   .summary { grid-template-columns: 1fr 1fr; }
-  .fac-summary { grid-template-columns: 1fr 1fr; }
+  .fac-summary, .evo-summary { grid-template-columns: 1fr 1fr; }
+  .evo-kpis { grid-template-columns: repeat(3, 1fr); }
+  .evo-columns { grid-template-columns: 1fr; }
   .kpi-wide { grid-column: 1 / -1; }
   .pillar-grid, .swot-grid, .fac-grid { grid-template-columns: 1fr; }
   .levels { grid-template-columns: repeat(2, 1fr); }
@@ -619,9 +656,14 @@ textarea { resize: vertical; }
 
 @media (max-width: 600px) {
   .app-header { position: static; }
-  .context-switch select { min-width: 0; max-width: 100%; }
-  .context-switch label { flex: 1; }
-  .summary, .fac-summary { grid-template-columns: 1fr; }
+  .context-switch { flex: 1 1 100%; width: 100%; min-width: 0; order: 3; }
+  .context-switch label { flex: 1 1 140px; min-width: 0; }
+  .context-switch select { min-width: 0; max-width: 100%; width: 100%; }
+  .context-switch .btn { flex: 1 1 100%; justify-content: center; }
+  .inline-field { flex-wrap: wrap; max-width: 100%; }
+  .inline-field select { min-width: 0; max-width: 100%; }
+  .summary, .fac-summary, .evo-summary { grid-template-columns: 1fr; }
+  .evo-kpis { grid-template-columns: 1fr 1fr; }
   .levels { grid-template-columns: 1fr; }
   .pillar-body { flex-direction: column; align-items: stretch; }
   .donut-slot { align-self: center; }
@@ -649,6 +691,10 @@ textarea { resize: vertical; }
   .report-table tr, .report-item { break-inside: avoid; }
   .table-wrap { overflow: visible; }
   .portfolio th:last-child, .portfolio td:last-child { display: none; }
+  .report .evo-columns { grid-template-columns: 1fr 1fr; }
+  .report .evo-kpis { grid-template-columns: repeat(5, 1fr); }
+  .report .report-kpis { grid-template-columns: 1.4fr 1fr 1fr; }
+  .report .report-swot { grid-template-columns: repeat(3, 1fr); }
 }
 
 </style>
@@ -683,6 +729,7 @@ textarea { resize: vertical; }
       <a href="#profile" data-route="profile"><span>0</span> <b data-i18n="nav.profile">Fiche</b></a>
       <a href="#assessment/gov" data-route="assessment"><span>1</span> <b data-i18n="nav.assessment">Diagnostic</b></a>
       <a href="#results" data-route="results"><span>2</span> <b data-i18n="nav.results">Résultats</b></a>
+      <a href="#evolution" data-route="evolution"><span>↗</span> <b data-i18n="nav.evolution">Évolution</b></a>
       <a href="#plan" data-route="plan"><span>3</span> <b data-i18n="nav.plan">Plan de travail</b></a>
       <a href="#report" data-route="report"><span>4</span> <b data-i18n="nav.report">Rapport</b></a>
       <a href="#facilitator" data-route="facilitator" class="nav-facilitator"><span>★</span> <b data-i18n="nav.facilitator">Espace facilitateur</b></a>
@@ -775,7 +822,7 @@ textarea { resize: vertical; }
       'profile.email': 'E-mail',
       'profile.current': 'Diagnostic en cours',
       'profile.sequence': 'Séquence de diagnostic',
-      'profile.year': 'Année de mise en œuvre du diagnostic',
+      'profile.year': 'Année du diagnostic',
       'profile.history': 'Historique des diagnostics',
       'profile.historyHelp': 'Chaque diagnostic conserve ses réponses et son plan, ce qui permet de suivre l’évolution de l’organisation dans le temps.',
       'profile.progress': 'Avancement',
@@ -909,6 +956,44 @@ textarea { resize: vertical; }
       'fac.empty': 'Aucune donnée',
 
       'help.title': 'Aide',
+      'nav.evolution': 'Évolution',
+      'seq.n': 'Diagnostic n°{n}',
+      'profile.month': 'Mois (facultatif)',
+      'confirm.prefill': 'Pré-remplir ce nouveau diagnostic avec les réponses de « {name} » ? (Vous pourrez ensuite modifier chaque réponse.)',
+      'report.modeSingle': 'Rapport du diagnostic',
+      'report.modeEvolution': 'Rapport d’évolution',
+      'evo.title': 'Évolution dans le temps',
+      'evo.intro': 'Le baromètre est conçu pour un diagnostic régulier (par exemple tous les 6 ou 12 mois). Cette page suit le développement de l’organisation d’une période à l’autre.',
+      'evo.count': '{n} diagnostic(s)',
+      'evo.toReport': 'Rapport comparatif',
+      'evo.needTwo': 'Il faut au moins deux diagnostics pour suivre l’évolution. Créez un nouveau diagnostic à la période suivante (bouton « Nouveau diagnostic »).',
+      'evo.first': 'Premier indice',
+      'evo.latest': 'Dernier indice',
+      'evo.change': 'Évolution de l’indice',
+      'evo.assessments': 'Diagnostics',
+      'evo.period': 'Période couverte',
+      'evo.chart': 'Évolution de l’indice et des piliers',
+      'evo.table': 'Tableau comparatif par période',
+      'evo.planDone': 'Plan de travail réalisé (%)',
+      'evo.compare': 'Comparaison entre deux périodes',
+      'evo.from': 'De',
+      'evo.to': 'À',
+      'evo.improved': 'composantes en progrès',
+      'evo.declined': 'composantes en recul',
+      'evo.stable': 'composantes stables',
+      'evo.resolved': 'faiblesses corrigées',
+      'evo.newWeak': 'nouvelles faiblesses',
+      'evo.notCompared': '{n} composante(s) non comparée(s) car non renseignée(s) dans l’une des deux périodes.',
+      'evo.improvedList': 'En progrès',
+      'evo.declinedList': 'En recul',
+      'evo.resolvedList': 'Faiblesses corrigées',
+      'evo.newWeakList': 'Nouvelles faiblesses',
+      'evo.followUp': 'Suivi du plan de travail',
+      'evo.noPlan': 'Aucun plan de travail pour cette période.',
+      'evo.followUpSentence': 'Plan de travail de « {period} » : {done} activité(s) réalisée(s) et {ongoing} en cours sur {total}, soit {rate} % de réalisation.',
+      'evo.doneList': 'Activités réalisées',
+      'evo.reportTitle': 'Rapport d’évolution organisationnelle',
+      'evo.summarySentence': 'L’indice moyen de développement de {org} est passé de {first} ({from}) à {last} ({to}). Entre les deux dernières périodes comparées, {resolved} faiblesse(s) ont été corrigée(s) et {newWeak} nouvelle(s) faiblesse(s) sont apparue(s).',
       'demo.load': 'Charger des données de démonstration',
       'demo.help': 'Pour tester l’outil rapidement, chargez trois organisations fictives (diagnostics, plans et rapports déjà remplis).',
       'demo.loaded': '{n} organisations de démonstration chargées.',
@@ -1123,6 +1208,44 @@ textarea { resize: vertical; }
       'fac.empty': 'No data',
 
       'help.title': 'Help',
+      'nav.evolution': 'Progress',
+      'seq.n': 'Assessment #{n}',
+      'profile.month': 'Month (optional)',
+      'confirm.prefill': 'Pre-fill this new assessment with the answers of “{name}”? (You can then change every answer.)',
+      'report.modeSingle': 'Assessment report',
+      'report.modeEvolution': 'Progress report',
+      'evo.title': 'Progress over time',
+      'evo.intro': 'The barometer is designed for regular assessments (for example every 6 or 12 months). This page tracks the organisation’s development from one period to the next.',
+      'evo.count': '{n} assessment(s)',
+      'evo.toReport': 'Comparative report',
+      'evo.needTwo': 'At least two assessments are needed to track progress. Create a new assessment at the next period (“New assessment” button).',
+      'evo.first': 'First index',
+      'evo.latest': 'Latest index',
+      'evo.change': 'Change in index',
+      'evo.assessments': 'Assessments',
+      'evo.period': 'Period covered',
+      'evo.chart': 'Index and pillars over time',
+      'evo.table': 'Comparison table by period',
+      'evo.planDone': 'Workplan completed (%)',
+      'evo.compare': 'Comparison between two periods',
+      'evo.from': 'From',
+      'evo.to': 'To',
+      'evo.improved': 'components improved',
+      'evo.declined': 'components declined',
+      'evo.stable': 'components stable',
+      'evo.resolved': 'weaknesses resolved',
+      'evo.newWeak': 'new weaknesses',
+      'evo.notCompared': '{n} component(s) not compared because they were not answered in one of the two periods.',
+      'evo.improvedList': 'Improved',
+      'evo.declinedList': 'Declined',
+      'evo.resolvedList': 'Weaknesses resolved',
+      'evo.newWeakList': 'New weaknesses',
+      'evo.followUp': 'Workplan follow-up',
+      'evo.noPlan': 'No workplan for this period.',
+      'evo.followUpSentence': 'Workplan of “{period}”: {done} activity(ies) done and {ongoing} ongoing out of {total}, i.e. {rate}% completed.',
+      'evo.doneList': 'Activities completed',
+      'evo.reportTitle': 'Organisational progress report',
+      'evo.summarySentence': 'The mean development index of {org} went from {first} ({from}) to {last} ({to}). Between the two periods compared, {resolved} weakness(es) were resolved and {newWeak} new weakness(es) appeared.',
       'demo.load': 'Load demo data',
       'demo.help': 'To try the tool quickly, load three fictitious organisations (assessments, workplans and reports already filled in).',
       'demo.loaded': '{n} demo organisations loaded.',
@@ -2566,6 +2689,7 @@ textarea { resize: vertical; }
       id: uid('a'),
       sequence: sequence || 1,
       year: year || new Date().getFullYear(),
+      period: '',
       createdAt: new Date().toISOString(),
       answers: {},
       comments: {},
@@ -2662,6 +2786,8 @@ textarea { resize: vertical; }
     var base = newAssessment(Number(a.sequence) || 1, Number(a.year) || new Date().getFullYear());
     if (typeof a.id === 'string' && a.id) base.id = a.id;
     base.createdAt = a.createdAt || base.createdAt;
+    base.period = /^\d{4}-(0[1-9]|1[0-2])$/.test(a.period || '') ? a.period : '';
+    if (base.period) base.year = Number(base.period.slice(0, 4));
     Object.keys(a.answers || {}).forEach(function (k) {
       var v = Number(a.answers[k]);
       if (v >= 1 && v <= 4 && Math.floor(v) === v) base.answers[k] = v;
@@ -2995,6 +3121,94 @@ textarea { resize: vertical; }
 
 </script>
   <script>
+/* js/evolution.js */
+/*
+ * Evolution over time: an organisation runs the assessment regularly
+ * (e.g. every 6 or 12 months). This module orders its assessments
+ * chronologically and compares them period by period.
+ */
+(function (root) {
+  'use strict';
+
+  var isNode = typeof module !== 'undefined' && module.exports;
+  var Scoring = isNode ? require('./scoring.js') : root.BarometerScoring;
+  var Plan = isNode ? require('./plan.js') : root.BarometerPlan;
+
+  /** Sort key: period (YYYY-MM) if set, otherwise the year, then the sequence number. */
+  function sortKey(a) {
+    var p = /^\d{4}-\d{2}$/.test(a.period || '') ? a.period : String(a.year) + '-00';
+    return p + '#' + String(1000 + (a.sequence || 0));
+  }
+
+  function chronological(assessments) {
+    return assessments.slice().sort(function (a, b) { return sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0; });
+  }
+
+  /** Scores of every assessment, oldest first. */
+  function timeline(framework, assessments, settings) {
+    return chronological(assessments).map(function (a) {
+      return { assessment: a, scores: Scoring.computeScores(framework, a.answers, settings) };
+    });
+  }
+
+  /**
+   * Component-by-component comparison between two assessments.
+   * Returns improved / declined / stable lists plus category transitions:
+   * weaknesses resolved (was 1-2, now 3-4) and new weaknesses (now 1-2, was 3-4).
+   */
+  function componentChanges(framework, fromAnswers, toAnswers) {
+    var out = { improved: [], declined: [], stable: [], resolvedWeaknesses: [], newWeaknesses: [], newStrengths: [], lostStrengths: [], notCompared: 0 };
+    framework.allComponents().forEach(function (e) {
+      var from = fromAnswers[e.component.id];
+      var to = toAnswers[e.component.id];
+      if (!from || !to) { out.notCompared++; return; }
+      var item = {
+        pillar: e.pillar,
+        aspect: e.aspect,
+        component: e.component,
+        from: from,
+        to: to,
+        delta: to - from,
+        fromCategory: Scoring.categoryFor(from, framework.MAX_SCORE),
+        toCategory: Scoring.categoryFor(to, framework.MAX_SCORE)
+      };
+      if (item.delta > 0) out.improved.push(item);
+      else if (item.delta < 0) out.declined.push(item);
+      else out.stable.push(item);
+      if (item.fromCategory === 'address' && item.toCategory !== 'address') out.resolvedWeaknesses.push(item);
+      if (item.fromCategory !== 'address' && item.toCategory === 'address') out.newWeaknesses.push(item);
+      if (item.fromCategory !== 'maintain' && item.toCategory === 'maintain') out.newStrengths.push(item);
+      if (item.fromCategory === 'maintain' && item.toCategory !== 'maintain') out.lostStrengths.push(item);
+    });
+    out.improved.sort(function (a, b) { return b.delta - a.delta; });
+    out.declined.sort(function (a, b) { return a.delta - b.delta; });
+    return out;
+  }
+
+  /** How far the workplan of a period was carried out. */
+  function planFollowUp(assessment) {
+    var s = Plan.stats(assessment.plan);
+    var done = assessment.plan.activities.filter(function (a) { return a.status === 'done'; });
+    return { stats: s, done: done, rate: s.total ? s.done / s.total : null };
+  }
+
+  var Evolution = {
+    sortKey: sortKey,
+    chronological: chronological,
+    timeline: timeline,
+    componentChanges: componentChanges,
+    planFollowUp: planFollowUp
+  };
+
+  if (isNode) {
+    module.exports = Evolution;
+  } else {
+    root.BarometerEvolution = Evolution;
+  }
+})(this);
+
+</script>
+  <script>
 /* js/demo.js */
 /*
  * Demo data for testing the tool: three fictitious organisations with
@@ -3037,16 +3251,28 @@ textarea { resize: vertical; }
     var en = lang === 'en';
 
     // 1. Young network: weak systems and finances, strong mission and team spirit.
-    var a1 = assessment(1, 2025, answers(function (e, i) {
+    var a0 = assessment(1, 2025, answers(function (e, i) {
+      if (e.pillar.id === 'fin') return 1;
+      if (e.pillar.id === 'plan') return [1, 1, 2, 2][i % 4];
+      if (e.aspect.id === 'gov-mission') return 2;
+      return [1, 2, 2][i % 3];
+    }), '2025-01');
+    a0.period = '2025-01';
+    a0.plan.activities.forEach(function (act, i) { act.status = i % 3 === 2 ? 'planned' : 'done'; act.edited = true; });
+
+    var a1 = assessment(2, 2025, answers(function (e, i) {
       if (e.pillar.id === 'fin') return 1 + (i % 2);
       if (e.pillar.id === 'plan') return [1, 2, 2, 3][i % 4];
       if (e.aspect.id === 'gov-mission') return 3;
       return [2, 3, 2][i % 3];
     }), '2025-07');
-    var a2 = assessment(2, 2026, answers(function (e, i) {
+    a1.period = '2025-07';
+    a1.plan.activities.forEach(function (act, i) { act.status = i % 4 === 3 ? 'ongoing' : 'done'; act.edited = true; });
+    var a2 = assessment(3, 2026, answers(function (e, i) {
       var before = a1.answers[e.component.id];
       return Math.min(4, before + (i % 3 === 0 ? 0 : 1));
     }), '2026-07');
+    a2.period = '2026-01';
     a2.comments['fin-management-audit'] = en ? 'First external audit completed in March 2026.' : 'Premier audit externe réalisé en mars 2026.';
     a2.plan.challenges['fin-vulnerability-diversity'] = en
       ? 'Reduce dependence on the main donor (currently 75% of the budget).'
@@ -3068,7 +3294,7 @@ textarea { resize: vertical; }
       name: en ? 'Women Farmers Network (demo)' : 'Réseau des Femmes Agricultrices (démo)',
       acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', region: 'Analamanga',
       address: 'Antananarivo', focalPoint: 'Hanta R.', phone: '+261 34 00 000 01', email: 'contact@example.org'
-    }, [a1, a2]);
+    }, [a0, a1, a2]);
 
     // 2. Well-established NGO: mostly strong, a few opportunities.
     var o2 = org('demo-org-2', {
@@ -3230,7 +3456,59 @@ textarea { resize: vertical; }
     return html + '</div>';
   }
 
-  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, fmt: fmt };
+  /**
+   * Line chart over periods (SVG).
+   * series: [{ label, color, values: [number|null], width?, dashed? }]; xLabels: [string]; max: y maximum.
+   */
+  function lines(series, xLabels, max, options) {
+    options = options || {};
+    var W = options.width || 720;
+    var H = options.height || 260;
+    var padL = 34, padR = 16, padT = 14, padB = 40;
+    var n = xLabels.length;
+    var plotW = W - padL - padR;
+    var plotH = H - padT - padB;
+    function x(i) { return padL + (n <= 1 ? plotW / 2 : (i / (n - 1)) * plotW); }
+    function y(v) { return padT + plotH - (v / max) * plotH; }
+
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart-lines', role: 'img', 'aria-label': options.label || '' });
+    for (var g = 0; g <= max; g++) {
+      svg.appendChild(el('line', { x1: padL, x2: W - padR, y1: y(g), y2: y(g), class: 'grid' }));
+      svg.appendChild(el('text', { x: padL - 8, y: y(g) + 4, 'text-anchor': 'end', class: 'axis' }, String(g)));
+    }
+    xLabels.forEach(function (lab, i) {
+      svg.appendChild(el('text', { x: x(i), y: H - padB + 18, 'text-anchor': 'middle', class: 'axis' }, lab));
+    });
+    series.forEach(function (s) {
+      var pts = [];
+      s.values.forEach(function (v, i) { if (v !== null && v !== undefined) pts.push([x(i), y(v), v]); });
+      if (pts.length > 1) {
+        svg.appendChild(el('polyline', {
+          points: pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' '),
+          fill: 'none', stroke: s.color, 'stroke-width': s.width || 2.5,
+          'stroke-dasharray': s.dashed ? '6 4' : 'none', 'stroke-linejoin': 'round', 'stroke-linecap': 'round'
+        }));
+      }
+      pts.forEach(function (p) {
+        svg.appendChild(el('circle', { cx: p[0], cy: p[1], r: s.width ? s.width + 1.5 : 4, fill: s.color }));
+        if (s.showValues) {
+          svg.appendChild(el('text', { x: p[0], y: p[1] - 10, 'text-anchor': 'middle', class: 'point-value', fill: s.color }, fmt(p[2], 2)));
+        }
+      });
+    });
+    var wrap = document.createElement('div');
+    wrap.className = 'lines-wrap';
+    wrap.appendChild(svg);
+    var legend = document.createElement('div');
+    legend.className = 'chart-legend';
+    legend.innerHTML = series.map(function (s) {
+      return '<span><i style="background:' + s.color + (s.dashed ? ';opacity:.6' : '') + '"></i>' + String(s.label).replace(/</g, '&lt;') + '</span>';
+    }).join('');
+    wrap.appendChild(legend);
+    return wrap;
+  }
+
+  root.BarometerCharts = { donut: donut, bars: bars, gantt: gantt, lines: lines, fmt: fmt };
 })(this);
 
 </script>
@@ -3297,18 +3575,20 @@ textarea { resize: vertical; }
     return org.assessments.filter(function (a) { return a.id === org.activeAssessmentId; })[0] || org.assessments[0];
   };
 
-  /** Most recent assessment: highest sequence, then most recently created. */
+  /** Assessments of an organisation, oldest first (period, year, then sequence). */
+  App.chronological = function (org) { return window.BarometerEvolution.chronological(org.assessments); };
+
+  /** Most recent assessment. */
   App.latestAssessment = function (org) {
-    return org.assessments.slice().sort(function (a, b) {
-      return b.sequence - a.sequence || String(b.createdAt).localeCompare(String(a.createdAt));
-    })[0];
+    var list = App.chronological(org);
+    return list[list.length - 1];
   };
 
-  /** Previous assessment of the same organisation, used as default comparison. */
+  /** Assessment just before `a` in time, used as default comparison. */
   App.previousAssessment = function (org, a) {
-    var older = org.assessments.filter(function (x) { return x.id !== a.id && x.sequence < a.sequence; });
-    older.sort(function (x, y) { return y.sequence - x.sequence; });
-    return older[0] || null;
+    var list = App.chronological(org);
+    var i = list.indexOf(a);
+    return i > 0 ? list[i - 1] : null;
   };
 
   App.scores = function (a) { return S.computeScores(F, a.answers, App.settings()); };
@@ -3320,10 +3600,30 @@ textarea { resize: vertical; }
 
   App.sequenceLabel = function (seq) {
     var s = F.SEQUENCES.filter(function (x) { return x.value === seq; })[0];
-    return s ? App.L(s.label) : '#' + seq;
+    return s ? App.L(s.label) : App.t('seq.n', { n: seq });
   };
 
-  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + a.year; };
+  /** "mars 2027" when a month is set, otherwise the year. */
+  App.periodLabel = function (a) {
+    if (a.period) {
+      var d = new Date(Number(a.period.slice(0, 4)), Number(a.period.slice(5, 7)) - 1, 1);
+      try { return d.toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { month: 'long', year: 'numeric' }); }
+      catch (e) { return a.period; }
+    }
+    return String(a.year);
+  };
+
+  /** Short period label for chart axes. */
+  App.periodShort = function (a) {
+    if (a.period) {
+      var d = new Date(Number(a.period.slice(0, 4)), Number(a.period.slice(5, 7)) - 1, 1);
+      try { return d.toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { month: 'short', year: 'numeric' }); }
+      catch (e) { return a.period; }
+    }
+    return String(a.year);
+  };
+
+  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a); };
 
   App.levelBadge = function (score) {
     return score ? '<span class="level-badge level-' + score + '">' + score + '</span>' : '<span class="tag">' + App.esc(App.t('notAnswered')) + '</span>';
@@ -3542,18 +3842,18 @@ textarea { resize: vertical; }
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
         '<label class="field"><span>' + App.esc(App.t('profile.sequence')) + '</span><select data-on="assess-sequence">' +
-          F.SEQUENCES.map(function (s) {
-            return '<option value="' + s.value + '"' + (s.value === a.sequence ? ' selected' : '') + '>' + App.esc(App.L(s.label)) + '</option>';
-          }).join('') +
+          seqOptions(org, a) +
         '</select></label>' +
         '<label class="field"><span>' + App.esc(App.t('profile.year')) + '</span>' +
           '<input type="number" min="2000" max="2100" data-on="assess-year" value="' + App.esc(a.year) + '"></label>' +
+        '<label class="field"><span>' + App.esc(App.t('profile.month')) + '</span><select data-on="assess-month">' +
+          monthOptions(a) + '</select></label>' +
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.history')) + '</h2>' +
         '<p class="muted">' + App.esc(App.t('profile.historyHelp')) + '</p>' +
         '<div class="table-wrap"><table class="table"><thead><tr><th>' + App.esc(App.t('header.assessment')) + '</th><th>' + App.esc(App.t('profile.progress')) +
         '</th><th>' + App.esc(App.t('profile.index')) + '</th><th></th></tr></thead><tbody>' +
-        org.assessments.map(function (x) {
+        App.chronological(org).map(function (x) {
           var r = App.scores(x);
           return '<tr' + (x.id === a.id ? ' class="current"' : '') + '><td>' + App.esc(App.assessmentLabel(x)) + '</td>' +
             '<td>' + r.answered + ' / ' + r.totalComponents + '</td>' +
@@ -3576,6 +3876,27 @@ textarea { resize: vertical; }
       '</section>'
     );
   };
+
+  function seqOptions(org, a) {
+    var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
+    var out = '';
+    for (var s = 1; s <= Math.max(maxSeq + 1, 4); s++) {
+      out += '<option value="' + s + '"' + (s === a.sequence ? ' selected' : '') + '>' + App.esc(App.sequenceLabel(s)) + '</option>';
+    }
+    return out;
+  }
+
+  function monthOptions(a) {
+    var current = a.period ? Number(a.period.slice(5, 7)) : 0;
+    var out = '<option value="">—</option>';
+    for (var m = 1; m <= 12; m++) {
+      var name;
+      try { name = new Date(2000, m - 1, 1).toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { month: 'long' }); }
+      catch (e) { name = String(m); }
+      out += '<option value="' + m + '"' + (m === current ? ' selected' : '') + '>' + App.esc(name) + '</option>';
+    }
+    return out;
+  }
 
   // ------------------------------------------------------------------ assessment
 
@@ -3755,6 +4076,7 @@ textarea { resize: vertical; }
       '<li>Ajoutez vos propres activités sous chaque composante, ou des activités générales.</li>' +
       '<li>Formulez des indicateurs clairs, avec valeur de base, valeur cible et source de vérification.</li>' +
       '<li>Si le diagnostic change, cliquez sur « Mettre à jour les activités standard ».</li></ol></section>' +
+      '<section class="card"><h2>Diagnostic régulier et évolution</h2><p>Refaites le diagnostic à intervalle régulier (par exemple tous les 6 ou 12 mois) avec « Nouveau diagnostic » : vous pouvez partir des réponses précédentes puis les ajuster. La page <strong>Évolution</strong> montre la courbe de l’indice et des piliers, le tableau comparatif de toutes les périodes, les composantes en progrès ou en recul entre deux périodes au choix, et le taux de réalisation du plan de travail. Le <strong>Rapport d’évolution</strong> (page Rapport) reprend ces éléments en PDF.</p></section>' +
       '<section class="card"><h2>5. Rapport PDF</h2><p>La page Rapport présente le rapport individuel : vue d’ensemble, scores détaillés, forces / opportunités / faiblesses, plan et chronogramme. Cliquez sur « Exporter en PDF » puis choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section>' +
       '<section class="card"><h2>6. Espace facilitateur</h2><p>Chaque organisation exporte son fichier (.json) depuis sa Fiche et l’envoie au facilitateur. Dans l’Espace facilitateur, importez plusieurs fichiers à la fois : le tableau de bord compare toutes les organisations, calcule les moyennes du portefeuille et liste les faiblesses les plus fréquentes. Un fichier ré-importé met à jour l’organisation correspondante.</p>' +
       '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>';
@@ -3784,6 +4106,7 @@ textarea { resize: vertical; }
       '<li>Add your own activities under each component, or general activities.</li>' +
       '<li>Write clear indicators with a baseline, a target and a means of verification.</li>' +
       '<li>If the assessment changes, click “Update standard activities”.</li></ol></section>' +
+      '<section class="card"><h2>Regular assessments and progress</h2><p>Repeat the assessment at regular intervals (for example every 6 or 12 months) with “New assessment”: you can start from the previous answers and adjust them. The <strong>Progress</strong> page shows the trend of the index and pillars, a comparison table of all periods, the components that improved or declined between any two periods, and how much of the workplan was completed. The <strong>Progress report</strong> (Report page) puts this into a PDF.</p></section>' +
       '<section class="card"><h2>5. PDF report</h2><p>The Report page shows the individual report: overview, detailed scores, strengths / opportunities / weaknesses, workplan and timeline. Click “Export to PDF” and choose “Save as PDF” in the print dialog.</p></section>' +
       '<section class="card"><h2>6. Facilitator space</h2><p>Each organisation exports its file (.json) from its Profile page and sends it to the facilitator. In the Facilitator space, import several files at once: the dashboard compares all organisations, computes portfolio averages and lists the most common weaknesses. Re-importing a file updates the matching organisation.</p>' +
       '<p>Data is stored in this browser only: back up the space regularly.</p></section>';
@@ -3810,11 +4133,22 @@ textarea { resize: vertical; }
   A['assess-year'] = function (el) {
     var y = Number(el.value);
     if (y >= 2000 && y <= 2100) {
-      App.assessment().year = y;
+      var a = App.assessment();
+      a.year = y;
+      if (a.period) a.period = y + a.period.slice(4);
       App.touch();
       App.persist(true);
       App.renderHeader();
     }
+  };
+
+  A['assess-month'] = function (el) {
+    var a = App.assessment();
+    var m = Number(el.value);
+    a.period = m >= 1 && m <= 12 ? a.year + '-' + (m < 10 ? '0' : '') + m : '';
+    App.touch();
+    App.persist(true);
+    App.renderHeader();
   };
 
   A.answer = function (el) {
@@ -3863,7 +4197,13 @@ textarea { resize: vertical; }
   A['new-assessment'] = function () {
     var org = App.org();
     var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
-    var a = Store.newAssessment(Math.min(maxSeq + 1, F.SEQUENCES.length), new Date().getFullYear());
+    var a = Store.newAssessment(maxSeq + 1, new Date().getFullYear());
+    var now = new Date();
+    a.period = now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1);
+    var last = App.latestAssessment(org);
+    if (last && Object.keys(last.answers).length && confirm(App.t('confirm.prefill', { name: App.assessmentLabel(last) }))) {
+      Object.keys(last.answers).forEach(function (k) { a.answers[k] = last.answers[k]; });
+    }
     org.assessments.push(a);
     org.activeAssessmentId = a.id;
     App.ui.compareWith = null;
@@ -4315,7 +4655,23 @@ textarea { resize: vertical; }
     }).join('') + (items.length > n ? '<li class="muted small">+ ' + (items.length - n) + '</li>' : '') + '</ul>';
   }
 
+  function reportHead() {
+    var mode = App.ui.reportMode === 'evolution' ? 'evolution' : 'single';
+    return '<div class="page-head no-print"><div><h1>' + esc(t('nav.report')) + '</h1>' +
+      '<p class="muted">' + esc(t('report.exportHelp')) + '</p></div>' +
+      '<div class="actions">' +
+        '<div class="segmented" role="group">' +
+          '<button class="' + (mode === 'single' ? 'active' : '') + '" data-click="report-mode" data-mode="single">' + esc(t('report.modeSingle')) + '</button>' +
+          '<button class="' + (mode === 'evolution' ? 'active' : '') + '" data-click="report-mode" data-mode="evolution">' + esc(t('report.modeEvolution')) + '</button>' +
+        '</div>' +
+        '<button class="btn primary" data-click="report-pdf">⤓ ' + esc(t('report.export')) + '</button></div></div>';
+  }
+
   App.views.report = function () {
+    if (App.ui.reportMode === 'evolution') {
+      App.renderEvolutionReport(reportHead());
+      return;
+    }
     var org = App.org();
     var o = org.organization;
     var a = App.assessment();
@@ -4333,9 +4689,7 @@ textarea { resize: vertical; }
     var st = Plan.stats(a.plan);
     var labels = App.monthLabels(a.plan);
 
-    var html = '<div class="page-head no-print"><div><h1>' + esc(t('nav.report')) + '</h1>' +
-      '<p class="muted">' + esc(t('report.exportHelp')) + '</p></div>' +
-      '<div class="actions"><button class="btn primary" data-click="report-pdf">⤓ ' + esc(t('report.export')) + '</button></div></div>';
+    var html = reportHead();
 
     if (!r.complete) {
       html += '<div class="notice no-print">' + esc(t('results.incomplete', { n: r.answered, total: r.totalComponents })) +
@@ -4485,10 +4839,16 @@ textarea { resize: vertical; }
     }), F.MAX_SCORE));
   };
 
+  A['report-mode'] = function (el) {
+    App.ui.reportMode = el.dataset.mode === 'evolution' ? 'evolution' : 'single';
+    if (location.hash === '#report') App.render(); else location.hash = '#report';
+  };
+
   A['report-pdf'] = function () {
     var a = App.assessment();
     var previous = document.title;
-    document.title = (t('nav.report') + '-' + App.slug(App.org().organization.acronym || App.orgName()) + '-' + a.year).replace(/\s+/g, '-');
+    var kind = App.ui.reportMode === 'evolution' ? t('report.modeEvolution') : t('nav.report');
+    document.title = (kind + '-' + App.slug(App.org().organization.acronym || App.orgName()) + '-' + a.year).replace(/\s+/g, '-');
     var restore = function () { document.title = previous; window.removeEventListener('afterprint', restore); };
     window.addEventListener('afterprint', restore);
     window.print();
@@ -4734,6 +5094,256 @@ textarea { resize: vertical; }
     location.hash = '#home';
     App.render();
   };
+})();
+
+</script>
+  <script>
+/* js/views-evolution.js */
+/*
+ * Evolution over time (regular assessments) and the comparative report.
+ *
+ * #evolution : trend of the global index and pillars across every period,
+ *              table of all periods, and a detailed comparison between two
+ *              chosen periods (improved / declined components, weaknesses
+ *              resolved, new weaknesses, workplan follow-up).
+ * #report in "evolution" mode : the same content as printable A4 pages.
+ */
+(function () {
+  'use strict';
+
+  var App = window.App;
+  var F = App.F;
+  var Evo = window.BarometerEvolution;
+  var esc = App.esc;
+  var t = App.t;
+  var L = App.L;
+  var A = App.actions;
+
+  /** Selected periods, defaulting to the previous and the latest assessment. */
+  function periods(org) {
+    var list = App.chronological(org);
+    var ids = list.map(function (a) { return a.id; });
+    if (ids.indexOf(App.ui.evoTo) < 0) App.ui.evoTo = ids[ids.length - 1];
+    if (ids.indexOf(App.ui.evoFrom) < 0 || App.ui.evoFrom === App.ui.evoTo) {
+      var toIdx = ids.indexOf(App.ui.evoTo);
+      App.ui.evoFrom = ids[toIdx > 0 ? toIdx - 1 : (ids.length > 1 ? 1 : 0)];
+    }
+    return {
+      list: list,
+      from: list[ids.indexOf(App.ui.evoFrom)],
+      to: list[ids.indexOf(App.ui.evoTo)]
+    };
+  }
+
+  function deltaCell(d, digits) {
+    if (d === null || d === undefined) return '<td class="center muted">—</td>';
+    var cls = d > 0 ? 'up' : d < 0 ? 'down' : 'flat';
+    return '<td class="center delta ' + cls + '">' + (d > 0 ? '+' : '') + App.fmt(d, digits === undefined ? 1 : digits) + '</td>';
+  }
+
+  /** Table: one column per period, last column = change first -> last. */
+  function periodTable(tl, cls) {
+    var first = tl[0].scores;
+    var last = tl[tl.length - 1].scores;
+    function row(label, get, digits, strong) {
+      var vals = tl.map(function (x) { return get(x); });
+      var d = vals[0] === null || vals[vals.length - 1] === null ? null : vals[vals.length - 1] - vals[0];
+      return '<tr' + (strong ? ' class="total"' : '') + '><td>' + label + '</td>' +
+        vals.map(function (v) { return '<td class="center">' + (v === null ? '—' : App.fmt(v, digits)) + '</td>'; }).join('') +
+        deltaCell(d, digits) + '</tr>';
+    }
+    var html = '<div class="table-wrap"><table class="' + cls + ' period-table"><thead><tr><th></th>' +
+      tl.map(function (x) { return '<th class="center">' + esc(App.sequenceLabel(x.assessment.sequence)) + '<br><span class="muted">' + esc(App.periodShort(x.assessment)) + '</span></th>'; }).join('') +
+      '<th class="center">Δ</th></tr></thead><tbody>';
+    html += row('<strong>' + esc(t('results.index')) + '</strong>', function (x) { return x.scores.index; }, 2, true);
+    F.PILLARS.forEach(function (p, i) {
+      html += row('<span class="dot" style="background:' + App.PILLAR_COLORS[p.id] + '"></span>' + esc(L(p.name)), function (x) { return x.scores.pillars[i].score; }, 1);
+    });
+    html += row(esc(t('results.total')), function (x) { return x.scores.answered ? x.scores.total : null; }, 0);
+    ['maintain', 'opportunity', 'address'].forEach(function (c) {
+      html += row(App.CAT_ICONS[c] + ' ' + esc(t('cats.' + c)), function (x) { return x.scores.answered ? x.scores.counts[c] : null; }, 0);
+    });
+    html += row(esc(t('evo.planDone')), function (x) {
+      var f = Evo.planFollowUp(x.assessment);
+      return f.rate === null ? null : f.rate * 100;
+    }, 0);
+    html += '</tbody></table></div>';
+    void first; void last;
+    return html;
+  }
+
+  function chart(tl) {
+    var labels = tl.map(function (x) { return App.periodShort(x.assessment); });
+    var series = [{ label: t('results.index'), color: '#1d2733', width: 3.5, showValues: true, values: tl.map(function (x) { return x.scores.index; }) }];
+    F.PILLARS.forEach(function (p, i) {
+      series.push({ label: L(p.shortName), color: App.PILLAR_COLORS[p.id], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
+    });
+    return App.Charts.lines(series, labels, F.MAX_SCORE, { label: t('evo.chart') });
+  }
+
+  function itemRow(it) {
+    return '<tr><td>' + esc(L(it.component.name)) + '<br><span class="muted small">' + esc(L(it.pillar.shortName)) + ' · ' + esc(L(it.aspect.name)) + '</span></td>' +
+      '<td class="center nowrap">' + App.levelBadge(it.from) + ' → ' + App.levelBadge(it.to) + '</td>' +
+      deltaCell(it.delta, 0) + '</tr>';
+  }
+
+  function changeList(title, items, cls, tableCls) {
+    return '<div class="evo-list ' + cls + '"><h3>' + title + ' <b>' + items.length + '</b></h3>' +
+      (items.length
+        ? '<table class="' + tableCls + '"><tbody>' + items.map(itemRow).join('') + '</tbody></table>'
+        : '<p class="muted small">' + esc(t('results.noItems')) + '</p>') + '</div>';
+  }
+
+  function changesSection(ch, tableCls) {
+    var kpis = [
+      ['improved', ch.improved.length, 'up'],
+      ['declined', ch.declined.length, 'down'],
+      ['stable', ch.stable.length, 'flat'],
+      ['resolved', ch.resolvedWeaknesses.length, 'up'],
+      ['newWeak', ch.newWeaknesses.length, 'down']
+    ];
+    return '<div class="evo-kpis">' + kpis.map(function (k) {
+      return '<div class="evo-kpi ' + k[2] + '"><strong>' + k[1] + '</strong><span>' + esc(t('evo.' + k[0])) + '</span></div>';
+    }).join('') + '</div>' +
+      (ch.notCompared ? '<p class="muted small">' + esc(t('evo.notCompared', { n: ch.notCompared })) + '</p>' : '') +
+      '<div class="evo-columns">' +
+        changeList('▲ ' + esc(t('evo.improvedList')), ch.improved, 'up', tableCls) +
+        changeList('▼ ' + esc(t('evo.declinedList')), ch.declined, 'down', tableCls) +
+      '</div>' +
+      '<div class="evo-columns">' +
+        changeList('✓ ' + esc(t('evo.resolvedList')), ch.resolvedWeaknesses, 'up', tableCls) +
+        changeList('! ' + esc(t('evo.newWeakList')), ch.newWeaknesses, 'down', tableCls) +
+      '</div>';
+  }
+
+  function followUpSection(a) {
+    var f = Evo.planFollowUp(a);
+    var lang = App.I18n.getLang();
+    if (!f.stats.total) return '<p class="muted">' + esc(t('evo.noPlan')) + '</p>';
+    return '<p>' + esc(t('evo.followUpSentence', {
+      period: App.assessmentLabel(a), total: f.stats.total, done: f.stats.done, ongoing: f.stats.ongoing, rate: App.fmt(f.rate * 100, 0)
+    })) + '</p>' +
+      '<div class="progress-line"><div class="progress"><div style="width:' + Math.round(f.stats.progress * 100) + '%"></div></div></div>' +
+      (f.done.length ? '<h3>' + esc(t('evo.doneList')) + '</h3><ul class="done-list">' + f.done.map(function (act) {
+        var e = act.componentId ? App.findComponent(act.componentId) : null;
+        return '<li>✓ ' + esc(App.Plan.resolveTexts(act, lang).title) + ' <span class="muted small">— ' + esc(e ? L(e.component.name) : t('plan.general')) + '</span></li>';
+      }).join('') + '</ul>' : '');
+  }
+
+  function selectors(p) {
+    function sel(action, current) {
+      return '<select data-on="' + action + '">' + p.list.map(function (a) {
+        return '<option value="' + esc(a.id) + '"' + (a.id === current.id ? ' selected' : '') + '>' + esc(App.assessmentLabel(a)) + '</option>';
+      }).join('') + '</select>';
+    }
+    return '<div class="evo-selectors"><label class="inline-field">' + esc(t('evo.from')) + ' ' + sel('evo-from', p.from) + '</label>' +
+      '<label class="inline-field">' + esc(t('evo.to')) + ' ' + sel('evo-to', p.to) + '</label></div>';
+  }
+
+  // ------------------------------------------------------------------ page
+
+  App.views.evolution = function () {
+    var org = App.org();
+    var p = periods(org);
+    var html = '<div class="page-head"><div><h1>' + esc(t('evo.title')) + '</h1><p class="muted">' + esc(App.orgName(org)) + ' — ' +
+      esc(t('evo.count', { n: p.list.length })) + '</p></div>' +
+      '<div class="actions no-print"><button class="btn" data-click="new-assessment">' + esc(t('header.newAssessment')) + '</button>' +
+      (p.list.length > 1 ? '<button class="btn primary" data-click="report-mode" data-mode="evolution">' + esc(t('evo.toReport')) + '</button>' : '') +
+      '</div></div><p class="muted">' + esc(t('evo.intro')) + '</p>';
+
+    if (p.list.length < 2) {
+      App.setView(html + '<div class="notice">' + esc(t('evo.needTwo')) + '</div>');
+      return;
+    }
+
+    var tl = Evo.timeline(F, p.list, App.settings());
+    var first = tl[0].scores.index;
+    var last = tl[tl.length - 1].scores.index;
+    html += '<section class="summary evo-summary">' +
+      kpi(t('evo.first') + ' (' + App.periodShort(p.list[0]) + ')', App.fmt(first, 2) + '<small> / 4</small>') +
+      kpi(t('evo.latest') + ' (' + App.periodShort(p.list[p.list.length - 1]) + ')', App.fmt(last, 2) + '<small> / 4</small>') +
+      kpi(t('evo.change'), first === null || last === null ? '—' : (last - first > 0 ? '+' : '') + App.fmt(last - first, 2)) +
+      kpi(t('evo.assessments'), String(p.list.length)) +
+      '</section>' +
+      '<section class="card"><h2>' + esc(t('evo.chart')) + '</h2><div id="evo-chart"></div></section>' +
+      '<section class="card"><h2>' + esc(t('evo.table')) + '</h2>' + periodTable(tl, 'table') + '</section>';
+
+    var ch = Evo.componentChanges(F, p.from.answers, p.to.answers);
+    html += '<section class="card"><div class="page-head"><h2>' + esc(t('evo.compare')) + '</h2>' + selectors(p) + '</div>' +
+      changesSection(ch, 'table compact') + '</section>' +
+      '<section class="card"><h2>' + esc(t('evo.followUp')) + ' — ' + esc(App.assessmentLabel(p.from)) + '</h2>' + followUpSection(p.from) + '</section>';
+
+    App.setView(html);
+    document.getElementById('evo-chart').appendChild(chart(tl));
+  };
+
+  function kpi(label, value) {
+    return '<div class="kpi"><span class="kpi-label">' + esc(label) + '</span><span class="kpi-value">' + value + '</span></div>';
+  }
+
+  // ------------------------------------------------------------------ comparative report
+
+  App.renderEvolutionReport = function (headHtml) {
+    var org = App.org();
+    var o = org.organization;
+    var p = periods(org);
+    if (p.list.length < 2) {
+      App.setView(headHtml + '<div class="notice">' + esc(t('evo.needTwo')) + '</div>');
+      return;
+    }
+    var tl = Evo.timeline(F, p.list, App.settings());
+    var first = tl[0].scores.index;
+    var last = tl[tl.length - 1].scores.index;
+    var ch = Evo.componentChanges(F, p.from.answers, p.to.answers);
+    var range = App.periodLabel(p.list[0]) + ' – ' + App.periodLabel(p.list[p.list.length - 1]);
+
+    function header(title) {
+      return '<header class="report-header"><div><div class="report-kicker">' + esc(t('app.title')) + '</div><h2>' + esc(title) + '</h2></div>' +
+        '<div class="report-meta">' + esc(App.orgName(org)) + (o.acronym ? ' (' + esc(o.acronym) + ')' : '') + '<br>' + esc(range) + '</div></header>';
+    }
+
+    var html = headHtml + '<div class="no-print">' + selectors(p) + '</div><div class="report">';
+
+    html += '<section class="report-page">' +
+      '<div class="report-cover"><div class="report-kicker">' + esc(t('app.title')) + '</div>' +
+        '<h1>' + esc(t('evo.reportTitle')) + '</h1>' +
+        '<div class="report-org">' + esc(App.orgName(org)) + (o.acronym ? ' <span>(' + esc(o.acronym) + ')</span>' : '') + '</div>' +
+        '<dl class="report-facts">' +
+          '<div><dt>' + esc(t('evo.period')) + '</dt><dd>' + esc(range) + '</dd></div>' +
+          '<div><dt>' + esc(t('evo.assessments')) + '</dt><dd>' + p.list.length + '</dd></div>' +
+          '<div><dt>' + esc(t('report.date')) + '</dt><dd>' + esc(App.dateStr()) + '</dd></div>' +
+          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(o.focalPoint) + '</dd></div>' : '') +
+        '</dl></div>' +
+      '<div class="report-kpis">' +
+        '<div class="report-kpi"><span>' + esc(t('evo.first')) + '</span><strong>' + App.fmt(first, 2) + '<small> / 4</small></strong><em>' + esc(App.periodLabel(p.list[0])) + '</em></div>' +
+        '<div class="report-kpi main"><span>' + esc(t('evo.latest')) + '</span><strong>' + App.fmt(last, 2) + '<small> / 4</small></strong><em>' + esc(App.periodLabel(p.list[p.list.length - 1])) + '</em></div>' +
+        '<div class="report-kpi"><span>' + esc(t('evo.change')) + '</span><strong>' + (first === null || last === null ? '—' : (last - first > 0 ? '+' : '') + App.fmt(last - first, 2)) + '</strong></div>' +
+      '</div>' +
+      '<p class="report-lead">' + esc(t('evo.summarySentence', {
+        org: App.orgName(org), first: App.fmt(first, 2), last: App.fmt(last, 2), from: App.periodLabel(p.list[0]), to: App.periodLabel(p.list[p.list.length - 1]),
+        resolved: ch.resolvedWeaknesses.length, newWeak: ch.newWeaknesses.length
+      })) + '</p>' +
+      '<h3 class="report-h3">' + esc(t('evo.chart')) + '</h3><div id="evo-report-chart"></div>' +
+      '<h3 class="report-h3">' + esc(t('evo.table')) + '</h3>' + periodTable(tl, 'report-table compact') +
+      '</section>';
+
+    html += '<section class="report-page">' + header(t('evo.compare')) +
+      '<p><strong>' + esc(App.assessmentLabel(p.from)) + '</strong> → <strong>' + esc(App.assessmentLabel(p.to)) + '</strong></p>' +
+      changesSection(ch, 'report-table compact') + '</section>';
+
+    html += '<section class="report-page report-last">' + header(t('evo.followUp')) +
+      '<h3 class="report-h3">' + esc(App.assessmentLabel(p.from)) + '</h3>' + followUpSection(p.from) +
+      '<div class="signatures">' + ['report.preparedBy', 'report.validatedBy'].map(function (k) {
+        return '<div class="signature"><span>' + esc(t(k)) + '</span><div class="sig-line"></div><small>' + esc(t('report.signature')) + '</small></div>';
+      }).join('') + '</div></section>';
+
+    html += '</div>';
+    App.setView(html);
+    document.getElementById('evo-report-chart').appendChild(chart(tl));
+  };
+
+  A['evo-from'] = function (el) { App.ui.evoFrom = el.value; App.render(); };
+  A['evo-to'] = function (el) { App.ui.evoTo = el.value; App.render(); };
 })();
 
 </script>

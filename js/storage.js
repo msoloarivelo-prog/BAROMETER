@@ -74,6 +74,7 @@
       id: uid('a'),
       sequence: sequence || 1,
       year: year || new Date().getFullYear(),
+      period: '',
       createdAt: new Date().toISOString(),
       answers: {},
       comments: {},
@@ -170,6 +171,8 @@
     var base = newAssessment(Number(a.sequence) || 1, Number(a.year) || new Date().getFullYear());
     if (typeof a.id === 'string' && a.id) base.id = a.id;
     base.createdAt = a.createdAt || base.createdAt;
+    base.period = /^\d{4}-(0[1-9]|1[0-2])$/.test(a.period || '') ? a.period : '';
+    if (base.period) base.year = Number(base.period.slice(0, 4));
     Object.keys(a.answers || {}).forEach(function (k) {
       var v = Number(a.answers[k]);
       if (v >= 1 && v <= 4 && Math.floor(v) === v) base.answers[k] = v;

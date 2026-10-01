@@ -39,16 +39,28 @@
     var en = lang === 'en';
 
     // 1. Young network: weak systems and finances, strong mission and team spirit.
-    var a1 = assessment(1, 2025, answers(function (e, i) {
+    var a0 = assessment(1, 2025, answers(function (e, i) {
+      if (e.pillar.id === 'fin') return 1;
+      if (e.pillar.id === 'plan') return [1, 1, 2, 2][i % 4];
+      if (e.aspect.id === 'gov-mission') return 2;
+      return [1, 2, 2][i % 3];
+    }), '2025-01');
+    a0.period = '2025-01';
+    a0.plan.activities.forEach(function (act, i) { act.status = i % 3 === 2 ? 'planned' : 'done'; act.edited = true; });
+
+    var a1 = assessment(2, 2025, answers(function (e, i) {
       if (e.pillar.id === 'fin') return 1 + (i % 2);
       if (e.pillar.id === 'plan') return [1, 2, 2, 3][i % 4];
       if (e.aspect.id === 'gov-mission') return 3;
       return [2, 3, 2][i % 3];
     }), '2025-07');
-    var a2 = assessment(2, 2026, answers(function (e, i) {
+    a1.period = '2025-07';
+    a1.plan.activities.forEach(function (act, i) { act.status = i % 4 === 3 ? 'ongoing' : 'done'; act.edited = true; });
+    var a2 = assessment(3, 2026, answers(function (e, i) {
       var before = a1.answers[e.component.id];
       return Math.min(4, before + (i % 3 === 0 ? 0 : 1));
     }), '2026-07');
+    a2.period = '2026-01';
     a2.comments['fin-management-audit'] = en ? 'First external audit completed in March 2026.' : 'Premier audit externe réalisé en mars 2026.';
     a2.plan.challenges['fin-vulnerability-diversity'] = en
       ? 'Reduce dependence on the main donor (currently 75% of the budget).'
@@ -70,7 +82,7 @@
       name: en ? 'Women Farmers Network (demo)' : 'Réseau des Femmes Agricultrices (démo)',
       acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', region: 'Analamanga',
       address: 'Antananarivo', focalPoint: 'Hanta R.', phone: '+261 34 00 000 01', email: 'contact@example.org'
-    }, [a1, a2]);
+    }, [a0, a1, a2]);
 
     // 2. Well-established NGO: mostly strong, a few opportunities.
     var o2 = org('demo-org-2', {

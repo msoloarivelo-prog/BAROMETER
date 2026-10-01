@@ -492,6 +492,41 @@ textarea { resize: vertical; }
 .weights input { width: 5rem; }
 .dot { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; margin-right: .5rem; vertical-align: middle; }
 
+/* ------------------------------------------------------------ evolution */
+
+.evo-summary { grid-template-columns: repeat(4, 1fr); }
+.segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.segmented button { border: 0; background: var(--surface); color: var(--text); padding: .45rem .8rem; font: inherit; font-size: .9rem; cursor: pointer; }
+.segmented button + button { border-left: 1px solid var(--border); }
+.segmented button.active { background: var(--accent); color: var(--accent-text); }
+.evo-selectors { display: flex; flex-wrap: wrap; gap: .6rem 1rem; margin-bottom: .6rem; }
+.evo-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; margin-bottom: .6rem; }
+.evo-kpi { border: 1px solid var(--border); border-radius: 8px; padding: .6rem .8rem; display: flex; flex-direction: column; }
+.evo-kpi strong { font-size: 1.6rem; line-height: 1.1; }
+.evo-kpi span { font-size: .8rem; color: var(--muted); }
+.evo-kpi.up strong { color: var(--ok); }
+.evo-kpi.down strong { color: var(--danger); }
+.evo-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .6rem; }
+.evo-list h3 { margin: .4rem 0; display: flex; gap: .5rem; align-items: baseline; }
+.evo-list.up h3 { color: var(--ok); }
+.evo-list.down h3 { color: var(--danger); }
+.evo-list .level-badge { min-width: 1.35rem; height: 1.35rem; font-size: .75rem; }
+.period-table td, .period-table th { white-space: nowrap; }
+.period-table td:first-child { white-space: normal; }
+.done-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .3rem; }
+.lines-wrap { width: 100%; }
+.chart-lines { width: 100%; height: auto; display: block; }
+.chart-lines .grid { stroke: var(--border); stroke-width: 1; }
+.chart-lines .axis { fill: var(--muted); font-size: 12px; }
+.chart-lines .point-value { font-size: 12px; font-weight: 700; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .85rem; margin-top: .3rem; }
+.chart-legend i { display: inline-block; width: 14px; height: 4px; border-radius: 2px; margin-right: .4rem; vertical-align: middle; }
+.report .evo-kpi strong { font-size: 15pt; }
+.report .evo-kpis { gap: 2mm; }
+.report .evo-columns { gap: 4mm; }
+.report .evo-list h3 { font-size: 10.5pt; }
+.report .chart-lines .axis { font-size: 11px; }
+
 /* ------------------------------------------------------------ report (screen = A4 preview) */
 
 .report { display: grid; gap: 1.5rem; justify-content: center; }
@@ -598,7 +633,9 @@ textarea { resize: vertical; }
 
 @media (max-width: 900px) {
   .summary { grid-template-columns: 1fr 1fr; }
-  .fac-summary { grid-template-columns: 1fr 1fr; }
+  .fac-summary, .evo-summary { grid-template-columns: 1fr 1fr; }
+  .evo-kpis { grid-template-columns: repeat(3, 1fr); }
+  .evo-columns { grid-template-columns: 1fr; }
   .kpi-wide { grid-column: 1 / -1; }
   .pillar-grid, .swot-grid, .fac-grid { grid-template-columns: 1fr; }
   .levels { grid-template-columns: repeat(2, 1fr); }
@@ -610,9 +647,14 @@ textarea { resize: vertical; }
 
 @media (max-width: 600px) {
   .app-header { position: static; }
-  .context-switch select { min-width: 0; max-width: 100%; }
-  .context-switch label { flex: 1; }
-  .summary, .fac-summary { grid-template-columns: 1fr; }
+  .context-switch { flex: 1 1 100%; width: 100%; min-width: 0; order: 3; }
+  .context-switch label { flex: 1 1 140px; min-width: 0; }
+  .context-switch select { min-width: 0; max-width: 100%; width: 100%; }
+  .context-switch .btn { flex: 1 1 100%; justify-content: center; }
+  .inline-field { flex-wrap: wrap; max-width: 100%; }
+  .inline-field select { min-width: 0; max-width: 100%; }
+  .summary, .fac-summary, .evo-summary { grid-template-columns: 1fr; }
+  .evo-kpis { grid-template-columns: 1fr 1fr; }
   .levels { grid-template-columns: 1fr; }
   .pillar-body { flex-direction: column; align-items: stretch; }
   .donut-slot { align-self: center; }
@@ -640,4 +682,8 @@ textarea { resize: vertical; }
   .report-table tr, .report-item { break-inside: avoid; }
   .table-wrap { overflow: visible; }
   .portfolio th:last-child, .portfolio td:last-child { display: none; }
+  .report .evo-columns { grid-template-columns: 1fr 1fr; }
+  .report .evo-kpis { grid-template-columns: repeat(5, 1fr); }
+  .report .report-kpis { grid-template-columns: 1.4fr 1fr 1fr; }
+  .report .report-swot { grid-template-columns: repeat(3, 1fr); }
 }
