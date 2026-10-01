@@ -1,0 +1,10 @@
+{
+  "name": "barometre-gouvernance",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Baromètre de gouvernance organisationnelle - application web",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "license": "UNLICENSED"
+}

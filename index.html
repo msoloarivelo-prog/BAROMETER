@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baromètre de gouvernance</title>
+  <meta name="description" content="Outil d'auto-diagnostic et de plan de renforcement de la gouvernance des petites organisations.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <a href="#accueil" class="logo" aria-label="Accueil">
+        <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+          <path d="M4 22a12 12 0 0 1 24 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M16 22l6-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="16" cy="22" r="2.5" fill="currentColor"/>
+        </svg>
+      </a>
+      <div>
+        <div class="app-title">Baromètre de gouvernance</div>
+        <div class="org-name" id="org-name"></div>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="#fiche" data-route="fiche"><span>0</span> Fiche</a>
+      <a href="#diagnostic/gov" data-route="diagnostic"><span>1</span> Diagnostic</a>
+      <a href="#resultats" data-route="resultats"><span>2</span> Résultats</a>
+      <a href="#plan/gov" data-route="plan"><span>3</span> Plan</a>
+      <a href="#manuel" data-route="manuel"><span>?</span> Manuel</a>
+    </nav>
+    <div class="assessment-switch">
+      <label for="assessment-select" class="sr-only">Diagnostic actif</label>
+      <select id="assessment-select"></select>
+      <button class="btn small" id="new-assessment" title="Démarrer un nouveau diagnostic">+ Nouveau</button>
+      <span id="save-status" class="save-status" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <main id="view" tabindex="-1"></main>
+
+  <footer class="app-footer">
+    Données enregistrées uniquement dans ce navigateur. Exportez régulièrement une sauvegarde depuis la page Fiche.
+  </footer>
+
+  <script src="js/framework.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
