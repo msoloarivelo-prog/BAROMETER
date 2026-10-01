@@ -1,11 +1,10 @@
 /*
- * Application : navigation, formulaires, tableau de bord et plan.
- * Correspondance avec le classeur Excel :
- *   Fiche            -> #fiche
- *   1 - DIAG_*       -> #diagnostic/<pilier>
- *   Dashboard        -> #resultats
- *   1 - GOUVERNANCE_VISION ... (plans) -> #plan/<pilier>
- *   MANUEL           -> #manuel
+ * Application core: state, routing, header, and the Profile, Assessment,
+ * Results and Help views. The Workplan, Report and Facilitator views live in
+ * views-*.js and register themselves on window.App.
+ *
+ * Event handling is delegated: elements carry data-on="action" (inputs) or
+ * data-click="action" (buttons); handlers live in App.actions.
  */
 (function () {
   'use strict';
@@ -13,68 +12,122 @@
   var F = window.BarometerFramework;
   var S = window.BarometerScoring;
   var Store = window.BarometerStorage;
+  var I18n = window.BarometerI18n;
   var Charts = window.BarometerCharts;
 
-  var PILLAR_COLORS = { gov: '#2f6f9f', plan: '#3f8f5f', hr: '#c9822b', fin: '#8a4f9e' };
+  var App = {
+    F: F,
+    S: S,
+    Store: Store,
+    I18n: I18n,
+    Charts: Charts,
+    Plan: window.BarometerPlan,
+    Activities: window.BarometerActivities,
+    PILLAR_COLORS: { gov: '#2f6f9f', plan: '#3f8f5f', hr: '#c9822b', fin: '#8a4f9e' },
+    CAT_ICONS: { maintain: '▲', opportunity: '◆', address: '▼', other: '●' },
+    ws: Store.load(),
+    ui: { compareWith: null, planFilter: 'all', flash: null },
+    views: {},
+    actions: {}
+  };
+  window.App = App;
 
-  var state = Store.load();
   var view = document.getElementById('view');
   var saveTimer = null;
-  var ui = { planFilterWeak: true, compareWith: null };
 
-  // ---------------------------------------------------------------- helpers
+  // ------------------------------------------------------------------ helpers
 
-  function esc(value) {
+  App.t = I18n.t;
+  App.L = I18n.L;
+
+  App.esc = function (value) {
     return String(value === undefined || value === null ? '' : value)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
+  };
 
-  function fmt(v, d) { return Charts.fmt(v, d); }
+  App.fmt = Charts.fmt;
 
-  function activeAssessment() {
-    return state.assessments.filter(function (a) { return a.id === state.activeAssessmentId; })[0] || state.assessments[0];
-  }
+  App.settings = function () { return App.ws.settings; };
 
-  function sequenceLabel(seq) {
+  App.org = function () {
+    return App.ws.orgs.filter(function (o) { return o.id === App.ws.activeOrgId; })[0] || App.ws.orgs[0];
+  };
+
+  App.assessment = function (org) {
+    org = org || App.org();
+    return org.assessments.filter(function (a) { return a.id === org.activeAssessmentId; })[0] || org.assessments[0];
+  };
+
+  /** Most recent assessment: highest sequence, then most recently created. */
+  App.latestAssessment = function (org) {
+    return org.assessments.slice().sort(function (a, b) {
+      return b.sequence - a.sequence || String(b.createdAt).localeCompare(String(a.createdAt));
+    })[0];
+  };
+
+  /** Previous assessment of the same organisation, used as default comparison. */
+  App.previousAssessment = function (org, a) {
+    var older = org.assessments.filter(function (x) { return x.id !== a.id && x.sequence < a.sequence; });
+    older.sort(function (x, y) { return y.sequence - x.sequence; });
+    return older[0] || null;
+  };
+
+  App.scores = function (a) { return S.computeScores(F, a.answers, App.settings()); };
+
+  App.orgName = function (org) {
+    var o = (org || App.org()).organization;
+    return o.name || App.t('unnamedOrg');
+  };
+
+  App.sequenceLabel = function (seq) {
     var s = F.SEQUENCES.filter(function (x) { return x.value === seq; })[0];
-    return s ? s.label : 'Diagnostic n°' + seq;
-  }
+    return s ? App.L(s.label) : '#' + seq;
+  };
 
-  function assessmentLabel(a) {
-    return sequenceLabel(a.sequence) + ' — ' + a.year;
-  }
+  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + a.year; };
 
-  function persist(immediate) {
+  App.levelBadge = function (score) {
+    return score ? '<span class="level-badge level-' + score + '">' + score + '</span>' : '<span class="tag">' + App.esc(App.t('notAnswered')) + '</span>';
+  };
+
+  App.catTag = function (cat) {
+    if (!cat) return '';
+    return '<span class="cat-tag cat-' + cat + '">' + App.CAT_ICONS[cat] + ' ' + App.esc(App.t('cat.' + cat)) + '</span>';
+  };
+
+  App.findComponent = function (id) {
+    return F.allComponents().filter(function (e) { return e.component.id === id; })[0] || null;
+  };
+
+  App.pillarById = function (id) {
+    return F.PILLARS.filter(function (p) { return p.id === id; })[0] || F.PILLARS[0];
+  };
+
+  App.dateStr = function (d) {
+    try {
+      return (d || new Date()).toLocaleDateString(I18n.getLang() === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) {
+      return (d || new Date()).toISOString().slice(0, 10);
+    }
+  };
+
+  App.touch = function (org) { (org || App.org()).updatedAt = new Date().toISOString(); };
+
+  App.persist = function (immediate) {
     clearTimeout(saveTimer);
     var run = function () {
-      var ok = Store.save(state);
+      var ok = Store.save(App.ws);
       var badge = document.getElementById('save-status');
       if (badge) {
-        badge.textContent = ok ? 'Enregistré localement' : 'Échec de l’enregistrement';
+        badge.textContent = ok ? App.t('saved') : App.t('saveFailed');
         badge.className = 'save-status ' + (ok ? 'ok' : 'err');
       }
     };
     if (immediate) run(); else saveTimer = setTimeout(run, 400);
-  }
+  };
 
-  function findComponent(id) {
-    var found = null;
-    F.PILLARS.forEach(function (p) {
-      p.aspects.forEach(function (a) {
-        a.components.forEach(function (c) {
-          if (c.id === id) found = { pillar: p, aspect: a, component: c };
-        });
-      });
-    });
-    return found;
-  }
-
-  function pillarById(id) {
-    return F.PILLARS.filter(function (p) { return p.id === id; })[0] || F.PILLARS[0];
-  }
-
-  function download(filename, content, type) {
+  App.download = function (filename, content, type) {
     var blob = new Blob([content], { type: type });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -84,574 +137,608 @@
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-  }
+  };
 
-  function slug(s) {
+  App.slug = function (s) {
     return (s || 'organisation').normalize('NFD').replace(/[̀-ͯ]/g, '')
       .replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'organisation';
-  }
+  };
 
-  function csv(rows) {
+  App.csv = function (rows) {
     return '﻿' + rows.map(function (r) {
       return r.map(function (cell) {
         var s = cell === null || cell === undefined ? '' : String(cell);
         return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
       }).join(';');
     }).join('\r\n');
-  }
+  };
 
-  // ---------------------------------------------------------------- header
+  App.num = function (v, d) { return v === null || v === undefined ? '' : App.fmt(v, d === undefined ? 2 : d); };
 
-  function renderHeader() {
-    document.getElementById('org-name').textContent = state.organization.name || 'Organisation sans nom';
-    var select = document.getElementById('assessment-select');
-    select.innerHTML = state.assessments.map(function (a) {
-      return '<option value="' + esc(a.id) + '"' + (a.id === state.activeAssessmentId ? ' selected' : '') + '>' +
-        esc(assessmentLabel(a)) + '</option>';
+  App.readJsonFiles = function (files, done) {
+    var list = Array.prototype.slice.call(files || []);
+    var results = [];
+    var pending = list.length;
+    if (!pending) return;
+    list.forEach(function (file, i) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        try { results[i] = { file: file, data: JSON.parse(reader.result) }; }
+        catch (e) { results[i] = { file: file, error: e }; }
+        if (--pending === 0) done(results);
+      };
+      reader.readAsText(file);
+    });
+  };
+
+  App.errMsg = function (e) {
+    var key = 'err.' + (e && e.message);
+    var msg = App.t(key);
+    return msg === key ? App.t('err.invalid') : msg;
+  };
+
+  App.flash = function (msg) { App.ui.flash = msg; };
+
+  // ------------------------------------------------------------------ header
+
+  App.renderHeader = function () {
+    var lang = I18n.getLang();
+    document.documentElement.lang = lang;
+    document.title = App.t('app.title');
+    document.querySelectorAll('[data-i18n]').forEach(function (node) {
+      node.textContent = App.t(node.getAttribute('data-i18n'));
+    });
+
+    var orgSel = document.getElementById('org-select');
+    orgSel.innerHTML = App.ws.orgs.map(function (o) {
+      return '<option value="' + App.esc(o.id) + '"' + (o.id === App.ws.activeOrgId ? ' selected' : '') + '>' + App.esc(App.orgName(o)) + '</option>';
     }).join('');
 
-    var route = currentRoute();
+    var org = App.org();
+    var aSel = document.getElementById('assessment-select');
+    aSel.innerHTML = org.assessments.map(function (a) {
+      return '<option value="' + App.esc(a.id) + '"' + (a.id === org.activeAssessmentId ? ' selected' : '') + '>' + App.esc(App.assessmentLabel(a)) + '</option>';
+    }).join('');
+
+    document.querySelectorAll('.lang-switch button').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+    });
+
+    var route = App.route();
     document.querySelectorAll('.main-nav a').forEach(function (link) {
       link.classList.toggle('active', link.getAttribute('data-route') === route.name);
     });
-  }
+    document.body.classList.toggle('mode-facilitator', route.name === 'facilitator');
+  };
 
-  // ---------------------------------------------------------------- routing
+  // ------------------------------------------------------------------ routing
 
-  function currentRoute() {
-    var hash = (location.hash || '#accueil').slice(1).split('/');
-    return { name: hash[0] || 'accueil', param: hash[1] || null };
-  }
+  App.route = function () {
+    var hash = (location.hash || '#home').slice(1).split('/');
+    return { name: hash[0] || 'home', param: hash[1] || null };
+  };
 
-  function render() {
-    var route = currentRoute();
-    renderHeader();
-    switch (route.name) {
-      case 'fiche': renderFiche(); break;
-      case 'diagnostic': renderDiagnostic(route.param); break;
-      case 'resultats': renderResults(); break;
-      case 'plan': renderPlan(route.param); break;
-      case 'manuel': renderManual(); break;
-      default: renderHome();
+  App.render = function () {
+    I18n.setLang(App.settings().lang);
+    var route = App.route();
+    App.renderHeader();
+    var fn = App.views[route.name] || App.views.home;
+    fn(route.param);
+    if (App.ui.flash) {
+      var note = document.createElement('div');
+      note.className = 'flash';
+      note.setAttribute('role', 'status');
+      note.textContent = App.ui.flash;
+      view.prepend(note);
+      App.ui.flash = null;
     }
-    view.focus({ preventScroll: true });
-  }
+  };
 
-  // ---------------------------------------------------------------- accueil
+  App.setView = function (html) { view.innerHTML = html; };
+  App.viewEl = view;
 
-  function renderHome() {
-    var a = activeAssessment();
-    var r = S.computeScores(F, a.answers);
+  App.pillarTabs = function (routeName, activeId, scores) {
+    return '<div class="pillar-tabs" role="tablist">' + F.PILLARS.map(function (p, i) {
+      var ps = scores.pillars[i];
+      return '<a role="tab" href="#' + routeName + '/' + p.id + '" class="pillar-tab' + (p.id === activeId ? ' active' : '') +
+        '" style="--pillar:' + App.PILLAR_COLORS[p.id] + '"' + (p.id === activeId ? ' aria-selected="true"' : '') + '>' +
+        '<span>' + App.esc(App.L(p.shortName)) + '</span>' +
+        '<small data-pillar-progress="' + p.id + '">' + ps.answered + '/' + ps.total + '</small></a>';
+    }).join('') + '</div>';
+  };
+
+  // ------------------------------------------------------------------ home
+
+  App.views.home = function () {
+    var a = App.assessment();
+    var r = App.scores(a);
     var steps = [
-      { n: 0, route: '#fiche', title: 'Fiche synoptique', text: "Renseignez l'identité de l'organisation et la séquence du diagnostic. À remplir en premier lieu." },
-      { n: 1, route: '#diagnostic/gov', title: 'Diagnostic', text: 'Choisissez, pour chacune des 33 composantes, la description qui correspond le mieux à votre situation.' },
-      { n: 2, route: '#resultats', title: 'Résultats', text: "Visualisez l'indice de développement organisationnel global et par pilier." },
-      { n: 3, route: '#plan/gov', title: 'Plan de renforcement', text: 'Traduisez les faiblesses identifiées en défis, activités, indicateurs et chronogramme.' }
+      { n: 0, route: '#profile', title: 'nav.profile', text: 'step.profile' },
+      { n: 1, route: '#assessment/gov', title: 'nav.assessment', text: 'step.assessment' },
+      { n: 2, route: '#results', title: 'nav.results', text: 'step.results' },
+      { n: 3, route: '#plan', title: 'nav.plan', text: 'step.plan' },
+      { n: 4, route: '#report', title: 'nav.report', text: 'step.report' }
     ];
-    view.innerHTML =
+    App.setView(
       '<section class="hero">' +
-        '<h1>Baromètre de gouvernance organisationnelle</h1>' +
-        '<p>Outil d’auto-diagnostic et d’accompagnement destiné aux petites organisations. ' +
-        'Il mesure le niveau de développement de quatre piliers — gouvernance, gestion des ressources et évaluation, ' +
-        'ressources humaines, ressources financières — sur une échelle de 1 à 4, puis aide à bâtir un plan de renforcement.</p>' +
+        '<h1>' + App.esc(App.t('home.title')) + '</h1>' +
+        '<p>' + App.esc(App.t('home.intro')) + '</p>' +
         '<div class="hero-status">' +
-          '<span><strong>' + esc(assessmentLabel(a)) + '</strong></span>' +
-          '<span>' + r.answered + ' / ' + r.totalComponents + ' composantes renseignées</span>' +
-          (r.index !== null ? '<span>Indice moyen : <strong>' + fmt(r.index, 2) + ' / 4</strong></span>' : '') +
+          '<span><strong>' + App.esc(App.orgName()) + '</strong> — ' + App.esc(App.assessmentLabel(a)) + '</span>' +
+          '<span>' + r.answered + ' / ' + r.totalComponents + ' ' + App.esc(App.t('home.components')) + '</span>' +
+          (r.index !== null ? '<span>' + App.esc(App.t('home.index')) + ' : <strong>' + App.fmt(r.index, 2) + ' / 4</strong></span>' : '') +
         '</div>' +
       '</section>' +
       '<ol class="process">' + steps.map(function (s) {
         return '<li><a href="' + s.route + '" class="process-step">' +
           '<span class="step-n">' + s.n + '</span>' +
-          '<span class="step-body"><strong>' + esc(s.title) + '</strong><span>' + esc(s.text) + '</span></span>' +
-          '</a></li>';
+          '<span class="step-body"><strong>' + App.esc(App.t(s.title)) + '</strong><span>' + App.esc(App.t(s.text)) + '</span></span></a></li>';
       }).join('') + '</ol>' +
-      '<section class="card"><h2>Les quatre stades de développement</h2><ol class="levels-legend">' +
+      '<a href="#facilitator" class="process-step facilitator-link"><span class="step-n">★</span><span class="step-body"><strong>' +
+        App.esc(App.t('nav.facilitator')) + '</strong><span>' + App.esc(App.t('step.facilitator')) + '</span></span></a>' +
+      '<section class="card"><h2>' + App.esc(App.t('home.levels')) + '</h2><ol class="levels-legend">' +
       F.LEVELS.map(function (l) {
-        return '<li><span class="level-badge level-' + l.value + '">' + l.value + '</span>' + esc(l.label) + '</li>';
-      }).join('') + '</ol></section>';
-  }
+        return '<li><span class="level-badge level-' + l.value + '">' + l.value + '</span>' + App.esc(App.L(l.label)) + '</li>';
+      }).join('') + '</ol></section>'
+    );
+  };
 
-  // ---------------------------------------------------------------- fiche
+  // ------------------------------------------------------------------ profile
 
-  function renderFiche() {
-    var o = state.organization;
-    var a = activeAssessment();
-    function field(id, label, value, type) {
-      return '<label class="field"><span>' + esc(label) + '</span>' +
-        '<input type="' + (type || 'text') + '" data-org="' + id + '" value="' + esc(value) + '"></label>';
+  App.views.profile = function () {
+    var org = App.org();
+    var o = org.organization;
+    var a = App.assessment();
+    function field(id, type) {
+      return '<label class="field"><span>' + App.esc(App.t('profile.' + id)) + '</span>' +
+        '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"></label>';
     }
-    view.innerHTML =
-      '<h1>Fiche synoptique de votre organisation</h1>' +
-      '<section class="card"><h2>Organisation</h2><div class="form-grid">' +
-        field('name', "Nom de l'organisation", o.name) +
-        field('address', 'Adresse', o.address) +
-        field('focalPoint', 'Point focal', o.focalPoint) +
-        field('phone', 'Téléphone', o.phone, 'tel') +
-        field('email', 'E-mail', o.email, 'email') +
+    App.setView(
+      '<h1>' + App.esc(App.t('profile.title')) + '</h1>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.org')) + '</h2><div class="form-grid">' +
+        field('name') + field('acronym') + field('type') + field('region') + field('address') +
+        field('focalPoint') + field('phone', 'tel') + field('email', 'email') +
       '</div></section>' +
-      '<section class="card"><h2>Diagnostic en cours</h2><div class="form-grid">' +
-        '<label class="field"><span>Séquence de diagnostic</span><select data-assess="sequence">' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
+        '<label class="field"><span>' + App.esc(App.t('profile.sequence')) + '</span><select data-on="assess-sequence">' +
           F.SEQUENCES.map(function (s) {
-            return '<option value="' + s.value + '"' + (s.value === a.sequence ? ' selected' : '') + '>' + esc(s.label) + '</option>';
+            return '<option value="' + s.value + '"' + (s.value === a.sequence ? ' selected' : '') + '>' + App.esc(App.L(s.label)) + '</option>';
           }).join('') +
         '</select></label>' +
-        '<label class="field"><span>Année de mise en œuvre du diagnostic</span>' +
-          '<input type="number" min="2000" max="2100" data-assess="year" value="' + esc(a.year) + '"></label>' +
+        '<label class="field"><span>' + App.esc(App.t('profile.year')) + '</span>' +
+          '<input type="number" min="2000" max="2100" data-on="assess-year" value="' + App.esc(a.year) + '"></label>' +
       '</div></section>' +
-      '<section class="card"><h2>Historique des diagnostics</h2>' +
-        '<p class="muted">Chaque diagnostic conserve ses propres réponses et son propre plan, ce qui permet de suivre l’évolution de l’organisation dans le temps.</p>' +
-        '<table class="table"><thead><tr><th>Diagnostic</th><th>Avancement</th><th>Indice</th><th></th></tr></thead><tbody>' +
-        state.assessments.map(function (x) {
-          var r = S.computeScores(F, x.answers);
-          return '<tr' + (x.id === a.id ? ' class="current"' : '') + '><td>' + esc(assessmentLabel(x)) + '</td>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.history')) + '</h2>' +
+        '<p class="muted">' + App.esc(App.t('profile.historyHelp')) + '</p>' +
+        '<div class="table-wrap"><table class="table"><thead><tr><th>' + App.esc(App.t('header.assessment')) + '</th><th>' + App.esc(App.t('profile.progress')) +
+        '</th><th>' + App.esc(App.t('profile.index')) + '</th><th></th></tr></thead><tbody>' +
+        org.assessments.map(function (x) {
+          var r = App.scores(x);
+          return '<tr' + (x.id === a.id ? ' class="current"' : '') + '><td>' + App.esc(App.assessmentLabel(x)) + '</td>' +
             '<td>' + r.answered + ' / ' + r.totalComponents + '</td>' +
-            '<td>' + (r.index === null ? '—' : fmt(r.index, 2)) + '</td>' +
+            '<td>' + App.fmt(r.index, 2) + '</td>' +
             '<td class="row-actions">' +
-              (x.id === a.id ? '<span class="tag">actif</span>' : '<button class="btn small" data-activate="' + esc(x.id) + '">Ouvrir</button>') +
-              (state.assessments.length > 1 ? ' <button class="btn small danger" data-delete="' + esc(x.id) + '">Supprimer</button>' : '') +
+              (x.id === a.id ? '<span class="tag">' + App.esc(App.t('active')) + '</span>' : '<button class="btn small" data-click="activate-assessment" data-id="' + App.esc(x.id) + '">' + App.esc(App.t('open')) + '</button>') +
+              (org.assessments.length > 1 ? ' <button class="btn small danger" data-click="delete-assessment" data-id="' + App.esc(x.id) + '">' + App.esc(App.t('delete')) + '</button>' : '') +
             '</td></tr>';
         }).join('') +
-        '</tbody></table>' +
-        '<div class="actions"><button class="btn primary" data-action="new-assessment">Nouveau diagnostic</button></div>' +
+        '</tbody></table></div>' +
+        '<div class="actions"><button class="btn primary" data-click="new-assessment">' + App.esc(App.t('header.newAssessment')) + '</button></div>' +
       '</section>' +
-      '<section class="card"><h2>Sauvegarde et partage</h2>' +
-        '<p class="muted">Les données sont enregistrées dans ce navigateur uniquement. Exportez régulièrement un fichier de sauvegarde (.json) pour l’archiver ou le transmettre.</p>' +
+      '<section class="card"><h2>' + App.esc(App.t('profile.share')) + '</h2>' +
+        '<p class="muted">' + App.esc(App.t('profile.shareHelp')) + '</p>' +
         '<div class="actions">' +
-          '<button class="btn" data-action="export-json">Exporter le dossier (.json)</button>' +
-          '<label class="btn">Importer un dossier<input type="file" accept=".json,application/json" data-action="import-json" hidden></label>' +
-          '<button class="btn danger" data-action="reset">Tout effacer</button>' +
+          '<button class="btn primary" data-click="export-org">' + App.esc(App.t('profile.export')) + '</button>' +
+          '<label class="btn">' + App.esc(App.t('profile.import')) + '<input type="file" accept=".json,application/json" multiple data-on="import-files" hidden></label>' +
+          (App.ws.orgs.length > 1 ? '<button class="btn danger" data-click="delete-org" data-id="' + App.esc(org.id) + '">' + App.esc(App.t('profile.deleteOrg')) + '</button>' : '') +
         '</div>' +
-      '</section>';
-  }
+      '</section>'
+    );
+  };
 
-  // ---------------------------------------------------------------- diagnostic
+  // ------------------------------------------------------------------ assessment
 
-  function renderDiagnostic(pillarId) {
-    var pillar = pillarById(pillarId);
-    var a = activeAssessment();
-    var r = S.computeScores(F, a.answers);
+  App.views.assessment = function (pillarId) {
+    var pillar = App.pillarById(pillarId);
+    var a = App.assessment();
+    var r = App.scores(a);
     var idx = F.PILLARS.indexOf(pillar);
     var prev = F.PILLARS[idx - 1];
     var next = F.PILLARS[idx + 1];
 
-    var html = '<h1>Diagnostic — ' + esc(pillar.name) + '</h1>' + pillarTabs('diagnostic', pillar.id, r) +
-      '<p class="muted">Cliquez, pour chaque composante, sur la description qui correspond le mieux à la situation actuelle de l’organisation. Les notes se calculent automatiquement.</p>' +
-      '<div class="level-header" aria-hidden="true"><span></span>' +
-        F.LEVELS.map(function (l) { return '<span><b>' + l.value + '</b> ' + esc(l.label) + '</span>'; }).join('') +
+    var html = '<h1>' + App.esc(App.t('diag.title')) + ' — ' + App.esc(App.L(pillar.name)) + '</h1>' +
+      App.pillarTabs('assessment', pillar.id, r) +
+      '<p class="muted">' + App.esc(App.t('diag.help')) + '</p>' +
+      '<div class="level-header" aria-hidden="true">' +
+        F.LEVELS.map(function (l) { return '<span><b>' + l.value + '</b> ' + App.esc(App.L(l.label)) + '</span>'; }).join('') +
       '</div>';
 
     pillar.aspects.forEach(function (aspect) {
-      html += '<section class="aspect card"><h2>' + esc(aspect.name) + '</h2>';
+      html += '<section class="aspect card"><h2>' + App.esc(App.L(aspect.name)) + '</h2>';
       aspect.components.forEach(function (c) {
         var selected = a.answers[c.id];
-        var title = c.name === aspect.name ? aspect.name : c.name;
-        html += '<fieldset class="component" data-component="' + esc(c.id) + '">' +
-          '<legend>' + esc(title) + '<span class="component-score">' + (selected ? 'Note : ' + selected + ' / 4' : 'Non renseigné') + '</span></legend>' +
+        var title = App.L(c.name) === App.L(aspect.name) ? App.L(aspect.name) : App.L(c.name);
+        html += '<fieldset class="component" data-component="' + App.esc(c.id) + '">' +
+          '<legend>' + App.esc(title) + '<span class="component-score">' + componentScoreText(selected) + '</span></legend>' +
           '<div class="levels">' +
           c.levels.map(function (text, i) {
             var v = i + 1;
             return '<label class="level-option level-' + v + '">' +
-              '<input type="radio" name="' + esc(c.id) + '" value="' + v + '"' + (selected === v ? ' checked' : '') + '>' +
-              '<span class="level-n">' + v + '</span><span class="level-text">' + esc(text) + '</span></label>';
+              '<input type="radio" name="' + App.esc(c.id) + '" value="' + v + '" data-on="answer"' + (selected === v ? ' checked' : '') + '>' +
+              '<span class="level-n">' + v + '</span><span class="level-text">' + App.esc(App.L(text)) + '</span></label>';
           }).join('') +
           '</div>' +
-          '<details class="comment"' + (a.comments[c.id] ? ' open' : '') + '><summary>Commentaire / justification</summary>' +
-          '<textarea data-comment="' + esc(c.id) + '" rows="2" placeholder="Éléments de preuve, observations…">' + esc(a.comments[c.id] || '') + '</textarea></details>' +
+          '<details class="comment"' + (a.comments[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('diag.comment')) + '</summary>' +
+          '<textarea data-on="comment" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('diag.commentPh')) + '">' + App.esc(a.comments[c.id] || '') + '</textarea></details>' +
           '</fieldset>';
       });
       html += '</section>';
     });
 
     html += '<nav class="pager">' +
-      (prev ? '<a class="btn" href="#diagnostic/' + prev.id + '">← ' + esc(prev.shortName) + '</a>' : '<span></span>') +
-      (next ? '<a class="btn primary" href="#diagnostic/' + next.id + '">' + esc(next.shortName) + ' →</a>'
-            : '<a class="btn primary" href="#resultats">Voir les résultats →</a>') +
+      (prev ? '<a class="btn" href="#assessment/' + prev.id + '">← ' + App.esc(App.L(prev.shortName)) + '</a>' : '<span></span>') +
+      (next ? '<a class="btn primary" href="#assessment/' + next.id + '">' + App.esc(App.L(next.shortName)) + ' →</a>'
+            : '<a class="btn primary" href="#results">' + App.esc(App.t('diag.next')) + ' →</a>') +
       '</nav>';
-    view.innerHTML = html;
+    App.setView(html);
+  };
+
+  function componentScoreText(selected) {
+    if (!selected) return App.esc(App.t('notAnswered'));
+    return App.esc(App.t('score')) + ' : ' + selected + ' / 4 · ' + App.catTag(S.categoryFor(selected));
   }
 
-  function pillarTabs(routeName, activeId, scores) {
-    return '<div class="pillar-tabs" role="tablist">' + F.PILLARS.map(function (p, i) {
-      var ps = scores.pillars[i];
-      return '<a role="tab" href="#' + routeName + '/' + p.id + '" class="pillar-tab' + (p.id === activeId ? ' active' : '') +
-        '" style="--pillar:' + PILLAR_COLORS[p.id] + '"' + (p.id === activeId ? ' aria-selected="true"' : '') + '>' +
-        '<span>' + esc(p.shortName) + '</span>' +
-        '<small data-pillar-progress="' + p.id + '">' + ps.answered + '/' + ps.total + '</small></a>';
-    }).join('') + '</div>';
-  }
+  // ------------------------------------------------------------------ results
 
-  // ---------------------------------------------------------------- résultats
-
-  function renderResults() {
-    var a = activeAssessment();
-    var r = S.computeScores(F, a.answers);
-    var others = state.assessments.filter(function (x) { return x.id !== a.id; });
-    if (ui.compareWith && !others.some(function (x) { return x.id === ui.compareWith; })) ui.compareWith = null;
-    var baseline = ui.compareWith ? others.filter(function (x) { return x.id === ui.compareWith; })[0] : null;
-    var cmp = baseline ? S.compareScores(r, S.computeScores(F, baseline.answers)) : null;
+  App.views.results = function () {
+    var org = App.org();
+    var a = App.assessment();
+    var r = App.scores(a);
+    var others = org.assessments.filter(function (x) { return x.id !== a.id; });
+    if (App.ui.compareWith === null) {
+      var prev = App.previousAssessment(org, a);
+      App.ui.compareWith = prev ? prev.id : '';
+    }
+    if (App.ui.compareWith && !others.some(function (x) { return x.id === App.ui.compareWith; })) App.ui.compareWith = '';
+    var baseline = others.filter(function (x) { return x.id === App.ui.compareWith; })[0];
+    var cmp = baseline ? S.compareScores(r, App.scores(baseline)) : null;
     var stage = S.stageFor(F, r.index);
+    var groups = S.classify(F, a.answers);
 
-    var html = '<div class="results-head"><div><h1>Résultat d’évaluation</h1>' +
-      '<p class="muted">' + esc(state.organization.name || 'Organisation sans nom') + ' — ' + esc(assessmentLabel(a)) + '</p></div>' +
+    var html = '<div class="page-head"><div><h1>' + App.esc(App.t('results.title')) + '</h1>' +
+      '<p class="muted">' + App.esc(App.orgName()) + ' — ' + App.esc(App.assessmentLabel(a)) + '</p></div>' +
       '<div class="actions no-print">' +
-        (others.length ? '<label class="inline-field">Comparer avec <select data-action="compare"><option value="">—</option>' +
+        (others.length ? '<label class="inline-field">' + App.esc(App.t('results.compare')) + ' <select data-on="compare"><option value="">—</option>' +
           others.map(function (x) {
-            return '<option value="' + esc(x.id) + '"' + (x.id === ui.compareWith ? ' selected' : '') + '>' + esc(assessmentLabel(x)) + '</option>';
+            return '<option value="' + App.esc(x.id) + '"' + (x.id === App.ui.compareWith ? ' selected' : '') + '>' + App.esc(App.assessmentLabel(x)) + '</option>';
           }).join('') + '</select></label>' : '') +
-        '<button class="btn" data-action="export-results">Exporter (CSV)</button>' +
-        '<button class="btn" data-action="print">Imprimer</button>' +
+        '<button class="btn" data-click="export-results">' + App.esc(App.t('exportCsv')) + '</button>' +
+        '<a class="btn primary" href="#report">' + App.esc(App.t('results.toReport')) + '</a>' +
       '</div></div>';
 
     if (!r.complete) {
-      html += '<div class="notice">Diagnostic incomplet : ' + r.answered + ' composante(s) sur ' + r.totalComponents +
-        ' renseignée(s). Les moyennes ne portent que sur les réponses fournies. <a href="#diagnostic/' + firstIncompletePillar(r) + '">Compléter le diagnostic</a></div>';
+      html += '<div class="notice">' + App.esc(App.t('results.incomplete', { n: r.answered, total: r.totalComponents })) +
+        ' <a href="#assessment/' + firstIncompletePillar(r) + '">' + App.esc(App.t('results.complete')) + '</a></div>';
     }
 
     html += '<section class="summary">' +
-      '<div class="kpi"><span class="kpi-label">Indice moyen de développement</span><span class="kpi-value">' + fmt(r.index, 2) + '<small> / 4</small></span>' +
+      '<div class="kpi"><span class="kpi-label">' + App.esc(App.t('results.index')) + '</span><span class="kpi-value">' + App.fmt(r.index, 2) + '<small> / 4</small></span>' +
         (cmp && cmp.index !== null ? deltaTag(cmp.index) : '') +
-        (stage ? '<span class="kpi-sub">Stade : ' + esc(stage.label) + '</span>' : '') + '</div>' +
-      '<div class="kpi"><span class="kpi-label">Placement total</span><span class="kpi-value">' + r.total + '<small> / ' + r.maxTotal + '</small></span>' +
+        (stage ? '<span class="kpi-sub">' + App.esc(App.t('results.stage')) + ' : ' + App.esc(App.L(stage.label)) + '</span>' : '') +
+        '<span class="kpi-sub small">' + App.esc(App.t('results.method.' + r.indexMethod)) + '</span></div>' +
+      '<div class="kpi"><span class="kpi-label">' + App.esc(App.t('results.total')) + '</span><span class="kpi-value">' + r.total + '<small> / ' + r.maxTotal + '</small></span>' +
         (cmp && cmp.total !== null ? deltaTag(cmp.total, 0) : '') +
-        '<span class="kpi-sub">' + (r.indexPercent === null ? '—' : fmt(r.indexPercent, 0) + ' % du maximum') + '</span></div>' +
-      '<div class="kpi kpi-wide"><span class="kpi-label">Moyenne par pilier</span><div id="pillar-overview"></div></div>' +
+        '<span class="kpi-sub">' + (r.total ? App.fmt((r.total / r.maxTotal) * 100, 0) + ' ' + App.esc(App.t('results.ofMax')) : '—') + '</span></div>' +
+      '<div class="kpi kpi-wide"><span class="kpi-label">' + App.esc(App.t('results.pillars')) + '</span><div id="pillar-overview"></div></div>' +
       '</section>';
 
-    html += '<section class="pillar-grid">' + F.PILLARS.map(function (p) {
-      return '<article class="pillar-card card" style="--pillar:' + PILLAR_COLORS[p.id] + '">' +
-        '<h2>' + esc(p.name) + '</h2>' +
-        '<div class="pillar-body"><div class="donut-slot" data-donut="' + p.id + '"></div><div class="bars-slot" data-bars="' + p.id + '"></div></div>' +
-        '<p class="muted small">Chaque champ d’évaluation a une pondération maximum de 4.</p></article>';
+    html += '<section class="swot-grid">' + ['maintain', 'opportunity', 'address'].map(function (cat) {
+      var items = groups[cat];
+      return '<article class="card swot cat-' + cat + '"><header><h2>' + App.CAT_ICONS[cat] + ' ' + App.esc(App.t('cats.' + cat)) +
+        '</h2><span class="swot-count">' + items.length + '</span></header>' +
+        '<p class="muted small">' + App.esc(App.t('catHelp.' + cat)) + '</p>' +
+        (items.length ? '<ul class="swot-list">' + items.map(function (it) {
+          return '<li>' + App.levelBadge(it.score) + '<span><strong>' + App.esc(App.L(it.component.name)) + '</strong><small>' +
+            App.esc(App.L(it.pillar.shortName)) + ' · ' + App.esc(App.L(it.aspect.name)) + '</small></span></li>';
+        }).join('') + '</ul>' : '<p class="muted">' + App.esc(App.t('results.noItems')) + '</p>') +
+        '</article>';
     }).join('') + '</section>';
 
-    var weak = S.weakestComponents(F, a.answers).filter(function (w) { return w.score <= 2; });
-    html += '<section class="card"><h2>Points à renforcer en priorité</h2>' +
-      (weak.length
-        ? '<table class="table"><thead><tr><th>Pilier</th><th>Aspect</th><th>Composante</th><th>Note</th></tr></thead><tbody>' +
-          weak.map(function (w) {
-            return '<tr><td>' + esc(w.pillarName) + '</td><td>' + esc(w.aspectName) + '</td><td>' + esc(w.componentName) +
-              '</td><td><span class="level-badge level-' + w.score + '">' + w.score + '</span></td></tr>';
-          }).join('') + '</tbody></table>' +
-          '<div class="actions no-print"><a class="btn primary" href="#plan/' + weak[0].pillarId + '">Construire le plan de renforcement →</a></div>'
-        : '<p class="muted">Aucune composante notée 1 ou 2.</p>') +
-      '</section>';
+    html += '<section class="pillar-grid">' + F.PILLARS.map(function (p) {
+      return '<article class="pillar-card card" style="--pillar:' + App.PILLAR_COLORS[p.id] + '">' +
+        '<h2>' + App.esc(App.L(p.name)) + '</h2>' +
+        '<div class="pillar-body"><div class="donut-slot" data-donut="' + p.id + '"></div><div class="bars-slot" data-bars="' + p.id + '"></div></div>' +
+        '<p class="muted small">' + App.esc(App.t('results.weightNote')) + '</p></article>';
+    }).join('') + '</section>' +
+    '<div class="actions no-print"><a class="btn primary" href="#plan">' + App.esc(App.t('results.toPlan')) + ' →</a></div>';
 
-    view.innerHTML = html;
+    App.setView(html);
 
     document.getElementById('pillar-overview').appendChild(Charts.bars(r.pillars.map(function (p, i) {
-      return { label: p.shortName, value: p.score, delta: cmp ? cmp.pillars[i].delta : undefined };
+      return { label: App.L(p.shortName), value: p.score, delta: cmp ? cmp.pillars[i].delta : undefined, color: App.PILLAR_COLORS[p.id] };
     }), F.MAX_SCORE));
 
     r.pillars.forEach(function (p, i) {
-      var color = PILLAR_COLORS[p.id];
-      view.querySelector('[data-donut="' + p.id + '"]').appendChild(Charts.donut(p.score, F.MAX_SCORE, { color: color, label: p.name }));
+      var color = App.PILLAR_COLORS[p.id];
+      view.querySelector('[data-donut="' + p.id + '"]').appendChild(Charts.donut(p.score, F.MAX_SCORE, { color: color, label: App.L(p.name) }));
       view.querySelector('[data-bars="' + p.id + '"]').appendChild(Charts.bars(p.aspects.map(function (asp, j) {
-        return { label: asp.name, value: asp.score, delta: cmp ? cmp.pillars[i].aspects[j].delta : undefined };
+        return { label: App.L(asp.name), value: asp.score, delta: cmp ? cmp.pillars[i].aspects[j].delta : undefined };
       }), F.MAX_SCORE, { color: color }));
     });
-  }
+  };
 
   function deltaTag(value, digits) {
     var cls = value > 0 ? 'up' : value < 0 ? 'down' : 'flat';
-    return '<span class="delta ' + cls + '">' + (value > 0 ? '+' : '') + fmt(value, digits === undefined ? 2 : digits) + ' vs référence</span>';
+    return '<span class="delta ' + cls + '">' + (value > 0 ? '+' : '') + App.fmt(value, digits === undefined ? 2 : digits) + ' ' + App.esc(App.t('results.vsRef')) + '</span>';
   }
+  App.deltaTag = deltaTag;
 
   function firstIncompletePillar(r) {
     var p = r.pillars.filter(function (x) { return x.answered < x.total; })[0];
     return p ? p.id : F.PILLARS[0].id;
   }
 
-  // ---------------------------------------------------------------- plan
+  // ------------------------------------------------------------------ help
 
-  function renderPlan(pillarId) {
-    var pillar = pillarById(pillarId);
-    var a = activeAssessment();
-    var r = S.computeScores(F, a.answers);
+  App.views.help = function () {
+    var w = S.effectiveWeights(F, { indexMethod: 'components' });
+    var weights = F.PILLARS.map(function (p) {
+      var n = p.aspects.reduce(function (s, a) { return s + a.components.length; }, 0);
+      return '<li>' + App.esc(App.L(p.name)) + ' : ' + n + ' / 33 → ' + App.fmt(w[p.id], 1) + ' %</li>';
+    }).join('');
+    var fr = I18n.getLang() === 'fr';
+    App.setView('<h1>' + App.esc(App.t('help.title')) + '</h1>' + (fr ? helpFr(weights) : helpEn(weights)));
+  };
 
-    var html = '<div class="results-head"><div><h1>Plan de renforcement — ' + esc(pillar.name) + '</h1>' +
-      '<p class="muted">' + esc(assessmentLabel(a)) + '</p></div>' +
-      '<div class="actions no-print">' +
-        '<label class="inline-field"><input type="checkbox" data-action="plan-filter"' + (ui.planFilterWeak ? ' checked' : '') + '> Seulement les composantes à renforcer (note &lt; 4)</label>' +
-        '<button class="btn" data-action="export-plan">Exporter le plan (CSV)</button>' +
-        '<button class="btn" data-action="print">Imprimer</button>' +
-      '</div></div>' +
-      pillarTabs('plan', pillar.id, r);
+  function helpFr(weights) {
+    return '<section class="card"><h2>1. Déroulement</h2><ol>' +
+      '<li><strong>Fiche</strong> : identité de l’organisation, séquence et année du diagnostic. À remplir en premier.</li>' +
+      '<li><strong>Diagnostic</strong> : pour chacune des 33 composantes, cliquez sur la description qui correspond le mieux à la situation actuelle (stades 1 à 4).</li>' +
+      '<li><strong>Résultats</strong> : indice global, scores par pilier et par aspect, forces, opportunités et faiblesses.</li>' +
+      '<li><strong>Plan de travail</strong> : activités standard proposées automatiquement, à adapter, et vos propres activités, avec un chronogramme.</li>' +
+      '<li><strong>Rapport</strong> : rapport individuel de l’organisation, à exporter en PDF.</li></ol></section>' +
+      '<section class="card"><h2>2. Forces, opportunités et faiblesses</h2><ul>' +
+      '<li><strong>▲ Force à maintenir</strong> : composante notée 4.</li>' +
+      '<li><strong>◆ Opportunité à saisir</strong> : composante notée 3, à un pas du niveau maximal.</li>' +
+      '<li><strong>▼ Faiblesse à corriger</strong> : composante notée 1 ou 2.</li></ul></section>' +
+      '<section class="card"><h2>3. Méthode de calcul</h2><ul>' +
+      '<li>Composante : note du niveau choisi (1 à 4).</li><li>Aspect : moyenne de ses composantes.</li>' +
+      '<li>Pilier : moyenne de ses aspects.</li><li>Placement total : somme des 33 composantes (maximum 132).</li>' +
+      '<li>Indice moyen de développement : moyenne des 33 composantes (méthode Excel, par défaut).</li></ul>' +
+      '<h3>Le poids des piliers</h3>' +
+      '<p>Dans le fichier Excel, aucun poids n’est saisi : l’indice global est la simple moyenne des 33 composantes. Mais comme les piliers n’ont pas le même nombre de composantes, ils ne pèsent pas autant dans l’indice :</p><ul>' + weights + '</ul>' +
+      '<p>La gestion des ressources et l’évaluation compte donc presque deux fois plus que la gouvernance. Si vous souhaitez que chaque pilier compte autant (25 % chacun) ou fixer vos propres poids, choisissez « Moyenne pondérée des 4 piliers » dans l’Espace facilitateur → Paramètres de calcul. Les scores des composantes, aspects et piliers ne changent pas : seul l’indice global change.</p></section>' +
+      '<section class="card"><h2>4. Plan de travail</h2><ol>' +
+      '<li>Le plan est pré-rempli : 2 activités par faiblesse, 1 par opportunité, 1 activité de maintien par force.</li>' +
+      '<li>Modifiez le texte, le responsable, la période (mois de début et de fin), la priorité et le statut. Les activités modifiées sont conservées lors des mises à jour.</li>' +
+      '<li>Ajoutez vos propres activités sous chaque composante, ou des activités générales.</li>' +
+      '<li>Formulez des indicateurs clairs, avec valeur de base, valeur cible et source de vérification.</li>' +
+      '<li>Si le diagnostic change, cliquez sur « Mettre à jour les activités standard ».</li></ol></section>' +
+      '<section class="card"><h2>5. Rapport PDF</h2><p>La page Rapport présente le rapport individuel : vue d’ensemble, scores détaillés, forces / opportunités / faiblesses, plan et chronogramme. Cliquez sur « Exporter en PDF » puis choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section>' +
+      '<section class="card"><h2>6. Espace facilitateur</h2><p>Chaque organisation exporte son fichier (.json) depuis sa Fiche et l’envoie au facilitateur. Dans l’Espace facilitateur, importez plusieurs fichiers à la fois : le tableau de bord compare toutes les organisations, calcule les moyennes du portefeuille et liste les faiblesses les plus fréquentes. Un fichier ré-importé met à jour l’organisation correspondante.</p>' +
+      '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>';
+  }
 
-    var shown = 0;
-    pillar.aspects.forEach(function (aspect) {
-      aspect.components.forEach(function (c) {
-        var score = a.answers[c.id];
-        if (ui.planFilterWeak && score === 4) return;
-        shown++;
-        var item = a.plan[c.id] || Store.emptyPlanItem();
-        var current = score ? c.levels[score - 1] : null;
-        var nextLevel = score && score < 4 ? c.levels[score] : null;
-        var title = c.name === aspect.name ? aspect.name : aspect.name + ' — ' + c.name;
-        function input(field, label, ph) {
-          return '<label class="field"><span>' + esc(label) + '</span><input type="text" data-plan="' + esc(c.id) + '" data-field="' + field + '" value="' + esc(item[field]) + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '></label>';
-        }
-        function area(field, label, ph) {
-          return '<label class="field wide"><span>' + esc(label) + '</span><textarea rows="2" data-plan="' + esc(c.id) + '" data-field="' + field + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>' + esc(item[field]) + '</textarea></label>';
-        }
-        html += '<article class="plan-item card" style="--pillar:' + PILLAR_COLORS[pillar.id] + '">' +
-          '<header><h2>' + esc(title) + '</h2>' +
-            (score ? '<span class="level-badge level-' + score + '">' + score + '</span>' : '<span class="tag">non évalué</span>') + '</header>' +
-          (current ? '<p class="context"><strong>Situation actuelle :</strong> ' + esc(current) + '</p>' : '') +
-          (nextLevel ? '<p class="context next"><strong>Niveau suivant visé :</strong> ' + esc(nextLevel) + '</p>' : '') +
-          '<div class="form-grid">' +
-            area('challenge', 'Défis identifiés lors du diagnostic', 'Reformulez la réponse au diagnostic sous forme de défi à relever.') +
-            area('activities', 'Activités de redressement proposées', 'Ex. : Augmenter les jetons de présence des membres du CA de 15 % pour chaque réunion ordinaire.') +
-            input('lead', 'Responsable (lead)') +
-            '<label class="field"><span>Priorité</span><select data-plan="' + esc(c.id) + '" data-field="priority"><option value="">—</option>' +
-              F.PRIORITIES.map(function (p) { return '<option' + (item.priority === p ? ' selected' : '') + '>' + p + '</option>'; }).join('') +
-            '</select></label>' +
-            input('resourcesAvailable', 'Ressources disponibles') +
-            input('resourcesAnticipated', 'Ressources anticipées') +
-            area('indicator', 'Indicateur (formulation)', 'Ex. : Jeton de présence à 23 000 Ariary validé.') +
-            input('baseline', 'Valeur de base') +
-            input('target', 'Valeur cible') +
-            area('verification', 'Source de vérification', 'Ex. : Note de service n°XX portant amendement du jeton de présence.') +
-          '</div>' +
-          '<div class="gantt"><span class="gantt-label">Chronogramme</span><div class="gantt-cells">' +
-            item.months.map(function (on, m) {
-              return '<label class="gantt-cell' + (on ? ' on' : '') + '" title="Mois ' + (m + 1) + '">' +
-                '<input type="checkbox" data-plan="' + esc(c.id) + '" data-month="' + m + '"' + (on ? ' checked' : '') + '>M' + (m + 1) + '</label>';
-            }).join('') +
-          '</div></div>' +
-          '</article>';
-      });
+  function helpEn(weights) {
+    return '<section class="card"><h2>1. Steps</h2><ol>' +
+      '<li><strong>Profile</strong>: organisation details, assessment sequence and year. Fill this in first.</li>' +
+      '<li><strong>Assessment</strong>: for each of the 33 components, click the description that best matches the current situation (stages 1 to 4).</li>' +
+      '<li><strong>Results</strong>: global index, scores by pillar and aspect, strengths, opportunities and weaknesses.</li>' +
+      '<li><strong>Workplan</strong>: standard activities proposed automatically, to be adapted, plus your own activities, with a timeline.</li>' +
+      '<li><strong>Report</strong>: the organisation’s individual report, to export to PDF.</li></ol></section>' +
+      '<section class="card"><h2>2. Strengths, opportunities and weaknesses</h2><ul>' +
+      '<li><strong>▲ Strength to maintain</strong>: component scored 4.</li>' +
+      '<li><strong>◆ Opportunity to catch</strong>: component scored 3, one step from the top level.</li>' +
+      '<li><strong>▼ Weakness to address</strong>: component scored 1 or 2.</li></ul></section>' +
+      '<section class="card"><h2>3. How scores are calculated</h2><ul>' +
+      '<li>Component: score of the chosen level (1 to 4).</li><li>Aspect: mean of its components.</li>' +
+      '<li>Pillar: mean of its aspects.</li><li>Total score: sum of the 33 components (maximum 132).</li>' +
+      '<li>Mean development index: mean of the 33 components (Excel method, default).</li></ul>' +
+      '<h3>Pillar weights</h3>' +
+      '<p>The Excel file has no weights to enter: the global index is the simple mean of the 33 components. But because pillars have different numbers of components, they do not weigh the same in the index:</p><ul>' + weights + '</ul>' +
+      '<p>Resource management and evaluation therefore counts almost twice as much as governance. If you want each pillar to count equally (25% each) or set your own weights, choose “Weighted mean of the 4 pillars” in Facilitator space → Calculation settings. Component, aspect and pillar scores do not change: only the global index does.</p></section>' +
+      '<section class="card"><h2>4. Workplan</h2><ol>' +
+      '<li>The plan is pre-filled: 2 activities per weakness, 1 per opportunity, 1 maintenance activity per strength.</li>' +
+      '<li>Edit the text, lead, period (start and end month), priority and status. Edited activities are kept when the plan is updated.</li>' +
+      '<li>Add your own activities under each component, or general activities.</li>' +
+      '<li>Write clear indicators with a baseline, a target and a means of verification.</li>' +
+      '<li>If the assessment changes, click “Update standard activities”.</li></ol></section>' +
+      '<section class="card"><h2>5. PDF report</h2><p>The Report page shows the individual report: overview, detailed scores, strengths / opportunities / weaknesses, workplan and timeline. Click “Export to PDF” and choose “Save as PDF” in the print dialog.</p></section>' +
+      '<section class="card"><h2>6. Facilitator space</h2><p>Each organisation exports its file (.json) from its Profile page and sends it to the facilitator. In the Facilitator space, import several files at once: the dashboard compares all organisations, computes portfolio averages and lists the most common weaknesses. Re-importing a file updates the matching organisation.</p>' +
+      '<p>Data is stored in this browser only: back up the space regularly.</p></section>';
+  }
+
+  // ------------------------------------------------------------------ actions
+
+  var A = App.actions;
+
+  A['org-field'] = function (el) {
+    App.org().organization[el.dataset.field] = el.value;
+    App.touch();
+    if (el.dataset.field === 'name') App.renderHeader();
+    App.persist();
+  };
+
+  A['assess-sequence'] = function (el) {
+    App.assessment().sequence = Number(el.value);
+    App.touch();
+    App.persist(true);
+    App.render();
+  };
+
+  A['assess-year'] = function (el) {
+    var y = Number(el.value);
+    if (y >= 2000 && y <= 2100) {
+      App.assessment().year = y;
+      App.touch();
+      App.persist(true);
+      App.renderHeader();
+    }
+  };
+
+  A.answer = function (el) {
+    var a = App.assessment();
+    a.answers[el.name] = Number(el.value);
+    App.touch();
+    var fs = el.closest('.component');
+    fs.querySelector('.component-score').innerHTML = componentScoreText(Number(el.value));
+    App.scores(a).pillars.forEach(function (p) {
+      var badge = view.querySelector('[data-pillar-progress="' + p.id + '"]');
+      if (badge) badge.textContent = p.answered + '/' + p.total;
     });
-    if (!shown) {
-      html += '<div class="notice">Toutes les composantes de ce pilier ont atteint la note maximale (4). Décochez le filtre pour afficher toutes les composantes.</div>';
-    }
-    view.innerHTML = html;
-  }
+    App.persist(true);
+  };
 
-  function planItem(a, componentId) {
-    if (!a.plan[componentId]) a.plan[componentId] = Store.emptyPlanItem();
-    return a.plan[componentId];
-  }
+  A.comment = function (el) {
+    App.assessment().comments[el.dataset.id] = el.value;
+    App.touch();
+    App.persist();
+  };
 
-  // ---------------------------------------------------------------- manuel
+  A.compare = function (el) {
+    App.ui.compareWith = el.value;
+    App.render();
+  };
 
-  function renderManual() {
-    view.innerHTML =
-      '<h1>Manuel d’utilisation</h1>' +
-      '<section class="card"><h2>I — Navigation</h2><p>Le menu en haut de page permet d’aller d’une étape à l’autre à tout moment. Le sélecteur de diagnostic (à droite) indique sur quel diagnostic vous travaillez.</p>' +
-      '<ol><li><strong>Fiche</strong> : informations sur votre organisme. À remplir en premier lieu.</li>' +
-      '<li><strong>Diagnostic</strong> : les tableaux-questionnaires, un par pilier (domaine d’étude).</li>' +
-      '<li><strong>Résultats</strong> : visualisation des indices de développement organisationnel.</li>' +
-      '<li><strong>Plan</strong> : canevas de planification des actions de renforcement, en relation avec les résultats du diagnostic. Le remplissage du plan est impératif.</li></ol></section>' +
-      '<section class="card"><h2>II — Remplissage des tableaux de diagnostic</h2>' +
-      '<p>Pour chaque composante d’évaluation, cliquez sur la description qui correspond le mieux à la situation actuelle. Les quatre colonnes correspondent aux quatre stades de développement : ' +
-      F.LEVELS.map(function (l) { return '<strong>' + l.value + '</strong> ' + esc(l.label); }).join(' ; ') + '.</p>' +
-      '<p>Les notes d’évaluation se complètent automatiquement.</p></section>' +
-      '<section class="card"><h2>III — Méthode de calcul</h2><ul>' +
-      '<li>Chaque composante reçoit la note du niveau choisi (1 à 4).</li>' +
-      '<li>La note d’un <em>aspect</em> est la moyenne de ses composantes.</li>' +
-      '<li>La note d’un <em>pilier</em> est la moyenne de ses aspects.</li>' +
-      '<li>Le <em>placement total</em> est la somme des 33 composantes (maximum 132).</li>' +
-      '<li>L’<em>indice moyen de développement</em> est la moyenne des 33 composantes.</li>' +
-      '<li>Lorsque plusieurs diagnostics existent, la page Résultats permet d’afficher l’évolution par rapport à un diagnostic de référence.</li></ul></section>' +
-      '<section class="card"><h2>IV — Remplissage du plan de renforcement</h2><ol>' +
-      '<li>Reformuler les réponses au diagnostic sous forme de défis / challenges à pallier.</li>' +
-      '<li>Formuler des activités concrètes pour pallier ces défis. Exemple — Activité 1 : augmenter les jetons de présence des membres du CA de 15 % pour chaque réunion ordinaire.</li>' +
-      '<li>Mentionner la personne ou le responsable direct qui supervisera et conduira ce changement.</li>' +
-      '<li>Mentionner les ressources disponibles (notamment le financement de l’action). Disponibles si déjà en main, anticipées si prévues dans les financements futurs.</li>' +
-      '<li>Formuler des indicateurs d’output clairs. Exemple : « Jeton de présence à 23 000 Ariary validé » au lieu de « Augmentation de la présence effective des membres du CA aux réunions ».</li>' +
-      '<li>Ne pas oublier de spécifier la valeur cible et la valeur de base de l’indicateur.</li>' +
-      '<li>Trois niveaux de priorité : Essentiel — Important — Neutre.</li>' +
-      '<li>Spécifier les sources de vérification des indicateurs. Exemple : note de service n°XX portant amendement du montant alloué au jeton de présence du CA.</li>' +
-      '<li>Cocher les mois concernés dans le chronogramme : les cellules se colorent comme dans un diagramme de Gantt.</li></ol></section>' +
-      '<section class="card"><h2>V — Sauvegarde</h2><p>Les données sont enregistrées automatiquement dans ce navigateur. Utilisez « Exporter le dossier » (page Fiche) pour créer une copie de sauvegarde ou la transmettre à un accompagnateur, qui pourra l’importer sur son propre poste.</p></section>';
-  }
+  A['activate-assessment'] = function (el) {
+    App.org().activeAssessmentId = el.dataset.id;
+    App.ui.compareWith = null;
+    App.persist(true);
+    App.render();
+  };
 
-  // ---------------------------------------------------------------- events
+  A['delete-assessment'] = function (el) {
+    var org = App.org();
+    var a = org.assessments.filter(function (x) { return x.id === el.dataset.id; })[0];
+    if (!a || org.assessments.length <= 1) return;
+    if (!confirm(App.t('confirm.deleteAssessment', { name: App.assessmentLabel(a) }))) return;
+    org.assessments = org.assessments.filter(function (x) { return x.id !== a.id; });
+    if (org.activeAssessmentId === a.id) org.activeAssessmentId = org.assessments[org.assessments.length - 1].id;
+    App.touch();
+    App.persist(true);
+    App.render();
+  };
 
-  view.addEventListener('change', function (e) {
-    var t = e.target;
-    var a = activeAssessment();
+  A['new-assessment'] = function () {
+    var org = App.org();
+    var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
+    var a = Store.newAssessment(Math.min(maxSeq + 1, F.SEQUENCES.length), new Date().getFullYear());
+    org.assessments.push(a);
+    org.activeAssessmentId = a.id;
+    App.ui.compareWith = null;
+    App.touch();
+    App.persist(true);
+    if (location.hash === '#profile') App.render(); else location.hash = '#profile';
+  };
 
-    if (t.type === 'radio' && t.closest('.component')) {
-      var cid = t.name;
-      a.answers[cid] = Number(t.value);
-      var fs = t.closest('.component');
-      fs.querySelector('.component-score').textContent = 'Note : ' + t.value + ' / 4';
-      var r = S.computeScores(F, a.answers);
-      r.pillars.forEach(function (p) {
-        var badge = view.querySelector('[data-pillar-progress="' + p.id + '"]');
-        if (badge) badge.textContent = p.answered + '/' + p.total;
+  A['export-org'] = function () {
+    var org = App.org();
+    var date = new Date().toISOString().slice(0, 10);
+    App.download('barometer-' + App.slug(org.organization.acronym || org.organization.name) + '-' + date + '.json',
+      JSON.stringify(Store.exportOrg(org), null, 2), 'application/json');
+  };
+
+  A['import-files'] = function (el) {
+    App.readJsonFiles(el.files, function (results) {
+      var orgs = [];
+      var errors = [];
+      results.forEach(function (r) {
+        if (r.error) { errors.push(r.file.name + ': ' + App.t('err.invalid')); return; }
+        try { orgs = orgs.concat(Store.parseImport(r.data).orgs); }
+        catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
       });
-      persist(true);
-      return;
-    }
-    if (t.dataset.assess === 'sequence') { a.sequence = Number(t.value); persist(true); render(); return; }
-    if (t.dataset.assess === 'year') { a.year = Number(t.value) || a.year; persist(true); renderHeader(); return; }
-    if (t.dataset.plan !== undefined && t.dataset.month !== undefined) {
-      var item = planItem(a, t.dataset.plan);
-      item.months[Number(t.dataset.month)] = t.checked;
-      t.parentElement.classList.toggle('on', t.checked);
-      persist(true);
-      return;
-    }
-    if (t.dataset.plan !== undefined && t.tagName === 'SELECT') {
-      planItem(a, t.dataset.plan)[t.dataset.field] = t.value;
-      persist(true);
-      return;
-    }
-    if (t.dataset.action === 'compare') { ui.compareWith = t.value || null; renderResults(); return; }
-    if (t.dataset.action === 'plan-filter') { ui.planFilterWeak = t.checked; render(); return; }
-    if (t.dataset.action === 'import-json') { importJson(t.files[0]); t.value = ''; return; }
-  });
+      if (orgs.length) {
+        var res = Store.mergeOrgs(App.ws, orgs);
+        App.ws.activeOrgId = orgs[orgs.length - 1].id;
+        App.persist(true);
+        App.flash(App.t('fac.imported', res) + (errors.length ? ' — ' + errors.join(' ; ') : ''));
+      } else if (errors.length) {
+        App.flash(App.t('fac.importError', { msg: errors.join(' ; ') }));
+      }
+      App.render();
+    });
+    el.value = '';
+  };
+
+  A['delete-org'] = function (el) {
+    var org = App.ws.orgs.filter(function (o) { return o.id === el.dataset.id; })[0];
+    if (!org || App.ws.orgs.length <= 1) return;
+    if (!confirm(App.t('fac.confirmDelete', { name: App.orgName(org) }))) return;
+    App.ws.orgs = App.ws.orgs.filter(function (o) { return o.id !== org.id; });
+    if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
+    App.persist(true);
+    App.render();
+  };
+
+  A['export-results'] = function () {
+    var a = App.assessment();
+    var r = App.scores(a);
+    var rows = [[App.t('profile.name'), App.orgName()], [App.t('header.assessment'), App.assessmentLabel(a)], [],
+      ['Pillar / Pilier', App.t('report.aspect'), App.t('report.component'), App.t('score'), App.t('report.currentLevel'), 'Category', App.t('diag.comment')]];
+    F.allComponents().forEach(function (e) {
+      var s = a.answers[e.component.id];
+      rows.push([App.L(e.pillar.name), App.L(e.aspect.name), App.L(e.component.name), s || '',
+        s ? App.L(F.LEVELS[s - 1].label) : '', s ? App.t('cat.' + S.categoryFor(s)) : '', a.comments[e.component.id] || '']);
+    });
+    rows.push([]);
+    r.pillars.forEach(function (p) {
+      p.aspects.forEach(function (asp) { rows.push([App.L(p.name), App.L(asp.name), '', App.num(asp.score)]); });
+      rows.push([App.L(p.name), '', '', App.num(p.score)]);
+    });
+    rows.push([]);
+    rows.push([App.t('results.total'), '', '', r.total + ' / ' + r.maxTotal]);
+    rows.push([App.t('results.index'), '', '', App.num(r.index)]);
+    App.download('results-' + App.slug(App.orgName()) + '-' + a.year + '.csv', App.csv(rows), 'text/csv;charset=utf-8');
+  };
+
+  // ------------------------------------------------------------------ events
+
+  function dispatch(el, e) {
+    var fn = A[el.dataset.on];
+    if (fn) fn(el, e);
+  }
+
+  var TEXT_INPUTS = 'textarea, input[type=text], input[type=email], input[type=tel]';
 
   view.addEventListener('input', function (e) {
-    var t = e.target;
-    var a = activeAssessment();
-    if (t.dataset.org) {
-      state.organization[t.dataset.org] = t.value;
-      if (t.dataset.org === 'name') renderHeader();
-      persist();
-    } else if (t.dataset.comment) {
-      a.comments[t.dataset.comment] = t.value;
-      persist();
-    } else if (t.dataset.plan !== undefined && t.dataset.field && t.tagName !== 'SELECT') {
-      planItem(a, t.dataset.plan)[t.dataset.field] = t.value;
-      persist();
-    }
+    var el = e.target;
+    if (el.dataset && el.dataset.on && el.matches(TEXT_INPUTS)) dispatch(el, e);
   });
 
-  view.addEventListener('click', function (e) {
-    var t = e.target.closest('button');
-    if (!t) return;
-    if (t.dataset.activate) { setActive(t.dataset.activate); return; }
-    if (t.dataset.delete) { deleteAssessment(t.dataset.delete); return; }
-    switch (t.dataset.action) {
-      case 'new-assessment': createAssessment(); break;
-      case 'export-json': exportJson(); break;
-      case 'export-results': exportResults(); break;
-      case 'export-plan': exportPlan(); break;
-      case 'print': window.print(); break;
-      case 'reset':
-        if (confirm('Effacer toutes les données de ce navigateur ? Pensez à exporter une sauvegarde avant.')) {
-          Store.clear();
-          state = Store.newState();
-          persist(true);
-          location.hash = '#fiche';
-          render();
-        }
-        break;
-    }
+  view.addEventListener('change', function (e) {
+    var el = e.target;
+    if (el.dataset && el.dataset.on && !el.matches(TEXT_INPUTS)) dispatch(el, e);
   });
 
-  document.getElementById('assessment-select').addEventListener('change', function (e) {
-    setActive(e.target.value);
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-click]');
+    if (!el) return;
+    var fn = A[el.dataset.click];
+    if (fn) { e.preventDefault(); fn(el, e); }
   });
 
-  document.getElementById('new-assessment').addEventListener('click', createAssessment);
-
-  window.addEventListener('hashchange', function () { render(); window.scrollTo(0, 0); });
-
-  // ---------------------------------------------------------------- actions
-
-  function setActive(id) {
-    state.activeAssessmentId = id;
-    ui.compareWith = null;
-    persist(true);
-    render();
-  }
-
-  function createAssessment() {
-    var maxSeq = state.assessments.reduce(function (m, a) { return Math.max(m, a.sequence); }, 0);
-    var prev = activeAssessment();
-    var a = Store.newAssessment(Math.min(maxSeq + 1, F.SEQUENCES.length), new Date().getFullYear());
-    state.assessments.push(a);
-    state.activeAssessmentId = a.id;
-    ui.compareWith = prev.id;
-    persist(true);
-    location.hash = '#fiche';
-    render();
-  }
-
-  function deleteAssessment(id) {
-    var a = state.assessments.filter(function (x) { return x.id === id; })[0];
-    if (!a || state.assessments.length <= 1) return;
-    if (!confirm('Supprimer définitivement « ' + assessmentLabel(a) + ' » ?')) return;
-    state.assessments = state.assessments.filter(function (x) { return x.id !== id; });
-    if (state.activeAssessmentId === id) state.activeAssessmentId = state.assessments[0].id;
-    persist(true);
-    render();
-  }
-
-  function exportJson() {
-    var date = new Date().toISOString().slice(0, 10);
-    download('barometre-' + slug(state.organization.name) + '-' + date + '.json', JSON.stringify(state, null, 2), 'application/json');
-  }
-
-  function importJson(file) {
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function () {
-      try {
-        var imported = Store.normalize(JSON.parse(reader.result));
-        if (!confirm('Remplacer les données actuelles par celles de « ' + (imported.organization.name || file.name) + ' » ?')) return;
-        state = imported;
-        ui.compareWith = null;
-        persist(true);
-        render();
-      } catch (err) {
-        alert('Import impossible : ' + err.message);
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function exportResults() {
-    var a = activeAssessment();
-    var r = S.computeScores(F, a.answers);
-    var rows = [['Organisation', state.organization.name], ['Diagnostic', assessmentLabel(a)], [],
-      ['Pilier', 'Aspect', 'Composante', 'Note', 'Niveau', 'Commentaire']];
-    F.PILLARS.forEach(function (p) {
-      p.aspects.forEach(function (asp) {
-        asp.components.forEach(function (c) {
-          var s = a.answers[c.id];
-          rows.push([p.name, asp.name, c.name, s || '', s ? F.LEVELS[s - 1].label : '', a.comments[c.id] || '']);
-        });
+  App.start = function () {
+    document.getElementById('org-select').addEventListener('change', function (e) {
+      App.ws.activeOrgId = e.target.value;
+      App.ui.compareWith = null;
+      App.persist(true);
+      App.render();
+    });
+    document.getElementById('assessment-select').addEventListener('change', function (e) {
+      App.org().activeAssessmentId = e.target.value;
+      App.ui.compareWith = null;
+      App.persist(true);
+      App.render();
+    });
+    document.querySelectorAll('.lang-switch button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        App.settings().lang = b.getAttribute('data-lang');
+        App.persist(true);
+        App.render();
       });
     });
-    rows.push([]);
-    rows.push(['Pilier', 'Aspect', '', 'Moyenne']);
-    r.pillars.forEach(function (p) {
-      p.aspects.forEach(function (asp) { rows.push([p.name, asp.name, '', num(asp.score)]); });
-      rows.push([p.name, '(moyenne du pilier)', '', num(p.score)]);
-    });
-    rows.push([]);
-    rows.push(['Placement total', '', '', r.total + ' / ' + r.maxTotal]);
-    rows.push(['Indice moyen de développement', '', '', num(r.index)]);
-    download('resultats-' + slug(state.organization.name) + '-' + a.year + '.csv', csv(rows), 'text/csv;charset=utf-8');
-  }
-
-  function exportPlan() {
-    var a = activeAssessment();
-    var header = ['Pilier', 'Aspect', 'Composante', 'Note', 'Défis', 'Activités', 'Responsable', 'Ressources disponibles',
-      'Ressources anticipées', 'Indicateur', 'Base', 'Cible', 'Priorité', 'Source de vérification'];
-    for (var m = 1; m <= Store.MONTHS; m++) header.push('M' + m);
-    var rows = [header];
-    F.PILLARS.forEach(function (p) {
-      p.aspects.forEach(function (asp) {
-        asp.components.forEach(function (c) {
-          var it = a.plan[c.id];
-          if (!it) return;
-          rows.push([p.name, asp.name, c.name, a.answers[c.id] || '', it.challenge, it.activities, it.lead,
-            it.resourcesAvailable, it.resourcesAnticipated, it.indicator, it.baseline, it.target, it.priority, it.verification]
-            .concat(it.months.map(function (on) { return on ? 'x' : ''; })));
-        });
-      });
-    });
-    download('plan-renforcement-' + slug(state.organization.name) + '-' + a.year + '.csv', csv(rows), 'text/csv;charset=utf-8');
-  }
-
-  function num(v) { return v === null ? '' : v.toFixed(2).replace('.', ','); }
-
-  render();
+    window.addEventListener('hashchange', function () { App.render(); window.scrollTo(0, 0); });
+    App.render();
+  };
 })();

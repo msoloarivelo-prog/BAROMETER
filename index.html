@@ -4,49 +4,61 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Baromètre de gouvernance</title>
-  <meta name="description" content="Outil d'auto-diagnostic et de plan de renforcement de la gouvernance des petites organisations.">
+  <meta name="description" content="Organisational governance self-assessment, workplan and report / Auto-diagnostic de gouvernance, plan de travail et rapport.">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <header class="app-header">
-    <div class="brand">
-      <a href="#accueil" class="logo" aria-label="Accueil">
-        <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+    <div class="header-row">
+      <a href="#home" class="brand" aria-label="Accueil / Home">
+        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
           <path d="M4 22a12 12 0 0 1 24 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
           <path d="M16 22l6-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
           <circle cx="16" cy="22" r="2.5" fill="currentColor"/>
         </svg>
+        <span class="app-title" data-i18n="app.title">Baromètre de gouvernance</span>
       </a>
-      <div>
-        <div class="app-title">Baromètre de gouvernance</div>
-        <div class="org-name" id="org-name"></div>
+      <div class="context-switch">
+        <label><span data-i18n="header.org">Organisation</span>
+          <select id="org-select"></select></label>
+        <label><span data-i18n="header.assessment">Diagnostic</span>
+          <select id="assessment-select"></select></label>
+        <button class="btn small" data-click="new-assessment" data-i18n="header.newAssessment">+ Nouveau diagnostic</button>
+      </div>
+      <div class="header-tools">
+        <span id="save-status" class="save-status" aria-live="polite"></span>
+        <div class="lang-switch" role="group" aria-label="Langue / Language">
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
       </div>
     </div>
-    <nav class="main-nav" aria-label="Navigation principale">
-      <a href="#fiche" data-route="fiche"><span>0</span> Fiche</a>
-      <a href="#diagnostic/gov" data-route="diagnostic"><span>1</span> Diagnostic</a>
-      <a href="#resultats" data-route="resultats"><span>2</span> Résultats</a>
-      <a href="#plan/gov" data-route="plan"><span>3</span> Plan</a>
-      <a href="#manuel" data-route="manuel"><span>?</span> Manuel</a>
+    <nav class="main-nav" aria-label="Navigation">
+      <a href="#profile" data-route="profile"><span>0</span> <b data-i18n="nav.profile">Fiche</b></a>
+      <a href="#assessment/gov" data-route="assessment"><span>1</span> <b data-i18n="nav.assessment">Diagnostic</b></a>
+      <a href="#results" data-route="results"><span>2</span> <b data-i18n="nav.results">Résultats</b></a>
+      <a href="#plan" data-route="plan"><span>3</span> <b data-i18n="nav.plan">Plan de travail</b></a>
+      <a href="#report" data-route="report"><span>4</span> <b data-i18n="nav.report">Rapport</b></a>
+      <a href="#facilitator" data-route="facilitator" class="nav-facilitator"><span>★</span> <b data-i18n="nav.facilitator">Espace facilitateur</b></a>
+      <a href="#help" data-route="help"><span>?</span> <b data-i18n="nav.help">Aide</b></a>
     </nav>
-    <div class="assessment-switch">
-      <label for="assessment-select" class="sr-only">Diagnostic actif</label>
-      <select id="assessment-select"></select>
-      <button class="btn small" id="new-assessment" title="Démarrer un nouveau diagnostic">+ Nouveau</button>
-      <span id="save-status" class="save-status" aria-live="polite"></span>
-    </div>
   </header>
 
   <main id="view" tabindex="-1"></main>
 
-  <footer class="app-footer">
-    Données enregistrées uniquement dans ce navigateur. Exportez régulièrement une sauvegarde depuis la page Fiche.
-  </footer>
+  <footer class="app-footer" data-i18n="footer"></footer>
 
+  <script src="js/i18n.js"></script>
   <script src="js/framework.js"></script>
+  <script src="js/activities.js"></script>
   <script src="js/scoring.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/plan.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/views-plan.js"></script>
+  <script src="js/views-report.js"></script>
+  <script src="js/views-facilitator.js"></script>
+  <script>window.App.start();</script>
 </body>
 </html>
