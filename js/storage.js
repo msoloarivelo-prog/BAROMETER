@@ -19,7 +19,7 @@
   var STORAGE_KEY = 'barometre-gouvernance:v2';
   var LEGACY_KEY = 'barometre-gouvernance:v1';
   var SCHEMA_VERSION = 2;
-  var MONTHS = 12;
+  var MONTHS = 24;
   var STATUSES = ['planned', 'ongoing', 'done'];
   var PLAN_CATEGORIES = ['address', 'opportunity', 'maintain', 'other'];
   var PROFILE_FIELDS = ['name', 'acronym', 'type', 'region', 'address', 'focalPoint', 'phone', 'email'];

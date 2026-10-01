@@ -175,7 +175,7 @@
       });
       html += '</tbody></table>' +
         '<h3 class="report-h3 report-gantt-title">' + esc(t('plan.timeline')) + '</h3>' +
-        App.Charts.gantt(App.activityRows(a), labels, esc);
+        App.Charts.gantt(App.activityRows(a), App.timelineHeader(a.plan), esc);
     }
     html += '</section>';
 

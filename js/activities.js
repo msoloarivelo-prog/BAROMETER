@@ -7,16 +7,17 @@
  *   maintain    - strength to maintain (scored 4)
  *
  * Each activity: { title: {fr,en}, indicator: {fr,en}, months: [start, end] }.
- * `months` is optional; defaults come from DEFAULT_MONTHS.
+ * `months` is optional; defaults come from DEFAULT_MONTHS (24-month plan:
+ * weaknesses in year 1, opportunities into year 2, strengths throughout).
  * Organisations can edit, remove or add their own activities in the app.
  */
 (function (root) {
   'use strict';
 
   var DEFAULT_MONTHS = {
-    address: [[1, 6], [3, 9], [6, 12]],
-    opportunity: [[4, 10], [6, 12]],
-    maintain: [[1, 12]]
+    address: [[1, 6], [4, 12], [7, 15]],
+    opportunity: [[7, 18], [10, 21]],
+    maintain: [[1, 24]]
   };
 
   function a(fr, en, ifr, ien, months) {

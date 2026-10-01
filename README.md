@@ -15,7 +15,7 @@ No installation is needed. Open `index.html` in a recent browser (Chrome, Edge, 
 | 0 | **Profile** | Organisation details, plus the assessment sequence and year |
 | 1 | **Assessment** | 33 components across 4 pillars; click the level (1–4) that matches the situation |
 | 2 | **Results** | Global index, total, pillar donuts and aspect bars, comparison with a previous assessment, and **strengths / opportunities / weaknesses** |
-| 3 | **Workplan** | Pre-filled with **standard activities**, which the organisation edits; it also adds **its own activities**. Shows a Gantt timeline over 12 months |
+| 3 | **Workplan** | Pre-filled with **standard activities**, which the organisation edits; it also adds **its own activities**. Shows a Gantt timeline over 24 months |
 | 4 | **Report** | Individual A4 report, with **Export to PDF** |
 
 Each component falls into a category based on its score:
@@ -30,7 +30,7 @@ Each component falls into a category based on its score:
 - Each activity records the lead, start and end month, priority, status (planned, ongoing or done), indicator with baseline and target, available and anticipated resources, and means of verification.
 - The organisation can add **its own activities**, either under a component or as general activities.
 - **Update standard activities** re-aligns the plan after the assessment changes. Activities the organisation has edited or added are always kept.
-- An optional plan start month turns M1…M12 into calendar months.
+- The plan covers **24 months**. By default, weaknesses are worked on in year 1, opportunities run into year 2, and maintenance activities cover the whole period. An optional plan start month turns M1…M24 into calendar months.
 
 ### PDF report
 

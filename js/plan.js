@@ -131,7 +131,36 @@
     }
   }
 
+  /**
+   * Timeline header for `months` months: year groups plus short month labels.
+   * With a start month: calendar years and month initials; otherwise
+   * "Year 1 / Year 2" and month numbers.
+   */
+  function timelineHeader(startMonth, months, lang) {
+    var groups = [];
+    var labels = [];
+    var locale = lang === 'en' ? 'en-GB' : 'fr-FR';
+    for (var n = 1; n <= months; n++) {
+      var key;
+      if (startMonth) {
+        var parts = startMonth.split('-');
+        var d = new Date(Number(parts[0]), Number(parts[1]) - 1 + (n - 1), 1);
+        key = String(d.getFullYear());
+        var short;
+        try { short = d.toLocaleDateString(locale, { month: 'narrow' }); } catch (e) { short = String(d.getMonth() + 1); }
+        labels.push(short);
+      } else {
+        key = 'Y' + Math.ceil(n / 12);
+        labels.push(String(n));
+      }
+      var last = groups[groups.length - 1];
+      if (last && last.key === key) last.span++; else groups.push({ key: key, label: key, span: 1 });
+    }
+    return { groups: groups, labels: labels };
+  }
+
   var Plan = {
+    timelineHeader: timelineHeader,
     DEFAULT_PRIORITY: DEFAULT_PRIORITY,
     syncStandardActivities: syncStandardActivities,
     sortActivities: sortActivities,

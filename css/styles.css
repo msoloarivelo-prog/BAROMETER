@@ -448,10 +448,12 @@ textarea { resize: vertical; }
 
 /* Gantt */
 .timeline-wrap { overflow-x: auto; }
-.gantt-chart { --name-w: 260px; min-width: 760px; font-size: .8rem; }
+.gantt-chart { --name-w: 240px; min-width: calc(var(--name-w) + var(--months) * 30px); font-size: .8rem; }
 .gantt-head, .gantt-line { display: grid; grid-template-columns: var(--name-w) repeat(var(--months), 1fr); align-items: center; }
 .gantt-head { position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--border); }
-.gantt-month { text-align: center; color: var(--muted); padding: .3rem 0; font-size: .72rem; border-left: 1px solid var(--border); }
+.gantt-month { text-align: center; color: var(--muted); padding: .2rem 0; font-size: .7rem; border-left: 1px solid var(--border); }
+.gantt-years { position: static; border-bottom: 0; }
+.gantt-year { text-align: center; font-weight: 600; font-size: .75rem; padding: .25rem 0; border-left: 2px solid var(--muted); background: var(--surface-2); }
 .gantt-line { border-bottom: 1px solid var(--surface-2); min-height: 2.1rem; }
 .gantt-name { padding: .25rem .5rem .25rem 0; min-width: 0; }
 .gantt-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -575,8 +577,9 @@ textarea { resize: vertical; }
 .report-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 2mm; margin-bottom: 4mm; }
 .report-header h2 { margin: .1rem 0 0; font-size: 15pt; }
 .report-meta { text-align: right; font-size: 8.5pt; color: #5d6b7a; }
-.report .gantt-chart { --name-w: 55mm; min-width: 0; font-size: 7.5pt; }
-.report .gantt-month { font-size: 6.5pt; }
+.report .gantt-chart { --name-w: 50mm; min-width: 0; font-size: 7.5pt; }
+.report .gantt-month { font-size: 6pt; }
+.report .gantt-year { font-size: 7pt; padding: .5mm 0; }
 .report .gantt-line { min-height: 6mm; break-inside: avoid; }
 .report .gantt-bar { height: 3mm; }
 .signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; margin-top: 12mm; }

@@ -108,13 +108,16 @@
 
   /**
    * Gantt timeline (HTML string).
-   * rows: [{ label, sub, start, end, category, status }]; monthLabels: array of 12 strings.
+   * rows: [{ label, sub, start, end, category, status }];
+   * header: { groups: [{label, span}], labels: [string per month] }.
    */
-  function gantt(rows, monthLabels, esc) {
-    var n = monthLabels.length;
+  function gantt(rows, header, esc) {
+    var n = header.labels.length;
     var html = '<div class="gantt-chart" style="--months:' + n + '">' +
+      '<div class="gantt-head gantt-years"><div class="gantt-name"></div>' +
+      header.groups.map(function (g) { return '<div class="gantt-year" style="grid-column:span ' + g.span + '">' + esc(g.label) + '</div>'; }).join('') + '</div>' +
       '<div class="gantt-head"><div class="gantt-name"></div>' +
-      monthLabels.map(function (m) { return '<div class="gantt-month">' + esc(m) + '</div>'; }).join('') + '</div>';
+      header.labels.map(function (m) { return '<div class="gantt-month">' + esc(m) + '</div>'; }).join('') + '</div>';
     rows.forEach(function (r) {
       html += '<div class="gantt-line cat-' + r.category + ' status-' + r.status + '">' +
         '<div class="gantt-name"><span class="gantt-title">' + esc(r.label) + '</span>' +

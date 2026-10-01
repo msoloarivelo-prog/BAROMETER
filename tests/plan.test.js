@@ -18,7 +18,7 @@ test('the library has address, opportunity and maintain activities for every com
       assert.ok(list.length >= 1, `${component.id} ${cat}`);
       for (const a of list) {
         assert.ok(a.title.fr && a.title.en && a.indicator.fr && a.indicator.en, a.key);
-        assert.ok(a.months[0] >= 1 && a.months[1] <= 12 && a.months[0] <= a.months[1], a.key);
+        assert.ok(a.months[0] >= 1 && a.months[1] <= Storage.MONTHS && a.months[0] <= a.months[1], a.key);
       }
     }
   }
@@ -36,7 +36,7 @@ test('standard activities follow the category of each component', () => {
   const skills = a.plan.activities.filter((x) => x.componentId === 'hr-skills-match');
   assert.ok(skills.every((x) => x.category === 'opportunity'));
   const role = a.plan.activities.filter((x) => x.componentId === 'gov-board-role');
-  assert.ok(role.every((x) => x.category === 'maintain' && x.start === 1 && x.end === 12));
+  assert.ok(role.every((x) => x.category === 'maintain' && x.start === 1 && x.end === 24));
 });
 
 test('sync is idempotent and keeps edited and custom activities', () => {
@@ -84,6 +84,26 @@ test('plan statistics', () => {
   assert.equal(s.total, 2);
   assert.equal(s.done, 1);
   assert.equal(s.progress, 0.5);
+});
+
+test('the plan horizon is 24 months', () => {
+  assert.equal(Storage.MONTHS, 24);
+  const a = Storage.newAssessment(1, 2026);
+  a.answers = { 'gov-mission-statement': 1, 'hr-skills-match': 3 };
+  Plan.syncStandardActivities(Framework, a);
+  const address = a.plan.activities.filter((x) => x.category === 'address');
+  assert.ok(address.every((x) => x.end <= 15), 'weaknesses are worked on first');
+  const opp = a.plan.activities.find((x) => x.category === 'opportunity');
+  assert.ok(opp.end > 12, 'opportunities run into year 2');
+});
+
+test('timeline header groups months by year', () => {
+  const plain = Plan.timelineHeader('', 24, 'en');
+  assert.deepEqual(plain.groups.map((g) => [g.key, g.span]), [['Y1', 12], ['Y2', 12]]);
+  assert.equal(plain.labels[23], '24');
+  const cal = Plan.timelineHeader('2026-11', 24, 'en');
+  assert.deepEqual(cal.groups.map((g) => [g.label, g.span]), [['2026', 2], ['2027', 12], ['2028', 10]]);
+  assert.equal(cal.labels.length, 24);
 });
 
 test('month labels follow the plan start month', () => {

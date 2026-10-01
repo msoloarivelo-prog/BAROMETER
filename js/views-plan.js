@@ -24,6 +24,15 @@
   }
   App.monthLabels = monthLabels;
 
+  function timelineHeader(plan) {
+    var h = Plan.timelineHeader(plan.startMonth, Store.MONTHS, App.I18n.getLang());
+    h.groups.forEach(function (g) {
+      if (/^Y\d+$/.test(g.key)) g.label = t('plan.year', { n: g.key.slice(1) });
+    });
+    return h;
+  }
+  App.timelineHeader = timelineHeader;
+
   function activityRows(a, filterFn) {
     var lang = App.I18n.getLang();
     return a.plan.activities.filter(filterFn || function () { return true; }).map(function (act) {
@@ -51,7 +60,7 @@
     var slot = document.getElementById('plan-timeline');
     if (!slot) return;
     var rows = activityRows(a, filterFn());
-    slot.innerHTML = rows.length ? App.Charts.gantt(rows, monthLabels(a.plan), esc) : '<p class="muted">' + esc(t('plan.empty')) + '</p>';
+    slot.innerHTML = rows.length ? App.Charts.gantt(rows, timelineHeader(a.plan), esc) : '<p class="muted">' + esc(t('plan.empty')) + '</p>';
   }
 
   function select(field, actId, options, value) {

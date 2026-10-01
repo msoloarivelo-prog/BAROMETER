@@ -85,5 +85,5 @@ test('activity months are clamped and ordered', () => {
   });
   const acts = ws.orgs[0].assessments[0].plan.activities;
   assert.deepEqual([acts[0].start, acts[0].end], [9, 9]);
-  assert.deepEqual([acts[1].start, acts[1].end], [1, 12]);
+  assert.deepEqual([acts[1].start, acts[1].end], [1, 24]);
 });
