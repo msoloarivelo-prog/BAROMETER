@@ -52,6 +52,23 @@ Web version of the Excel/VBA tool **"17112016 OUTIL ACCOMPAGNEMENT TEFI v1.2.0.x
 
 The interface is available in **French and English** (FR / EN switch in the header).
 
+## Two ways to use it
+
+| | Browser only (default) | Server version |
+|---|---|---|
+| Where the data lives | In each browser (`localStorage`, IndexedDB) | PostgreSQL database on your server |
+| Sign-in | None | Facilitator and organisation accounts |
+| Sharing with the facilitator | Organisations export a `.json` file | Live: the facilitator sees every organisation |
+| Install | None: open `index.html` or the offline file | Docker: `docker compose up -d` — see **[DEPLOY.md](DEPLOY.md)** |
+
+The same files serve both: when the app finds the server (`/api/me`), it shows the sign-in page; otherwise it works in the browser only.
+
+In the server version:
+- **Organisation accounts** see and edit only their own organisation; **facilitators** see everything, manage accounts (*Facilitator space → User accounts*) and the calculation settings.
+- The browser keeps a copy so work continues during connection cuts; changes are sent when the connection is back. If two people changed the same organisation, both sets of changes are merged (field by field for the profile, assessment by assessment).
+- Evidence PDFs are stored in the database.
+- The server makes a daily backup and keeps earlier versions of each organisation.
+
 ## Getting started
 
 No installation is needed. Open `index.html` in a recent browser (Chrome, Edge, Firefox or Safari). The tool works offline. To host it, copy the folder to any static host (GitHub Pages, Netlify, an internal server…).
@@ -143,7 +160,7 @@ The barometer is meant to be repeated regularly, for example every 6 or 12 month
   - the **most common weaknesses**, which are candidates for group training.
 - The portfolio exports to CSV, and the whole workspace can be backed up or restored.
 
-Data is stored in the browser (`localStorage`). Nothing is sent to a server.
+In the browser-only version, data is stored in the browser (`localStorage`) and nothing is sent to a server. In the server version, data is stored in PostgreSQL (see DEPLOY.md).
 
 ## Calculation (identical to the Excel "Fiche de Calculs")
 
@@ -206,6 +223,10 @@ js/views-plan.js         Workplan view
 js/views-report.js       Report view and PDF export
 js/views-facilitator.js  Facilitator space
 js/views-evolution.js    Progress page and comparative report
+js/sync.js               server mode: sign-in detection, sync with the server, merge
+js/views-account.js      server mode: sign-in page, My account, user accounts
+server/                  Node.js API server (PostgreSQL, accounts, sessions, files)
+Dockerfile, docker-compose.yml, deploy/   server installation (see DEPLOY.md)
 tests/                   unit tests
 scripts/build-offline.js builds the single-file offline version
 dist/                    offline single-file build (generated)
@@ -218,3 +239,10 @@ npm test
 ```
 
 Requires Node.js 18 or later; there are no dependencies.
+
+Server tests need a PostgreSQL database (its tables are dropped and recreated):
+
+```
+cd server && npm install
+TEST_DATABASE_URL=postgres://user:password@localhost:5432/diagnostic_test npm test
+```

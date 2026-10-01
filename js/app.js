@@ -160,9 +160,22 @@
 
   App.touch = function (org) { (org || App.org()).updatedAt = new Date().toISOString(); };
 
+  var Sync = window.BarometerSync;
+  App.Sync = Sync;
+
+  /** True when the data is on a server (signed in). */
+  App.serverMode = function () { return !!Sync && Sync.mode === 'server'; };
+  App.isFacilitator = function () { return !App.serverMode() || Sync.user.role === 'facilitator'; };
+
   App.persist = function (immediate) {
     clearTimeout(saveTimer);
     var run = function () {
+      if (App.serverMode()) {
+        // Server mode: cached in the browser, then sent to the server.
+        Sync.schedule(immediate ? 300 : undefined);
+        App.syncStatus();
+        return;
+      }
       var ok = Store.save(App.ws);
       var badge = document.getElementById('save-status');
       if (badge) {
@@ -171,6 +184,17 @@
       }
     };
     if (immediate) run(); else saveTimer = setTimeout(run, 400);
+  };
+
+  /** Shows the server synchronisation state in the header. */
+  App.syncStatus = function () {
+    var badge = document.getElementById('save-status');
+    if (!badge || !App.serverMode()) return;
+    var state = Sync.state === 'idle' ? (Sync.pendingCount() ? 'pending' : 'synced') : Sync.state;
+    var cls = { synced: 'ok', pending: 'busy', syncing: 'busy', offline: 'warn', error: 'err' }[state] || '';
+    badge.textContent = App.t('sync.' + state);
+    badge.title = App.t('sync.' + state + '.help') + (state === 'error' && Sync.lastError ? ' (' + App.errMsg(Sync.lastError) + ')' : '');
+    badge.className = 'save-status ' + cls;
   };
 
   App.download = function (filename, content, type) {
@@ -218,10 +242,14 @@
   };
 
   App.errMsg = function (e) {
+    if (e instanceof TypeError) return App.t('err.network');
     var key = 'err.' + (e && e.message);
     var msg = App.t(key);
     return msg === key ? App.t('err.invalid') : msg;
   };
+
+  /** "some message" -> "Some message." */
+  App.sentence = function (msg) { msg = String(msg || ''); return msg.charAt(0).toUpperCase() + msg.slice(1) + (/[.!?]$/.test(msg) ? '' : '.'); };
 
   App.flash = function (msg) { App.ui.flash = msg; };
 
@@ -251,6 +279,19 @@
       b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
     });
 
+    var server = App.serverMode();
+    var login = !!Sync && Sync.mode === 'login';
+    document.body.classList.toggle('mode-server', server);
+    document.body.classList.toggle('mode-login', login);
+    document.body.classList.toggle('role-org', server && Sync.user.role === 'org');
+    var box = document.getElementById('user-box');
+    if (box) {
+      box.hidden = !server;
+      box.innerHTML = server ? '<a href="#account" class="user-link" title="' + App.esc(App.t('account.title')) + '">👤 ' + App.esc(Sync.user.name || Sync.user.email) + '</a>' +
+        '<button type="button" class="btn small ghost" data-click="logout">' + App.esc(App.t('account.logout')) + '</button>' : '';
+    }
+    App.syncStatus();
+
     var route = App.route();
     document.querySelectorAll('.main-nav a').forEach(function (link) {
       link.classList.toggle('active', link.getAttribute('data-route') === route.name);
@@ -270,6 +311,9 @@
     var route = App.route();
     App.renderHeader();
     var fn = App.views[route.name] || App.views.home;
+    if (Sync && Sync.mode === 'login') fn = App.views.login;
+    else if (route.name === 'facilitator' && !App.isFacilitator()) fn = App.views.home;
+    else if (route.name === 'account' && !App.serverMode()) fn = App.views.home;
     fn(route.param);
     if (App.ui.flash) {
       var note = document.createElement('div');
@@ -728,7 +772,14 @@
       '<section class="card"><h2>Diagnostic régulier et évolution</h2><p>Refaites le diagnostic à intervalle régulier (par exemple tous les 6 ou 12 mois) avec « Nouveau diagnostic » : vous pouvez partir des réponses précédentes puis les ajuster. La page <strong>Évolution</strong> montre la courbe de l’indice et des piliers, le tableau comparatif de toutes les périodes, les composantes en progrès ou en recul entre deux périodes au choix, et le taux de réalisation du plan de travail. Le <strong>Rapport d’évolution</strong> (page Rapport) reprend ces éléments en PDF.</p></section>' +
       '<section class="card"><h2>5. Rapport PDF</h2><p>La page Rapport présente le rapport individuel : vue d’ensemble, scores détaillés, forces / opportunités / faiblesses, plan et chronogramme. Cliquez sur « Exporter en PDF » puis choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section>' +
       '<section class="card"><h2>6. Espace facilitateur</h2><p>Chaque organisation exporte son fichier (.json) depuis sa Fiche et l’envoie au facilitateur. Dans l’Espace facilitateur, importez plusieurs fichiers à la fois : le tableau de bord compare toutes les organisations, calcule les moyennes du portefeuille et liste les faiblesses les plus fréquentes. Un fichier ré-importé met à jour l’organisation correspondante.</p>' +
-      '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>';
+      (App.serverMode()
+        ? '<p>Les données sont enregistrées sur le serveur (base PostgreSQL), sauvegardé chaque jour. Le navigateur en garde une copie : vous pouvez continuer à travailler pendant une coupure de connexion, les modifications sont envoyées au retour de la connexion (état affiché en haut à droite).</p></section>' +
+          '<section class="card"><h2>7. Comptes</h2><ul>' +
+          '<li>Chaque organisation se connecte avec son propre compte et ne voit que ses données ; les facilitateurs voient toutes les organisations.</li>' +
+          '<li>Les facilitateurs créent les comptes et génèrent les nouveaux mots de passe (Espace facilitateur → Comptes utilisateurs).</li>' +
+          '<li>Chacun peut changer son mot de passe dans « Mon compte » (cliquez sur votre nom).</li>' +
+          '<li>Sur un ordinateur partagé, déconnectez-vous toujours : la copie locale est alors effacée.</li></ul></section>'
+        : '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>');
   }
 
   function helpEn(weights) {
@@ -763,7 +814,14 @@
       '<section class="card"><h2>Regular assessments and progress</h2><p>Repeat the assessment at regular intervals (for example every 6 or 12 months) with “New assessment”: you can start from the previous answers and adjust them. The <strong>Progress</strong> page shows the trend of the index and pillars, a comparison table of all periods, the components that improved or declined between any two periods, and how much of the workplan was completed. The <strong>Progress report</strong> (Report page) puts this into a PDF.</p></section>' +
       '<section class="card"><h2>5. PDF report</h2><p>The Report page shows the individual report: overview, detailed scores, strengths / opportunities / weaknesses, workplan and timeline. Click “Export to PDF” and choose “Save as PDF” in the print dialog.</p></section>' +
       '<section class="card"><h2>6. Facilitator space</h2><p>Each organisation exports its file (.json) from its Profile page and sends it to the facilitator. In the Facilitator space, import several files at once: the dashboard compares all organisations, computes portfolio averages and lists the most common weaknesses. Re-importing a file updates the matching organisation.</p>' +
-      '<p>Data is stored in this browser only: back up the space regularly.</p></section>';
+      (App.serverMode()
+        ? '<p>Data is stored on the server (PostgreSQL database), backed up every day. The browser keeps a copy: you can keep working during a connection cut, and changes are sent when the connection is back (status shown top right).</p></section>' +
+          '<section class="card"><h2>7. Accounts</h2><ul>' +
+          '<li>Each organisation signs in with its own account and sees only its own data; facilitators see every organisation.</li>' +
+          '<li>Facilitators create accounts and generate new passwords (Facilitator space → User accounts).</li>' +
+          '<li>Everyone can change their password in "My account" (click your name).</li>' +
+          '<li>On a shared computer, always sign out: this also removes the local copy.</li></ul></section>'
+        : '<p>Data is stored in this browser only: back up the space regularly.</p></section>');
   }
 
   // ------------------------------------------------------------------ actions
@@ -842,11 +900,16 @@
     var files = Array.prototype.slice.call(el.files || []);
     el.value = '';
     var errors = [];
-    Promise.all(files.map(function (file) {
-      return window.BarometerFiles.add(file).then(function (meta) {
+    var org = App.org();
+    // In server mode the organisation must exist on the server first.
+    var ready = App.serverMode() ? Sync.flush() : Promise.resolve();
+    ready.then(function () {
+      return Promise.all(files.map(function (file) {
+      return window.BarometerFiles.add(file, org.id).then(function (meta) {
         (a.evidenceFiles[cid] = a.evidenceFiles[cid] || []).push(meta);
       })['catch'](function (e) { errors.push(file.name + ' : ' + App.t('evidence.err.' + (e.message === 'too-large' ? 'size' : e.message === 'not-pdf' ? 'pdf' : 'store'))); });
-    })).then(function () {
+      }));
+    }).then(function () {
       App.touch();
       App.persist(true);
       refreshEvidence(cid);
@@ -974,11 +1037,17 @@
           files = files.concat(parsed.files || []);
         } catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
       });
-      if (files.length) window.BarometerFiles.importFiles(files)['catch'](function () { errors.push(App.t('evidence.err.store')); });
+      var importFiles = function () {
+        if (files.length) {
+          window.BarometerFiles.importFiles(files, orgs)['catch'](function () { alert(App.t('evidence.err.store')); });
+        }
+      };
       if (orgs.length) {
         var res = Store.mergeOrgs(App.ws, orgs);
         App.ws.activeOrgId = orgs[orgs.length - 1].id;
         App.persist(true);
+        // Server mode: send the organisations before their files.
+        if (App.serverMode()) Sync.flush().then(importFiles); else importFiles();
         App.flash(App.t('fac.imported', res) + (errors.length ? ' — ' + errors.join(' ; ') : ''));
       } else if (errors.length) {
         App.flash(App.t('fac.importError', { msg: errors.join(' ; ') }));
@@ -992,10 +1061,15 @@
     var org = App.ws.orgs.filter(function (o) { return o.id === el.dataset.id; })[0];
     if (!org || App.ws.orgs.length <= 1) return;
     if (!confirm(App.t('fac.confirmDelete', { name: App.orgName(org) }))) return;
-    App.ws.orgs = App.ws.orgs.filter(function (o) { return o.id !== org.id; });
-    if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
-    App.persist(true);
-    App.render();
+    var removeLocal = function () {
+      App.ws.orgs = App.ws.orgs.filter(function (o) { return o.id !== org.id; });
+      if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
+      if (App.serverMode()) Sync.forget(org.id);
+      App.persist(true);
+      App.render();
+    };
+    if (!App.serverMode()) { removeLocal(); return; }
+    Sync.deleteOrg(org.id).then(removeLocal, function (e) { alert(App.sentence(App.errMsg(e))); });
   };
 
   A['load-demo'] = function () {
@@ -1049,6 +1123,14 @@
     if (el.dataset && el.dataset.on && !el.matches(TEXT_INPUTS)) dispatch(el, e);
   });
 
+  view.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (form.dataset && form.dataset.submit && A[form.dataset.submit]) {
+      e.preventDefault();
+      A[form.dataset.submit](form, e);
+    }
+  });
+
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-click]');
     if (!el) return;
@@ -1077,6 +1159,39 @@
       });
     });
     window.addEventListener('hashchange', function () { App.render(); window.scrollTo(0, 0); });
+    if (!Sync) { App.render(); return; }
+    // Looks for a server (login and PostgreSQL storage); without one the
+    // app works in local mode, from browser storage.
+    document.body.classList.add('booting');
+    Sync.start(App).then(function () {
+      document.body.classList.remove('booting');
+      App.afterLogin();
+    });
+  };
+
+  /** Server mode is on (at start or after signing in). */
+  App.afterLogin = function () {
+    if (App.serverMode()) {
+      window.BarometerFiles.useServer(true);
+      startRefresh();
+    }
     App.render();
   };
+
+  var refreshing = false;
+
+  /** Shows changes made by other users when coming back to the page. */
+  function startRefresh() {
+    if (refreshing) return;
+    refreshing = true;
+    var pull = function (force) {
+      Sync.refresh(force).then(function (changed) {
+        var el = document.activeElement;
+        var typing = el && el !== document.body && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+        if (changed && !typing) App.render(); else if (changed) App.renderHeader();
+      });
+    };
+    window.addEventListener('focus', function () { pull(false); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) pull(false); });
+  }
 })();

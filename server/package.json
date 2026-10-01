@@ -1,0 +1,16 @@
+{
+  "name": "outil-diagnostic-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Server for the Outil de Diagnostic Organisationnel: PostgreSQL storage, accounts and login",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "pg": "^8.13.0"
+  },
+  "license": "UNLICENSED"
+}

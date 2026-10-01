@@ -394,6 +394,7 @@
     newActivity: newActivity,
     emptyPlan: emptyPlan,
     normalizeWorkspace: normalizeWorkspace,
+    normalizeSettings: normalizeSettings,
     normalizeOrg: normalizeOrg,
     parseImport: parseImport,
     mergeOrgs: mergeOrgs,

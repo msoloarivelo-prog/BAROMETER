@@ -157,14 +157,16 @@
       '</section>';
 
     html += settingsCard();
+    if (App.accountsCard) html += App.accountsCard();
 
     html += '<section class="card no-print"><h2>' + esc(t('profile.share')) + '</h2><div class="actions">' +
       '<button class="btn" data-click="fac-backup">' + esc(t('fac.backup')) + '</button>' +
       '<label class="btn">' + esc(t('fac.restore')) + '<input type="file" accept=".json,application/json" data-on="fac-restore" hidden></label>' +
-      '<button class="btn danger" data-click="fac-reset">' + esc(t('fac.reset')) + '</button>' +
-      '</div></section>';
+      (App.serverMode() ? '' : '<button class="btn danger" data-click="fac-reset">' + esc(t('fac.reset')) + '</button>') +
+      '</div>' + (App.serverMode() ? '<p class="muted small">' + esc(t('fac.restoreServerHelp')) + '</p>' : '') + '</section>';
 
     App.setView(html);
+    if (App.loadAccounts && App.serverMode()) App.loadAccounts();
 
     document.getElementById('fac-pillars').appendChild(App.Charts.bars(pillarAvg, F.MAX_SCORE));
     var commonSlot = document.getElementById('fac-common');
@@ -250,6 +252,17 @@
       try {
         if (r.error) throw new Error('invalid');
         var ws = Store.normalizeWorkspace(r.data);
+        if (App.serverMode()) {
+          // On a server, a backup is merged (organisations added or updated), never replaces everything.
+          if (!confirm(t('fac.confirmRestoreServer'))) return;
+          Store.mergeOrgs(App.ws, ws.orgs);
+          App.persist(true);
+          App.Sync.flush().then(function () {
+            if (Array.isArray(r.data.files)) return window.BarometerFiles.importFiles(r.data.files, ws.orgs);
+          })['catch'](function () { alert(t('evidence.err.store')); });
+          App.render();
+          return;
+        }
         if (!confirm(t('fac.confirmRestore'))) return;
         if (Array.isArray(r.data.files)) window.BarometerFiles.importFiles(r.data.files)['catch'](function () {});
         App.ws = ws;

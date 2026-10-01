@@ -1,0 +1,7 @@
+# HTTPS front for the app (certificate obtained automatically).
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy app:8080 {
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

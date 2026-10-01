@@ -58,8 +58,33 @@
     });
   }
 
+  // Server mode: files are stored in the database through the API.
+  var remote = null;
+
+  function remoteFetch(method, path, body) {
+    var opts = { method: method, credentials: 'same-origin', headers: { 'X-Requested-With': 'diag' } };
+    if (body) { opts.body = body; opts.headers['Content-Type'] = 'application/pdf'; }
+    return fetch('api/' + path, opts).then(function (res) {
+      if (!res.ok) {
+        return res.json().then(function (d) { throw new Error((d && d.error) || 'store'); }, function () { throw new Error('store'); });
+      }
+      return res;
+    });
+  }
+
+  function remoteUpload(file, orgId, id, name) {
+    var q = 'files?org=' + encodeURIComponent(orgId) + '&name=' + encodeURIComponent(name || file.name || 'evidence.pdf') + (id ? '&id=' + encodeURIComponent(id) : '');
+    return remoteFetch('POST', q, file).then(function (res) { return res.json(); });
+  }
+
+  /** Switches to server storage (called by the app in server mode). */
+  function useServer(on) { remote = on ? {} : null; }
+
   /** Stores a PDF and returns its metadata. */
-  function add(file) {
+  function add(file, orgId) {
+    if (remote) {
+      return validatePdf(file).then(function () { return remoteUpload(file, orgId); });
+    }
     return validatePdf(file).then(function () {
       var meta = { id: uid(), name: file.name, size: file.size, uploadedAt: new Date().toISOString() };
       var record = { id: meta.id, name: meta.name, size: meta.size, type: 'application/pdf', uploadedAt: meta.uploadedAt, data: file };
@@ -68,10 +93,19 @@
   }
 
   function get(id) {
+    if (remote) {
+      return remoteFetch('GET', 'files/' + encodeURIComponent(id)).then(function (res) {
+        var disp = res.headers.get('content-disposition') || '';
+        var m = /filename\*=UTF-8''([^;]+)/i.exec(disp);
+        var name = m ? decodeURIComponent(m[1]) : 'evidence.pdf';
+        return res.blob().then(function (blob) { return { id: id, name: name, size: blob.size, data: blob }; });
+      }, function (e) { if (e.message === 'not-found') return null; throw e; });
+    }
     return tx('readonly', function (s) { return s.get(id); });
   }
 
   function remove(id) {
+    if (remote) return remoteFetch('DELETE', 'files/' + encodeURIComponent(id));
     return tx('readwrite', function (s) { s['delete'](id); });
   }
 
@@ -163,9 +197,37 @@
     })).then(function (list) { return list.filter(Boolean); });
   }
 
-  /** Restores embedded files from an import. */
-  function importFiles(list) {
+  /** Organisation of each referenced file id. */
+  function ownersOf(orgs) {
+    var out = {};
+    orgs.forEach(function (o) {
+      o.assessments.forEach(function (a) {
+        Object.keys(a.evidenceFiles || {}).forEach(function (cid) {
+          a.evidenceFiles[cid].forEach(function (f) { out[f.id] = o.id; });
+        });
+      });
+    });
+    return out;
+  }
+
+  /**
+   * Restores embedded files from an import. In server mode `orgs` (the
+   * imported organisations) tells which organisation each file belongs to;
+   * the organisations must already be on the server.
+   */
+  function importFiles(list, orgs) {
     if (!Array.isArray(list) || !list.length) return Promise.resolve(0);
+    if (remote) {
+      var owners = ownersOf(orgs || []);
+      var chain = Promise.resolve(0);
+      list.forEach(function (f) {
+        if (!f || typeof f.id !== 'string' || typeof f.data !== 'string' || !owners[f.id]) return;
+        chain = chain.then(function (n) {
+          return remoteUpload(base64ToBlob(f.data), owners[f.id], f.id, f.name).then(function () { return n + 1; });
+        });
+      });
+      return chain;
+    }
     return tx('readwrite', function (s) {
       list.forEach(function (f) {
         if (!f || typeof f.id !== 'string' || typeof f.data !== 'string') return;
@@ -182,6 +244,7 @@
 
   root.BarometerFiles = {
     MAX_SIZE: MAX_SIZE,
+    useServer: useServer,
     add: add,
     get: get,
     remove: remove,

@@ -101,6 +101,33 @@ a { color: var(--accent); }
 .save-status.ok::before { content: "● "; color: var(--ok); }
 .save-status.err { color: var(--danger); }
 
+.save-status.busy::before { content: "● "; color: #c9a227; }
+.save-status.warn { color: #9a6b00; }
+.save-status.warn::before { content: "● "; color: #c9a227; }
+.save-status.err::before { content: "● "; }
+
+/* Server mode: signed-in user, login page, accounts */
+.user-box { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; margin-left: auto; padding-left: .8rem; }
+.user-box[hidden] { display: none; }
+.user-link { text-decoration: none; font-weight: 600; max-width: 14rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.booting #view, body.booting .main-nav, body.booting .context-switch { visibility: hidden; }
+body.mode-login .context-switch, body.mode-login .main-nav, body.mode-login #save-status { display: none; }
+body.role-org .nav-facilitator, body.role-org .facilitator-link, body.role-org .demo-card { display: none; }
+.login-card { max-width: 26rem; margin: 3rem auto; }
+.login-form { display: grid; gap: .8rem; margin: 1rem 0; }
+.login-form .btn { justify-self: start; }
+.login-error, .form-message { min-height: 1.2em; margin: 0; font-size: .9rem; }
+.login-error, .form-message.err { color: var(--danger); }
+.form-message.ok { color: var(--ok); }
+.form-grid.narrow { max-width: 28rem; grid-template-columns: 1fr; }
+.account-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .6rem 1.2rem; margin: 0 0 1rem; }
+.account-facts dt { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.account-facts dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.input-with-button { display: flex; gap: .4rem; }
+.input-with-button input { flex: 1; min-width: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.table.accounts tr.inactive td { color: var(--muted); }
+.account-form .field[hidden] { display: none; }
+
 .lang-switch { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
 .lang-switch button { border: 0; background: transparent; color: var(--muted); padding: .25rem .65rem; font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
 .lang-switch button.active { background: var(--accent); color: var(--accent-text); }
@@ -181,7 +208,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem 3rem; outline: n
 
 .actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .6rem; }
 
-select, input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="month"], textarea {
+select, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="month"], textarea {
   width: 100%;
   padding: .5rem .6rem;
   border: 1px solid var(--border);
@@ -850,6 +877,7 @@ textarea { resize: vertical; }
       <a href="#report" data-route="report"><span>4</span> <b data-i18n="nav.report">Rapport</b></a>
       <a href="#facilitator" data-route="facilitator" class="nav-facilitator"><span>★</span> <b data-i18n="nav.facilitator">Espace facilitateur</b></a>
       <a href="#help" data-route="help"><span>?</span> <b data-i18n="nav.help">Aide</b></a>
+      <span id="user-box" class="user-box" hidden></span>
     </nav>
   </header>
 
@@ -1071,6 +1099,80 @@ textarea { resize: vertical; }
       'fac.empty': 'Aucune donnée',
 
       'help.title': 'Aide',
+      'sync.synced': 'Synchronisé',
+      'sync.synced.help': 'Toutes les modifications sont enregistrées sur le serveur.',
+      'sync.pending': 'En attente…',
+      'sync.pending.help': 'Des modifications vont être envoyées au serveur.',
+      'sync.syncing': 'Envoi…',
+      'sync.syncing.help': 'Envoi des modifications au serveur.',
+      'sync.offline': 'Hors ligne',
+      'sync.offline.help': 'Pas de connexion : les modifications sont conservées dans ce navigateur et envoyées au retour de la connexion.',
+      'sync.error': 'Erreur de synchro',
+      'sync.error.help': 'Les modifications n’ont pas pu être enregistrées sur le serveur.',
+      'login.title': 'Connexion',
+      'login.intro': 'Connectez-vous avec le compte fourni par votre facilitateur.',
+      'login.email': 'Adresse e-mail',
+      'login.password': 'Mot de passe',
+      'login.submit': 'Se connecter',
+      'login.help': 'Mot de passe oublié ? Demandez à votre facilitateur de le réinitialiser.',
+      'login.err.bad': 'E-mail ou mot de passe incorrect.',
+      'login.err.many': 'Trop de tentatives. Réessayez dans 15 minutes.',
+      'login.err.missing': 'Saisissez votre e-mail et votre mot de passe.',
+      'account.title': 'Mon compte',
+      'account.logout': 'Déconnexion',
+      'account.name': 'Nom',
+      'account.email': 'E-mail',
+      'account.role': 'Rôle',
+      'account.org': 'Organisation',
+      'account.role.facilitator': 'Facilitateur',
+      'account.role.org': 'Organisation',
+      'account.status': 'Statut',
+      'account.active': 'Actif',
+      'account.disabled': 'Désactivé',
+      'account.lastLogin': 'Dernière connexion',
+      'account.password': 'Changer mon mot de passe',
+      'account.current': 'Mot de passe actuel',
+      'account.new': 'Nouveau mot de passe (8 caractères minimum)',
+      'account.confirm': 'Confirmer le nouveau mot de passe',
+      'account.save': 'Enregistrer',
+      'account.changed': 'Mot de passe modifié.',
+      'account.mismatch': 'Les deux mots de passe ne correspondent pas.',
+      'account.confirmLogoutPending': 'Des modifications n’ont pas encore été envoyées au serveur (pas de connexion). Elles seront perdues si vous vous déconnectez maintenant. Continuer ?',
+      'accounts.title': 'Comptes utilisateurs',
+      'accounts.intro': 'Chaque organisation se connecte avec son propre compte et ne voit que ses données. Les facilitateurs voient toutes les organisations et gèrent les comptes.',
+      'accounts.loading': 'Chargement…',
+      'accounts.none': 'Aucun compte.',
+      'accounts.you': '(vous)',
+      'accounts.noOrg': '— choisir —',
+      'accounts.new': 'Créer un compte',
+      'accounts.create': 'Créer le compte',
+      'accounts.generate': 'Générer',
+      'accounts.initialPassword': 'Mot de passe initial',
+      'accounts.created': 'Compte créé. Communiquez ces identifiants à la personne (elle pourra changer son mot de passe dans « Mon compte ») :\n\nE-mail : {email}\nMot de passe : {password}',
+      'accounts.reset': 'Nouveau mot de passe',
+      'accounts.confirmReset': 'Générer un nouveau mot de passe pour {email} ? L’ancien ne fonctionnera plus.',
+      'accounts.resetDone': 'Nouveau mot de passe pour {email} :\n\n{password}\n\nCommuniquez-le à la personne ; elle pourra le changer dans « Mon compte ».',
+      'accounts.disable': 'Désactiver',
+      'accounts.enable': 'Réactiver',
+      'accounts.confirmDelete': 'Supprimer le compte {email} ? Les données de l’organisation sont conservées.',
+      'fac.confirmRestoreServer': 'Les organisations de la sauvegarde seront ajoutées au serveur ou mises à jour. Les autres organisations ne sont pas modifiées. Continuer ?',
+      'fac.restoreServerHelp': 'Sur le serveur, restaurer une sauvegarde ajoute ou met à jour ses organisations sans effacer les autres. Le serveur fait aussi sa propre sauvegarde quotidienne.',
+      'err.network': 'serveur injoignable, vérifiez la connexion',
+      'err.password-too-short': 'le mot de passe doit contenir au moins 8 caractères',
+      'err.email-taken': 'cette adresse e-mail a déjà un compte',
+      'err.invalid-email': 'adresse e-mail invalide',
+      'err.org-required': 'choisissez l’organisation du compte',
+      'err.unknown-org': 'organisation introuvable sur le serveur',
+      'err.org-has-accounts': 'cette organisation a encore des comptes utilisateurs : supprimez-les d’abord',
+      'err.last-facilitator': 'il doit rester au moins un facilitateur actif',
+      'err.cannot-demote-self': 'vous ne pouvez pas désactiver votre propre compte',
+      'err.cannot-delete-self': 'vous ne pouvez pas supprimer votre propre compte',
+      'err.bad-current-password': 'mot de passe actuel incorrect',
+      'err.forbidden': 'action non autorisée',
+      'err.unauthenticated': 'session expirée : reconnectez-vous',
+      'err.server-error': 'erreur du serveur',
+      'err.too-large': 'données trop volumineuses',
+      'err.invalid-org': 'données d’organisation invalides',
       'profile.domain': 'Domaine d’intervention',
       'profile.typeOther': 'Préciser le type',
       'profile.domainOther': 'Préciser le domaine',
@@ -1394,6 +1496,80 @@ textarea { resize: vertical; }
       'fac.empty': 'No data',
 
       'help.title': 'Help',
+      'sync.synced': 'Saved',
+      'sync.synced.help': 'All changes are saved on the server.',
+      'sync.pending': 'Pending…',
+      'sync.pending.help': 'Changes are about to be sent to the server.',
+      'sync.syncing': 'Saving…',
+      'sync.syncing.help': 'Sending changes to the server.',
+      'sync.offline': 'Offline',
+      'sync.offline.help': 'No connection: changes are kept in this browser and sent when the connection is back.',
+      'sync.error': 'Sync error',
+      'sync.error.help': 'Changes could not be saved on the server.',
+      'login.title': 'Sign in',
+      'login.intro': 'Sign in with the account your facilitator gave you.',
+      'login.email': 'E-mail address',
+      'login.password': 'Password',
+      'login.submit': 'Sign in',
+      'login.help': 'Forgot your password? Ask your facilitator to reset it.',
+      'login.err.bad': 'Wrong e-mail or password.',
+      'login.err.many': 'Too many attempts. Try again in 15 minutes.',
+      'login.err.missing': 'Enter your e-mail and password.',
+      'account.title': 'My account',
+      'account.logout': 'Sign out',
+      'account.name': 'Name',
+      'account.email': 'E-mail',
+      'account.role': 'Role',
+      'account.org': 'Organisation',
+      'account.role.facilitator': 'Facilitator',
+      'account.role.org': 'Organisation',
+      'account.status': 'Status',
+      'account.active': 'Active',
+      'account.disabled': 'Disabled',
+      'account.lastLogin': 'Last sign-in',
+      'account.password': 'Change my password',
+      'account.current': 'Current password',
+      'account.new': 'New password (at least 8 characters)',
+      'account.confirm': 'Confirm the new password',
+      'account.save': 'Save',
+      'account.changed': 'Password changed.',
+      'account.mismatch': 'The two passwords do not match.',
+      'account.confirmLogoutPending': 'Some changes have not been sent to the server yet (no connection). They will be lost if you sign out now. Continue?',
+      'accounts.title': 'User accounts',
+      'accounts.intro': 'Each organisation signs in with its own account and sees only its own data. Facilitators see every organisation and manage the accounts.',
+      'accounts.loading': 'Loading…',
+      'accounts.none': 'No accounts.',
+      'accounts.you': '(you)',
+      'accounts.noOrg': '— choose —',
+      'accounts.new': 'Create an account',
+      'accounts.create': 'Create the account',
+      'accounts.generate': 'Generate',
+      'accounts.initialPassword': 'Initial password',
+      'accounts.created': 'Account created. Give these sign-in details to the person (they can change the password in "My account"):\n\nE-mail: {email}\nPassword: {password}',
+      'accounts.reset': 'New password',
+      'accounts.confirmReset': 'Generate a new password for {email}? The old one will stop working.',
+      'accounts.resetDone': 'New password for {email}:\n\n{password}\n\nGive it to the person; they can change it in "My account".',
+      'accounts.disable': 'Disable',
+      'accounts.enable': 'Enable',
+      'accounts.confirmDelete': 'Delete the account {email}? The organisation’s data is kept.',
+      'fac.confirmRestoreServer': 'The organisations in the backup will be added to the server or updated. Other organisations are not changed. Continue?',
+      'fac.restoreServerHelp': 'On the server, restoring a backup adds or updates its organisations without deleting the others. The server also makes its own daily backup.',
+      'err.network': 'server unreachable, check the connection',
+      'err.password-too-short': 'the password must have at least 8 characters',
+      'err.email-taken': 'this e-mail address already has an account',
+      'err.invalid-email': 'invalid e-mail address',
+      'err.org-required': 'choose the account’s organisation',
+      'err.unknown-org': 'organisation not found on the server',
+      'err.org-has-accounts': 'this organisation still has user accounts: delete them first',
+      'err.last-facilitator': 'at least one active facilitator must remain',
+      'err.cannot-demote-self': 'you cannot disable your own account',
+      'err.cannot-delete-self': 'you cannot delete your own account',
+      'err.bad-current-password': 'wrong current password',
+      'err.forbidden': 'action not allowed',
+      'err.unauthenticated': 'session expired: sign in again',
+      'err.server-error': 'server error',
+      'err.too-large': 'data too large',
+      'err.invalid-org': 'invalid organisation data',
       'profile.domain': 'Field of work',
       'profile.typeOther': 'Specify the type',
       'profile.domainOther': 'Specify the field',
@@ -7331,6 +7507,7 @@ textarea { resize: vertical; }
     newActivity: newActivity,
     emptyPlan: emptyPlan,
     normalizeWorkspace: normalizeWorkspace,
+    normalizeSettings: normalizeSettings,
     normalizeOrg: normalizeOrg,
     parseImport: parseImport,
     mergeOrgs: mergeOrgs,
@@ -7823,8 +8000,33 @@ textarea { resize: vertical; }
     });
   }
 
+  // Server mode: files are stored in the database through the API.
+  var remote = null;
+
+  function remoteFetch(method, path, body) {
+    var opts = { method: method, credentials: 'same-origin', headers: { 'X-Requested-With': 'diag' } };
+    if (body) { opts.body = body; opts.headers['Content-Type'] = 'application/pdf'; }
+    return fetch('api/' + path, opts).then(function (res) {
+      if (!res.ok) {
+        return res.json().then(function (d) { throw new Error((d && d.error) || 'store'); }, function () { throw new Error('store'); });
+      }
+      return res;
+    });
+  }
+
+  function remoteUpload(file, orgId, id, name) {
+    var q = 'files?org=' + encodeURIComponent(orgId) + '&name=' + encodeURIComponent(name || file.name || 'evidence.pdf') + (id ? '&id=' + encodeURIComponent(id) : '');
+    return remoteFetch('POST', q, file).then(function (res) { return res.json(); });
+  }
+
+  /** Switches to server storage (called by the app in server mode). */
+  function useServer(on) { remote = on ? {} : null; }
+
   /** Stores a PDF and returns its metadata. */
-  function add(file) {
+  function add(file, orgId) {
+    if (remote) {
+      return validatePdf(file).then(function () { return remoteUpload(file, orgId); });
+    }
     return validatePdf(file).then(function () {
       var meta = { id: uid(), name: file.name, size: file.size, uploadedAt: new Date().toISOString() };
       var record = { id: meta.id, name: meta.name, size: meta.size, type: 'application/pdf', uploadedAt: meta.uploadedAt, data: file };
@@ -7833,10 +8035,19 @@ textarea { resize: vertical; }
   }
 
   function get(id) {
+    if (remote) {
+      return remoteFetch('GET', 'files/' + encodeURIComponent(id)).then(function (res) {
+        var disp = res.headers.get('content-disposition') || '';
+        var m = /filename\*=UTF-8''([^;]+)/i.exec(disp);
+        var name = m ? decodeURIComponent(m[1]) : 'evidence.pdf';
+        return res.blob().then(function (blob) { return { id: id, name: name, size: blob.size, data: blob }; });
+      }, function (e) { if (e.message === 'not-found') return null; throw e; });
+    }
     return tx('readonly', function (s) { return s.get(id); });
   }
 
   function remove(id) {
+    if (remote) return remoteFetch('DELETE', 'files/' + encodeURIComponent(id));
     return tx('readwrite', function (s) { s['delete'](id); });
   }
 
@@ -7928,9 +8139,37 @@ textarea { resize: vertical; }
     })).then(function (list) { return list.filter(Boolean); });
   }
 
-  /** Restores embedded files from an import. */
-  function importFiles(list) {
+  /** Organisation of each referenced file id. */
+  function ownersOf(orgs) {
+    var out = {};
+    orgs.forEach(function (o) {
+      o.assessments.forEach(function (a) {
+        Object.keys(a.evidenceFiles || {}).forEach(function (cid) {
+          a.evidenceFiles[cid].forEach(function (f) { out[f.id] = o.id; });
+        });
+      });
+    });
+    return out;
+  }
+
+  /**
+   * Restores embedded files from an import. In server mode `orgs` (the
+   * imported organisations) tells which organisation each file belongs to;
+   * the organisations must already be on the server.
+   */
+  function importFiles(list, orgs) {
     if (!Array.isArray(list) || !list.length) return Promise.resolve(0);
+    if (remote) {
+      var owners = ownersOf(orgs || []);
+      var chain = Promise.resolve(0);
+      list.forEach(function (f) {
+        if (!f || typeof f.id !== 'string' || typeof f.data !== 'string' || !owners[f.id]) return;
+        chain = chain.then(function (n) {
+          return remoteUpload(base64ToBlob(f.data), owners[f.id], f.id, f.name).then(function () { return n + 1; });
+        });
+      });
+      return chain;
+    }
     return tx('readwrite', function (s) {
       list.forEach(function (f) {
         if (!f || typeof f.id !== 'string' || typeof f.data !== 'string') return;
@@ -7947,6 +8186,7 @@ textarea { resize: vertical; }
 
   root.BarometerFiles = {
     MAX_SIZE: MAX_SIZE,
+    useServer: useServer,
     add: add,
     get: get,
     remove: remove,
@@ -7956,6 +8196,467 @@ textarea { resize: vertical; }
     idsOf: idsOf,
     formatSize: formatSize
   };
+})(this);
+
+</script>
+  <script>
+/* js/sync.js */
+/*
+ * Server mode: login, loading the workspace from the server (PostgreSQL)
+ * and sending changes back.
+ *
+ * The app keeps working without a server: opened from a file (offline
+ * build), from GitHub Pages or from any static host, /api/me does not answer
+ * and the app stays in local mode (browser storage only).
+ *
+ * In server mode the browser keeps a cache of the workspace (separate from
+ * the local-mode data) so work continues when the connection drops; changes
+ * are sent when it is back. Each organisation carries a version number: if
+ * someone else saved it in between, the server answers 409 and the two
+ * copies are merged (assessments missing on either side are kept, the local
+ * copy wins for the rest).
+ */
+(function (root) {
+  'use strict';
+
+  var CACHE_KEY = 'diag-server-cache:v1';
+  var isNode = typeof module !== 'undefined' && module.exports;
+  var Store = isNode ? require('./storage.js') : root.BarometerStorage;
+
+  var Sync = {
+    mode: 'local', // local | login | server
+    user: null,
+    offline: false,
+    state: 'idle', // idle | pending | syncing | synced | offline | error
+    lastError: null
+  };
+
+  var App = null;
+  var versions = {};   // orgId -> server version
+  var synced = {};     // orgId -> JSON of the last copy known to be on the server
+  var settingsSynced = null;
+  var timer = null;
+  var retryTimer = null;
+  var flushing = null;
+  var again = false;
+  var lastRefresh = 0;
+
+  function ApiError(status, body) {
+    this.status = status;
+    this.body = body || {};
+    this.message = (body && body.error) || 'http-' + status;
+  }
+
+  /** Calls the API. Rejects with ApiError (HTTP error) or TypeError (network). */
+  function api(method, path, body, raw) {
+    var opts = { method: method, credentials: 'same-origin', headers: { 'X-Requested-With': 'diag' } };
+    if (body !== undefined) {
+      if (raw) { opts.body = body; opts.headers['Content-Type'] = raw; }
+      else { opts.body = JSON.stringify(body); opts.headers['Content-Type'] = 'application/json'; }
+    }
+    return fetch('api/' + path, opts).then(function (res) {
+      var type = res.headers.get('content-type') || '';
+      var parse = type.indexOf('json') >= 0 ? res.json() : Promise.resolve(null);
+      return parse.then(function (data) {
+        if (!res.ok) throw new ApiError(res.status, data);
+        return data;
+      });
+    });
+  }
+  Sync.api = api;
+  Sync.ApiError = ApiError;
+
+  // ---------------------------------------------------------------- cache
+
+  function readCache() {
+    try { return JSON.parse(root.localStorage.getItem(CACHE_KEY)) || null; } catch (e) { return null; }
+  }
+
+  function writeCache() {
+    if (Sync.mode !== 'server' || !App) return true;
+    try {
+      root.localStorage.setItem(CACHE_KEY, JSON.stringify({
+        user: Sync.user, ws: App.ws, versions: versions, synced: synced, settingsSynced: settingsSynced
+      }));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function clearCache() {
+    try { root.localStorage.removeItem(CACHE_KEY); } catch (e) { /* ignored */ }
+  }
+
+  function fp(org) { return JSON.stringify(org); }
+
+  function serverSettings(s) { return JSON.stringify({ indexMethod: s.indexMethod, weights: s.weights }); }
+
+  /** An empty placeholder organisation that was never saved: not worth sending. */
+  function isBlank(org) {
+    if (versions[org.id] !== undefined && versions[org.id] !== null) return false;
+    if (org.organization.name || org.organization.acronym || org.assessments.length !== 1) return false;
+    var a = org.assessments[0];
+    return !Object.keys(a.answers).length && !a.plan.activities.length;
+  }
+
+  function isDirty(org) { return synced[org.id] !== fp(org) && !isBlank(org); }
+
+  Sync.pendingCount = function () {
+    if (Sync.mode !== 'server' || !App) return 0;
+    return App.ws.orgs.filter(isDirty).length + (canEditSettings() && serverSettings(App.ws.settings) !== settingsSynced ? 1 : 0);
+  };
+
+  function canEditSettings() { return Sync.user && Sync.user.role === 'facilitator'; }
+
+  // ---------------------------------------------------------------- start
+
+  /** Decides the mode: local (no server), login (server, signed out) or server. */
+  function detect() {
+    if (root.location.protocol === 'file:' || typeof fetch !== 'function') return Promise.resolve({ mode: 'local' });
+    return fetch('api/me', { credentials: 'same-origin' }).then(function (res) {
+      var type = res.headers.get('content-type') || '';
+      if (type.indexOf('json') < 0) return { mode: 'local' };
+      return res.json().then(function (data) {
+        if (!data || !data.server) return { mode: 'local' };
+        if (res.status === 200 && data.user) return { mode: 'server', user: data.user };
+        return { mode: 'login' };
+      });
+    }, function () {
+      var cache = readCache();
+      return cache && cache.user ? { mode: 'server', user: cache.user, offline: true } : { mode: 'local' };
+    });
+  }
+
+  /** Builds the workspace from the server copy and the local cache. */
+  function buildWorkspace(remote, cache, lang) {
+    var mine = cache && cache.user && cache.user.id === Sync.user.id ? cache : null;
+    versions = {};
+    synced = {};
+    var cachedOrgs = {};
+    if (mine) {
+      mine.ws.orgs.forEach(function (o) { cachedOrgs[o.id] = o; });
+    }
+    var orgs = [];
+    remote.orgs.forEach(function (r) {
+      var local = cachedOrgs[r.id];
+      var data;
+      try { data = Store.normalizeOrg(r.data); } catch (e) { return; }
+      var remoteFp = fp(data);
+      if (local && mine.synced[r.id] !== fp(local)) {
+        // Unsent local changes: keep them (they are sent next, merged on conflict).
+        orgs.push(local);
+        versions[r.id] = mine.versions[r.id];
+        synced[r.id] = mine.synced[r.id];
+      } else {
+        orgs.push(data);
+        versions[r.id] = r.version;
+        synced[r.id] = remoteFp;
+      }
+      delete cachedOrgs[r.id];
+    });
+    // Organisations created offline and never sent.
+    if (mine) {
+      Object.keys(cachedOrgs).forEach(function (id) {
+        if (mine.versions[id] === undefined || mine.versions[id] === null) orgs.push(cachedOrgs[id]);
+      });
+    }
+    var settings = Store.normalizeSettings(remote.settings);
+    settings.lang = lang;
+    settingsSynced = serverSettings(settings);
+    if (mine && mine.settingsSynced !== serverSettings(mine.ws.settings) && canEditSettings()) {
+      settings.indexMethod = mine.ws.settings.indexMethod;
+      settings.weights = mine.ws.settings.weights;
+    }
+    var ws = Store.newWorkspace();
+    ws.settings = settings;
+    if (orgs.length) ws.orgs = orgs;
+    if (!ws.orgs.length) ws.orgs = [Store.newOrg('')];
+    var active = mine && mine.ws.activeOrgId;
+    ws.activeOrgId = ws.orgs.some(function (o) { return o.id === active; }) ? active : ws.orgs[0].id;
+    return ws;
+  }
+
+  function loadServer(lang) {
+    var cache = readCache();
+    return api('GET', 'workspace').then(function (remote) {
+      App.ws = buildWorkspace(remote, cache, lang);
+      Sync.offline = false;
+      writeCache();
+      lastRefresh = Date.now();
+    }, function (e) {
+      if (e instanceof ApiError && e.status === 401) { Sync.mode = 'login'; return; }
+      // Network problem: work from the cache.
+      if (cache && cache.user && cache.user.id === Sync.user.id) {
+        App.ws = Store.normalizeWorkspace(cache.ws);
+        App.ws.settings.lang = lang;
+        versions = cache.versions || {};
+        synced = cache.synced || {};
+        settingsSynced = cache.settingsSynced || null;
+        Sync.offline = true;
+        Sync.state = 'offline';
+      } else {
+        throw e;
+      }
+    });
+  }
+
+  var listening = false;
+
+  /** Once signed in: sends pending changes and watches the connection. */
+  function ready() {
+    if (Sync.mode !== 'server') return;
+    if (Sync.pendingCount()) Sync.schedule(200);
+    if (listening) return;
+    listening = true;
+    root.addEventListener('online', function () { Sync.schedule(100); });
+    root.addEventListener('beforeunload', function (e) {
+      if (Sync.mode === 'server' && Sync.pendingCount()) { e.preventDefault(); e.returnValue = ''; }
+    });
+  }
+
+  Sync.start = function (app) {
+    App = app;
+    var lang = App.ws.settings.lang;
+    return detect().then(function (d) {
+      Sync.mode = d.mode;
+      if (d.mode !== 'server') return;
+      Sync.user = d.user;
+      return loadServer(lang).then(ready);
+    })['catch'](function (e) {
+      Sync.mode = 'login';
+      Sync.lastError = e;
+    });
+  };
+
+  // ---------------------------------------------------------------- login / logout
+
+  Sync.login = function (email, password) {
+    var lang = App.ws.settings.lang;
+    return api('POST', 'login', { email: email, password: password }).then(function (data) {
+      Sync.user = data.user;
+      Sync.mode = 'server';
+      return loadServer(lang).then(ready);
+    });
+  };
+
+  Sync.logout = function () {
+    var done = function () {
+      return api('POST', 'logout')['catch'](function () {}).then(function () {
+        clearCache();
+        Sync.mode = 'login';
+        Sync.user = null;
+      });
+    };
+    return Sync.flush().then(done, done);
+  };
+
+  // ---------------------------------------------------------------- sending changes
+
+  Sync.schedule = function (delay) {
+    if (Sync.mode !== 'server') return;
+    writeCache();
+    clearTimeout(timer);
+    if (Sync.pendingCount()) setState('pending');
+    timer = setTimeout(function () { Sync.flush(); }, delay === undefined ? 1200 : delay);
+  };
+
+  function byId(list) {
+    var out = {};
+    (list || []).forEach(function (x) { out[x.id] = x; });
+    return out;
+  }
+
+  function same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+
+  /**
+   * Three-way merge of an organisation edited here (local) and elsewhere
+   * (remote), from the last copy both had (base). What changed here since
+   * base is kept (profile field by field, assessments one by one); everything
+   * else comes from the remote copy. Without a base, nothing is lost:
+   * assessments of both sides are kept, the local copy wins on the rest.
+   */
+  function merge(local, remote, base) {
+    var out = JSON.parse(JSON.stringify(remote));
+    if (!base) {
+      out = JSON.parse(JSON.stringify(local));
+      var have = byId(local.assessments);
+      remote.assessments.forEach(function (a) { if (!have[a.id]) out.assessments.push(a); });
+      return out;
+    }
+    Object.keys(local.organization).forEach(function (k) {
+      if (local.organization[k] !== (base.organization || {})[k]) out.organization[k] = local.organization[k];
+    });
+    var L = byId(local.assessments);
+    var B = byId(base.assessments);
+    var R = byId(remote.assessments);
+    var result = [];
+    var seen = {};
+    remote.assessments.forEach(function (r) {
+      seen[r.id] = true;
+      var l = L[r.id];
+      if (!l) {
+        // Deleted here: drop it unless it changed elsewhere since.
+        if (B[r.id] && same(B[r.id], r)) return;
+        result.push(r);
+      } else {
+        result.push(B[r.id] && same(B[r.id], l) ? r : l);
+      }
+    });
+    local.assessments.forEach(function (l) {
+      if (seen[l.id]) return;
+      // Not on the server: new here (keep), or deleted elsewhere (keep only if changed here).
+      if (!B[l.id] || !same(B[l.id], l)) result.push(l);
+    });
+    if (!result.length) result = local.assessments.slice();
+    out.assessments = result;
+    out.activeAssessmentId = result.some(function (a) { return a.id === local.activeAssessmentId; }) ? local.activeAssessmentId : result[result.length - 1].id;
+    out.updatedAt = local.updatedAt > remote.updatedAt ? local.updatedAt : remote.updatedAt;
+    return out;
+  }
+  Sync.merge = merge;
+
+  function replaceOrg(org) {
+    for (var i = 0; i < App.ws.orgs.length; i++) {
+      if (App.ws.orgs[i].id === org.id) { App.ws.orgs[i] = org; return; }
+    }
+  }
+
+  function pushOrg(org, attempt) {
+    var body = fp(org);
+    var base = versions[org.id] === undefined ? null : versions[org.id];
+    return api('PUT', 'orgs/' + encodeURIComponent(org.id), { data: JSON.parse(body), baseVersion: base }).then(function (r) {
+      versions[org.id] = r.version;
+      synced[org.id] = body;
+    }, function (e) {
+      if (e instanceof ApiError && e.status === 409 && e.body && e.body.data && attempt < 3) {
+        var current = App.ws.orgs.filter(function (o) { return o.id === org.id; })[0] || org;
+        var base = null;
+        try { base = synced[org.id] ? JSON.parse(synced[org.id]) : null; } catch (x) { base = null; }
+        var remoteOrg = Store.normalizeOrg(e.body.data);
+        var merged = Store.normalizeOrg(merge(current, remoteOrg, base));
+        // The server copy becomes the new base.
+        synced[org.id] = fp(remoteOrg);
+        replaceOrg(merged);
+        versions[org.id] = e.body.version;
+        Sync.merged = true;
+        return pushOrg(merged, attempt + 1);
+      }
+      throw e;
+    });
+  }
+
+  function setState(state) {
+    Sync.state = state;
+    if (App && App.syncStatus) App.syncStatus();
+  }
+
+  /** Sends every changed organisation (and the settings). Resolves when done. */
+  Sync.flush = function () {
+    if (Sync.mode !== 'server') return Promise.resolve();
+    if (flushing) { again = true; return flushing; }
+    clearTimeout(timer);
+    var orgs = App.ws.orgs.filter(isDirty);
+    var sendSettings = canEditSettings() && serverSettings(App.ws.settings) !== settingsSynced;
+    if (!orgs.length && !sendSettings) { setState(Sync.offline ? 'offline' : 'synced'); return Promise.resolve(); }
+    setState('syncing');
+    Sync.merged = false;
+    var chain = Promise.resolve();
+    orgs.forEach(function (org) { chain = chain.then(function () { return pushOrg(org, 0); }); });
+    if (sendSettings) {
+      var s = serverSettings(App.ws.settings);
+      chain = chain.then(function () { return api('PUT', 'settings', JSON.parse(s)); }).then(function () { settingsSynced = s; });
+    }
+    flushing = chain.then(function () {
+      Sync.offline = false;
+      Sync.lastError = null;
+      clearTimeout(retryTimer);
+      writeCache();
+      setState(Sync.pendingCount() ? 'pending' : 'synced');
+      if (Sync.merged && App.renderHeader) App.renderHeader();
+    }, function (e) {
+      writeCache();
+      Sync.lastError = e;
+      if (e instanceof ApiError && e.status === 401) {
+        Sync.mode = 'login';
+        setState('error');
+        if (App.render) App.render();
+        return;
+      }
+      if (e instanceof ApiError) { setState('error'); return; }
+      Sync.offline = true;
+      setState('offline');
+      clearTimeout(retryTimer);
+      retryTimer = setTimeout(function () { Sync.flush(); }, 30000);
+    }).then(function () {
+      flushing = null;
+      if (again) { again = false; return Sync.flush(); }
+    });
+    return flushing;
+  };
+
+  /** Gets changes made elsewhere (other users) for organisations without local changes. */
+  Sync.refresh = function (force) {
+    if (Sync.mode !== 'server' || flushing) return Promise.resolve(false);
+    if (!force && Date.now() - lastRefresh < 30000) return Promise.resolve(false);
+    lastRefresh = Date.now();
+    return api('GET', 'workspace').then(function (remote) {
+      var changed = false;
+      var seen = {};
+      remote.orgs.forEach(function (r) {
+        seen[r.id] = true;
+        var local = App.ws.orgs.filter(function (o) { return o.id === r.id; })[0];
+        if (!local) {
+          App.ws.orgs.push(Store.normalizeOrg(r.data));
+          changed = true;
+        } else if (versions[r.id] !== r.version && !isDirty(local)) {
+          var fresh = Store.normalizeOrg(r.data);
+          fresh.activeAssessmentId = fresh.assessments.some(function (a) { return a.id === local.activeAssessmentId; }) ? local.activeAssessmentId : fresh.activeAssessmentId;
+          replaceOrg(fresh);
+          changed = true;
+        } else {
+          return;
+        }
+        versions[r.id] = r.version;
+        synced[r.id] = fp(App.ws.orgs.filter(function (o) { return o.id === r.id; })[0]);
+      });
+      // Deleted on the server (and not changed here since).
+      App.ws.orgs = App.ws.orgs.filter(function (o) {
+        var gone = !seen[o.id] && versions[o.id] !== undefined && versions[o.id] !== null && !isDirty(o);
+        if (gone) { changed = true; delete versions[o.id]; delete synced[o.id]; }
+        return !gone;
+      });
+      if (!App.ws.orgs.length) App.ws.orgs = [Store.newOrg('')];
+      if (!App.ws.orgs.some(function (o) { return o.id === App.ws.activeOrgId; })) App.ws.activeOrgId = App.ws.orgs[0].id;
+      var s = Store.normalizeSettings(remote.settings);
+      if (serverSettings(App.ws.settings) === settingsSynced && serverSettings(s) !== settingsSynced) {
+        App.ws.settings.indexMethod = s.indexMethod;
+        App.ws.settings.weights = s.weights;
+        settingsSynced = serverSettings(s);
+        changed = true;
+      }
+      Sync.offline = false;
+      writeCache();
+      return changed;
+    })['catch'](function () { return false; });
+  };
+
+  /** Deletes an organisation on the server (needs a connection). */
+  Sync.deleteOrg = function (id) {
+    if (versions[id] === undefined || versions[id] === null) return Promise.resolve();
+    return api('DELETE', 'orgs/' + encodeURIComponent(id)).then(function () {
+      delete versions[id];
+      delete synced[id];
+    });
+  };
+
+  /** Forgets local tracking for an organisation (after deleting it). */
+  Sync.forget = function (id) { delete versions[id]; delete synced[id]; writeCache(); };
+
+  Sync.saveCache = writeCache;
+
+  if (isNode) module.exports = Sync;
+  else root.BarometerSync = Sync;
 })(this);
 
 </script>
@@ -8334,9 +9035,22 @@ textarea { resize: vertical; }
 
   App.touch = function (org) { (org || App.org()).updatedAt = new Date().toISOString(); };
 
+  var Sync = window.BarometerSync;
+  App.Sync = Sync;
+
+  /** True when the data is on a server (signed in). */
+  App.serverMode = function () { return !!Sync && Sync.mode === 'server'; };
+  App.isFacilitator = function () { return !App.serverMode() || Sync.user.role === 'facilitator'; };
+
   App.persist = function (immediate) {
     clearTimeout(saveTimer);
     var run = function () {
+      if (App.serverMode()) {
+        // Server mode: cached in the browser, then sent to the server.
+        Sync.schedule(immediate ? 300 : undefined);
+        App.syncStatus();
+        return;
+      }
       var ok = Store.save(App.ws);
       var badge = document.getElementById('save-status');
       if (badge) {
@@ -8345,6 +9059,17 @@ textarea { resize: vertical; }
       }
     };
     if (immediate) run(); else saveTimer = setTimeout(run, 400);
+  };
+
+  /** Shows the server synchronisation state in the header. */
+  App.syncStatus = function () {
+    var badge = document.getElementById('save-status');
+    if (!badge || !App.serverMode()) return;
+    var state = Sync.state === 'idle' ? (Sync.pendingCount() ? 'pending' : 'synced') : Sync.state;
+    var cls = { synced: 'ok', pending: 'busy', syncing: 'busy', offline: 'warn', error: 'err' }[state] || '';
+    badge.textContent = App.t('sync.' + state);
+    badge.title = App.t('sync.' + state + '.help') + (state === 'error' && Sync.lastError ? ' (' + App.errMsg(Sync.lastError) + ')' : '');
+    badge.className = 'save-status ' + cls;
   };
 
   App.download = function (filename, content, type) {
@@ -8392,10 +9117,14 @@ textarea { resize: vertical; }
   };
 
   App.errMsg = function (e) {
+    if (e instanceof TypeError) return App.t('err.network');
     var key = 'err.' + (e && e.message);
     var msg = App.t(key);
     return msg === key ? App.t('err.invalid') : msg;
   };
+
+  /** "some message" -> "Some message." */
+  App.sentence = function (msg) { msg = String(msg || ''); return msg.charAt(0).toUpperCase() + msg.slice(1) + (/[.!?]$/.test(msg) ? '' : '.'); };
 
   App.flash = function (msg) { App.ui.flash = msg; };
 
@@ -8425,6 +9154,19 @@ textarea { resize: vertical; }
       b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
     });
 
+    var server = App.serverMode();
+    var login = !!Sync && Sync.mode === 'login';
+    document.body.classList.toggle('mode-server', server);
+    document.body.classList.toggle('mode-login', login);
+    document.body.classList.toggle('role-org', server && Sync.user.role === 'org');
+    var box = document.getElementById('user-box');
+    if (box) {
+      box.hidden = !server;
+      box.innerHTML = server ? '<a href="#account" class="user-link" title="' + App.esc(App.t('account.title')) + '">👤 ' + App.esc(Sync.user.name || Sync.user.email) + '</a>' +
+        '<button type="button" class="btn small ghost" data-click="logout">' + App.esc(App.t('account.logout')) + '</button>' : '';
+    }
+    App.syncStatus();
+
     var route = App.route();
     document.querySelectorAll('.main-nav a').forEach(function (link) {
       link.classList.toggle('active', link.getAttribute('data-route') === route.name);
@@ -8444,6 +9186,9 @@ textarea { resize: vertical; }
     var route = App.route();
     App.renderHeader();
     var fn = App.views[route.name] || App.views.home;
+    if (Sync && Sync.mode === 'login') fn = App.views.login;
+    else if (route.name === 'facilitator' && !App.isFacilitator()) fn = App.views.home;
+    else if (route.name === 'account' && !App.serverMode()) fn = App.views.home;
     fn(route.param);
     if (App.ui.flash) {
       var note = document.createElement('div');
@@ -8902,7 +9647,14 @@ textarea { resize: vertical; }
       '<section class="card"><h2>Diagnostic régulier et évolution</h2><p>Refaites le diagnostic à intervalle régulier (par exemple tous les 6 ou 12 mois) avec « Nouveau diagnostic » : vous pouvez partir des réponses précédentes puis les ajuster. La page <strong>Évolution</strong> montre la courbe de l’indice et des piliers, le tableau comparatif de toutes les périodes, les composantes en progrès ou en recul entre deux périodes au choix, et le taux de réalisation du plan de travail. Le <strong>Rapport d’évolution</strong> (page Rapport) reprend ces éléments en PDF.</p></section>' +
       '<section class="card"><h2>5. Rapport PDF</h2><p>La page Rapport présente le rapport individuel : vue d’ensemble, scores détaillés, forces / opportunités / faiblesses, plan et chronogramme. Cliquez sur « Exporter en PDF » puis choisissez « Enregistrer au format PDF » dans la fenêtre d’impression.</p></section>' +
       '<section class="card"><h2>6. Espace facilitateur</h2><p>Chaque organisation exporte son fichier (.json) depuis sa Fiche et l’envoie au facilitateur. Dans l’Espace facilitateur, importez plusieurs fichiers à la fois : le tableau de bord compare toutes les organisations, calcule les moyennes du portefeuille et liste les faiblesses les plus fréquentes. Un fichier ré-importé met à jour l’organisation correspondante.</p>' +
-      '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>';
+      (App.serverMode()
+        ? '<p>Les données sont enregistrées sur le serveur (base PostgreSQL), sauvegardé chaque jour. Le navigateur en garde une copie : vous pouvez continuer à travailler pendant une coupure de connexion, les modifications sont envoyées au retour de la connexion (état affiché en haut à droite).</p></section>' +
+          '<section class="card"><h2>7. Comptes</h2><ul>' +
+          '<li>Chaque organisation se connecte avec son propre compte et ne voit que ses données ; les facilitateurs voient toutes les organisations.</li>' +
+          '<li>Les facilitateurs créent les comptes et génèrent les nouveaux mots de passe (Espace facilitateur → Comptes utilisateurs).</li>' +
+          '<li>Chacun peut changer son mot de passe dans « Mon compte » (cliquez sur votre nom).</li>' +
+          '<li>Sur un ordinateur partagé, déconnectez-vous toujours : la copie locale est alors effacée.</li></ul></section>'
+        : '<p>Les données sont enregistrées dans ce navigateur uniquement : sauvegardez régulièrement l’espace.</p></section>');
   }
 
   function helpEn(weights) {
@@ -8937,7 +9689,14 @@ textarea { resize: vertical; }
       '<section class="card"><h2>Regular assessments and progress</h2><p>Repeat the assessment at regular intervals (for example every 6 or 12 months) with “New assessment”: you can start from the previous answers and adjust them. The <strong>Progress</strong> page shows the trend of the index and pillars, a comparison table of all periods, the components that improved or declined between any two periods, and how much of the workplan was completed. The <strong>Progress report</strong> (Report page) puts this into a PDF.</p></section>' +
       '<section class="card"><h2>5. PDF report</h2><p>The Report page shows the individual report: overview, detailed scores, strengths / opportunities / weaknesses, workplan and timeline. Click “Export to PDF” and choose “Save as PDF” in the print dialog.</p></section>' +
       '<section class="card"><h2>6. Facilitator space</h2><p>Each organisation exports its file (.json) from its Profile page and sends it to the facilitator. In the Facilitator space, import several files at once: the dashboard compares all organisations, computes portfolio averages and lists the most common weaknesses. Re-importing a file updates the matching organisation.</p>' +
-      '<p>Data is stored in this browser only: back up the space regularly.</p></section>';
+      (App.serverMode()
+        ? '<p>Data is stored on the server (PostgreSQL database), backed up every day. The browser keeps a copy: you can keep working during a connection cut, and changes are sent when the connection is back (status shown top right).</p></section>' +
+          '<section class="card"><h2>7. Accounts</h2><ul>' +
+          '<li>Each organisation signs in with its own account and sees only its own data; facilitators see every organisation.</li>' +
+          '<li>Facilitators create accounts and generate new passwords (Facilitator space → User accounts).</li>' +
+          '<li>Everyone can change their password in "My account" (click your name).</li>' +
+          '<li>On a shared computer, always sign out: this also removes the local copy.</li></ul></section>'
+        : '<p>Data is stored in this browser only: back up the space regularly.</p></section>');
   }
 
   // ------------------------------------------------------------------ actions
@@ -9016,11 +9775,16 @@ textarea { resize: vertical; }
     var files = Array.prototype.slice.call(el.files || []);
     el.value = '';
     var errors = [];
-    Promise.all(files.map(function (file) {
-      return window.BarometerFiles.add(file).then(function (meta) {
+    var org = App.org();
+    // In server mode the organisation must exist on the server first.
+    var ready = App.serverMode() ? Sync.flush() : Promise.resolve();
+    ready.then(function () {
+      return Promise.all(files.map(function (file) {
+      return window.BarometerFiles.add(file, org.id).then(function (meta) {
         (a.evidenceFiles[cid] = a.evidenceFiles[cid] || []).push(meta);
       })['catch'](function (e) { errors.push(file.name + ' : ' + App.t('evidence.err.' + (e.message === 'too-large' ? 'size' : e.message === 'not-pdf' ? 'pdf' : 'store'))); });
-    })).then(function () {
+      }));
+    }).then(function () {
       App.touch();
       App.persist(true);
       refreshEvidence(cid);
@@ -9148,11 +9912,17 @@ textarea { resize: vertical; }
           files = files.concat(parsed.files || []);
         } catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
       });
-      if (files.length) window.BarometerFiles.importFiles(files)['catch'](function () { errors.push(App.t('evidence.err.store')); });
+      var importFiles = function () {
+        if (files.length) {
+          window.BarometerFiles.importFiles(files, orgs)['catch'](function () { alert(App.t('evidence.err.store')); });
+        }
+      };
       if (orgs.length) {
         var res = Store.mergeOrgs(App.ws, orgs);
         App.ws.activeOrgId = orgs[orgs.length - 1].id;
         App.persist(true);
+        // Server mode: send the organisations before their files.
+        if (App.serverMode()) Sync.flush().then(importFiles); else importFiles();
         App.flash(App.t('fac.imported', res) + (errors.length ? ' — ' + errors.join(' ; ') : ''));
       } else if (errors.length) {
         App.flash(App.t('fac.importError', { msg: errors.join(' ; ') }));
@@ -9166,10 +9936,15 @@ textarea { resize: vertical; }
     var org = App.ws.orgs.filter(function (o) { return o.id === el.dataset.id; })[0];
     if (!org || App.ws.orgs.length <= 1) return;
     if (!confirm(App.t('fac.confirmDelete', { name: App.orgName(org) }))) return;
-    App.ws.orgs = App.ws.orgs.filter(function (o) { return o.id !== org.id; });
-    if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
-    App.persist(true);
-    App.render();
+    var removeLocal = function () {
+      App.ws.orgs = App.ws.orgs.filter(function (o) { return o.id !== org.id; });
+      if (App.ws.activeOrgId === org.id) App.ws.activeOrgId = App.ws.orgs[0].id;
+      if (App.serverMode()) Sync.forget(org.id);
+      App.persist(true);
+      App.render();
+    };
+    if (!App.serverMode()) { removeLocal(); return; }
+    Sync.deleteOrg(org.id).then(removeLocal, function (e) { alert(App.sentence(App.errMsg(e))); });
   };
 
   A['load-demo'] = function () {
@@ -9223,6 +9998,14 @@ textarea { resize: vertical; }
     if (el.dataset && el.dataset.on && !el.matches(TEXT_INPUTS)) dispatch(el, e);
   });
 
+  view.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (form.dataset && form.dataset.submit && A[form.dataset.submit]) {
+      e.preventDefault();
+      A[form.dataset.submit](form, e);
+    }
+  });
+
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-click]');
     if (!el) return;
@@ -9251,8 +10034,41 @@ textarea { resize: vertical; }
       });
     });
     window.addEventListener('hashchange', function () { App.render(); window.scrollTo(0, 0); });
+    if (!Sync) { App.render(); return; }
+    // Looks for a server (login and PostgreSQL storage); without one the
+    // app works in local mode, from browser storage.
+    document.body.classList.add('booting');
+    Sync.start(App).then(function () {
+      document.body.classList.remove('booting');
+      App.afterLogin();
+    });
+  };
+
+  /** Server mode is on (at start or after signing in). */
+  App.afterLogin = function () {
+    if (App.serverMode()) {
+      window.BarometerFiles.useServer(true);
+      startRefresh();
+    }
     App.render();
   };
+
+  var refreshing = false;
+
+  /** Shows changes made by other users when coming back to the page. */
+  function startRefresh() {
+    if (refreshing) return;
+    refreshing = true;
+    var pull = function (force) {
+      Sync.refresh(force).then(function (changed) {
+        var el = document.activeElement;
+        var typing = el && el !== document.body && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+        if (changed && !typing) App.render(); else if (changed) App.renderHeader();
+      });
+    };
+    window.addEventListener('focus', function () { pull(false); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) pull(false); });
+  }
 })();
 
 </script>
@@ -10049,14 +10865,16 @@ textarea { resize: vertical; }
       '</section>';
 
     html += settingsCard();
+    if (App.accountsCard) html += App.accountsCard();
 
     html += '<section class="card no-print"><h2>' + esc(t('profile.share')) + '</h2><div class="actions">' +
       '<button class="btn" data-click="fac-backup">' + esc(t('fac.backup')) + '</button>' +
       '<label class="btn">' + esc(t('fac.restore')) + '<input type="file" accept=".json,application/json" data-on="fac-restore" hidden></label>' +
-      '<button class="btn danger" data-click="fac-reset">' + esc(t('fac.reset')) + '</button>' +
-      '</div></section>';
+      (App.serverMode() ? '' : '<button class="btn danger" data-click="fac-reset">' + esc(t('fac.reset')) + '</button>') +
+      '</div>' + (App.serverMode() ? '<p class="muted small">' + esc(t('fac.restoreServerHelp')) + '</p>' : '') + '</section>';
 
     App.setView(html);
+    if (App.loadAccounts && App.serverMode()) App.loadAccounts();
 
     document.getElementById('fac-pillars').appendChild(App.Charts.bars(pillarAvg, F.MAX_SCORE));
     var commonSlot = document.getElementById('fac-common');
@@ -10142,6 +10960,17 @@ textarea { resize: vertical; }
       try {
         if (r.error) throw new Error('invalid');
         var ws = Store.normalizeWorkspace(r.data);
+        if (App.serverMode()) {
+          // On a server, a backup is merged (organisations added or updated), never replaces everything.
+          if (!confirm(t('fac.confirmRestoreServer'))) return;
+          Store.mergeOrgs(App.ws, ws.orgs);
+          App.persist(true);
+          App.Sync.flush().then(function () {
+            if (Array.isArray(r.data.files)) return window.BarometerFiles.importFiles(r.data.files, ws.orgs);
+          })['catch'](function () { alert(t('evidence.err.store')); });
+          App.render();
+          return;
+        }
         if (!confirm(t('fac.confirmRestore'))) return;
         if (Array.isArray(r.data.files)) window.BarometerFiles.importFiles(r.data.files)['catch'](function () {});
         App.ws = ws;
@@ -10456,6 +11285,229 @@ textarea { resize: vertical; }
 
   A['evo-from'] = function (el) { App.ui.evoFrom = el.value; App.render(); };
   A['evo-to'] = function (el) { App.ui.evoTo = el.value; App.render(); };
+})();
+
+</script>
+  <script>
+/* js/views-account.js */
+/*
+ * Server mode only: login page, "My account" page (password change, sign
+ * out) and account management in the Facilitator space.
+ */
+(function () {
+  'use strict';
+
+  var App = window.App;
+  var Sync = App.Sync;
+  var esc = App.esc;
+  var t = App.t;
+  var A = App.actions;
+
+  if (!Sync) return;
+
+  /** Random password without look-alike characters (0/O, 1/l/I). */
+  App.generatePassword = function () {
+    var chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var bytes = new Uint8Array(10);
+    window.crypto.getRandomValues(bytes);
+    return Array.prototype.map.call(bytes, function (b) { return chars[b % chars.length]; }).join('');
+  };
+
+  function errorText(e) {
+    return App.sentence(e instanceof Sync.ApiError ? App.errMsg(e) : t('err.network'));
+  }
+
+  // ---------------------------------------------------------------- login
+
+  App.views.login = function () {
+    App.setView(
+      '<section class="card login-card">' +
+        '<h1>' + esc(t('login.title')) + '</h1>' +
+        '<p class="muted">' + esc(t('login.intro')) + '</p>' +
+        '<form data-submit="login" class="login-form" novalidate>' +
+          '<label class="field"><span>' + esc(t('login.email')) + '</span><input type="email" name="email" autocomplete="username" required autofocus></label>' +
+          '<label class="field"><span>' + esc(t('login.password')) + '</span><input type="password" name="password" autocomplete="current-password" required></label>' +
+          '<p class="login-error" role="alert"></p>' +
+          '<button class="btn primary" type="submit">' + esc(t('login.submit')) + '</button>' +
+        '</form>' +
+        '<p class="muted small">' + esc(t('login.help')) + '</p>' +
+      '</section>');
+    var first = App.viewEl.querySelector('input[name=email]');
+    if (first) first.focus();
+  };
+
+  A.login = function (form) {
+    var err = form.querySelector('.login-error');
+    var btn = form.querySelector('button[type=submit]');
+    var email = form.elements.email.value.trim();
+    var password = form.elements.password.value;
+    err.textContent = '';
+    if (!email || !password) { err.textContent = t('login.err.missing'); return; }
+    btn.disabled = true;
+    Sync.login(email, password).then(function () {
+      if (location.hash !== '#home') history.replaceState(null, '', '#home');
+      App.afterLogin();
+    }, function (e) {
+      btn.disabled = false;
+      if (e instanceof Sync.ApiError && e.status === 401) err.textContent = t('login.err.bad');
+      else if (e instanceof Sync.ApiError && e.status === 429) err.textContent = t('login.err.many');
+      else err.textContent = errorText(e);
+      form.elements.password.value = '';
+      form.elements.password.focus();
+    });
+  };
+
+  A.logout = function () {
+    if (Sync.pendingCount() && Sync.offline && !confirm(t('account.confirmLogoutPending'))) return;
+    Sync.logout().then(function () {
+      location.hash = '#home';
+      location.reload();
+    });
+  };
+
+  // ---------------------------------------------------------------- my account
+
+  App.views.account = function () {
+    var u = Sync.user;
+    var org = u.orgId ? App.ws.orgs.filter(function (o) { return o.id === u.orgId; })[0] : null;
+    App.setView(
+      '<h1>' + esc(t('account.title')) + '</h1>' +
+      '<section class="card"><dl class="account-facts">' +
+        '<div><dt>' + esc(t('account.name')) + '</dt><dd>' + esc(u.name || '—') + '</dd></div>' +
+        '<div><dt>' + esc(t('account.email')) + '</dt><dd>' + esc(u.email) + '</dd></div>' +
+        '<div><dt>' + esc(t('account.role')) + '</dt><dd>' + esc(t('account.role.' + u.role)) + '</dd></div>' +
+        (org ? '<div><dt>' + esc(t('account.org')) + '</dt><dd>' + esc(App.orgName(org)) + '</dd></div>' : '') +
+      '</dl><div class="actions"><button class="btn" data-click="logout">' + esc(t('account.logout')) + '</button></div></section>' +
+      '<section class="card"><h2>' + esc(t('account.password')) + '</h2>' +
+        '<form data-submit="password-change" class="form-grid narrow" novalidate>' +
+          '<label class="field"><span>' + esc(t('account.current')) + '</span><input type="password" name="current" autocomplete="current-password" required></label>' +
+          '<label class="field"><span>' + esc(t('account.new')) + '</span><input type="password" name="next" autocomplete="new-password" minlength="8" required></label>' +
+          '<label class="field"><span>' + esc(t('account.confirm')) + '</span><input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>' +
+          '<p class="form-message" role="status"></p>' +
+          '<div><button class="btn primary" type="submit">' + esc(t('account.save')) + '</button></div>' +
+        '</form></section>');
+  };
+
+  A['password-change'] = function (form) {
+    var msg = form.querySelector('.form-message');
+    var f = form.elements;
+    msg.className = 'form-message';
+    if (f.next.value !== f.confirm.value) { msg.textContent = t('account.mismatch'); msg.classList.add('err'); return; }
+    Sync.api('POST', 'password', { current: f.current.value, next: f.next.value }).then(function () {
+      form.reset();
+      msg.textContent = t('account.changed');
+      msg.classList.add('ok');
+    }, function (e) {
+      msg.textContent = errorText(e);
+      msg.classList.add('err');
+    });
+  };
+
+  // ---------------------------------------------------------------- accounts (facilitator)
+
+  function orgOptions(selected) {
+    return '<option value="">' + esc(t('accounts.noOrg')) + '</option>' + App.ws.orgs.map(function (o) {
+      return '<option value="' + esc(o.id) + '"' + (o.id === selected ? ' selected' : '') + '>' + esc(App.orgName(o)) + '</option>';
+    }).join('');
+  }
+
+  /** Card shown in the Facilitator space (server mode). */
+  App.accountsCard = function () {
+    if (!App.serverMode() || Sync.user.role !== 'facilitator') return '';
+    return '<section class="card no-print" id="accounts"><h2>' + esc(t('accounts.title')) + '</h2>' +
+      '<p class="muted">' + esc(t('accounts.intro')) + '</p>' +
+      '<div id="accounts-list"><p class="muted">' + esc(t('accounts.loading')) + '</p></div>' +
+      '<h3>' + esc(t('accounts.new')) + '</h3>' +
+      '<form data-submit="account-create" class="form-grid account-form" novalidate>' +
+        '<label class="field"><span>' + esc(t('account.name')) + '</span><input type="text" name="name" autocomplete="off"></label>' +
+        '<label class="field"><span>' + esc(t('account.email')) + '</span><input type="email" name="email" autocomplete="off" required></label>' +
+        '<label class="field"><span>' + esc(t('account.role')) + '</span><select name="role" data-on="account-role">' +
+          '<option value="org">' + esc(t('account.role.org')) + '</option>' +
+          '<option value="facilitator">' + esc(t('account.role.facilitator')) + '</option></select></label>' +
+        '<label class="field account-org"><span>' + esc(t('account.org')) + '</span><select name="orgId">' + orgOptions(App.ws.activeOrgId) + '</select></label>' +
+        '<label class="field"><span>' + esc(t('accounts.initialPassword')) + '</span>' +
+          '<span class="input-with-button"><input type="text" name="password" autocomplete="off" value="' + App.generatePassword() + '">' +
+          '<button type="button" class="btn small" data-click="account-generate">' + esc(t('accounts.generate')) + '</button></span></label>' +
+        '<p class="form-message" role="status"></p>' +
+        '<div><button class="btn primary" type="submit">' + esc(t('accounts.create')) + '</button></div>' +
+      '</form></section>';
+  };
+
+  /** Loads the account list into the card. */
+  App.loadAccounts = function () {
+    var slot = document.getElementById('accounts-list');
+    if (!slot) return;
+    Sync.api('GET', 'users').then(function (data) {
+      var names = {};
+      App.ws.orgs.forEach(function (o) { names[o.id] = App.orgName(o); });
+      if (!document.body.contains(slot)) return;
+      slot.innerHTML = !data.users.length ? '<p class="muted">' + esc(t('accounts.none')) + '</p>' :
+        '<div class="table-wrap"><table class="table accounts"><thead><tr>' +
+        '<th>' + esc(t('account.name')) + '</th><th>' + esc(t('account.email')) + '</th><th>' + esc(t('account.role')) + '</th>' +
+        '<th>' + esc(t('account.org')) + '</th><th>' + esc(t('account.status')) + '</th><th>' + esc(t('account.lastLogin')) + '</th><th></th></tr></thead><tbody>' +
+        data.users.map(function (u) {
+          var self = u.id === Sync.user.id;
+          return '<tr' + (u.active ? '' : ' class="inactive"') + '><td>' + esc(u.name || '—') + (self ? ' <span class="muted small">' + esc(t('accounts.you')) + '</span>' : '') + '</td>' +
+            '<td>' + esc(u.email) + '</td><td>' + esc(t('account.role.' + u.role)) + '</td>' +
+            '<td>' + esc(u.orgId ? (names[u.orgId] || u.orgId) : '—') + '</td>' +
+            '<td>' + esc(t(u.active ? 'account.active' : 'account.disabled')) + '</td>' +
+            '<td class="nowrap">' + esc(u.lastLogin ? App.dateStr(new Date(u.lastLogin)) : '—') + '</td>' +
+            '<td class="row-actions">' +
+              '<button class="btn small" data-click="account-reset" data-id="' + u.id + '" data-email="' + esc(u.email) + '">' + esc(t('accounts.reset')) + '</button> ' +
+              (self ? '' :
+                '<button class="btn small" data-click="account-toggle" data-id="' + u.id + '" data-active="' + (u.active ? '0' : '1') + '">' + esc(t(u.active ? 'accounts.disable' : 'accounts.enable')) + '</button> ' +
+                '<button class="btn small ghost danger" data-click="account-delete" data-id="' + u.id + '" data-email="' + esc(u.email) + '" title="' + esc(t('delete')) + '">✕</button>') +
+            '</td></tr>';
+        }).join('') + '</tbody></table></div>';
+    }, function (e) {
+      slot.innerHTML = '<p class="notice">' + esc(errorText(e)) + '</p>';
+    });
+  };
+
+  A['account-role'] = function (el) {
+    var form = el.form;
+    form.querySelector('.account-org').hidden = el.value !== 'org';
+  };
+
+  A['account-generate'] = function (el) {
+    el.closest('form').elements.password.value = App.generatePassword();
+  };
+
+  A['account-create'] = function (form) {
+    var f = form.elements;
+    var msg = form.querySelector('.form-message');
+    msg.className = 'form-message';
+    msg.textContent = '';
+    var body = { name: f.name.value.trim(), email: f.email.value.trim(), role: f.role.value, orgId: f.role.value === 'org' ? f.orgId.value : null, password: f.password.value };
+    // The organisation must be on the server before an account is linked to it.
+    Sync.flush().then(function () { return Sync.api('POST', 'users', body); }).then(function (data) {
+      alert(t('accounts.created', { email: data.user.email, password: body.password }));
+      form.reset();
+      f.password.value = App.generatePassword();
+      form.querySelector('.account-org').hidden = false;
+      App.loadAccounts();
+    }, function (e) {
+      msg.textContent = errorText(e);
+      msg.classList.add('err');
+    });
+  };
+
+  A['account-reset'] = function (el) {
+    if (!confirm(t('accounts.confirmReset', { email: el.dataset.email }))) return;
+    var password = App.generatePassword();
+    Sync.api('PATCH', 'users/' + el.dataset.id, { password: password }).then(function () {
+      alert(t('accounts.resetDone', { email: el.dataset.email, password: password }));
+    }, function (e) { alert(errorText(e)); });
+  };
+
+  A['account-toggle'] = function (el) {
+    Sync.api('PATCH', 'users/' + el.dataset.id, { active: el.dataset.active === '1' }).then(App.loadAccounts, function (e) { alert(errorText(e)); });
+  };
+
+  A['account-delete'] = function (el) {
+    if (!confirm(t('accounts.confirmDelete', { email: el.dataset.email }))) return;
+    Sync.api('DELETE', 'users/' + el.dataset.id).then(App.loadAccounts, function (e) { alert(errorText(e)); });
+  };
 })();
 
 </script>

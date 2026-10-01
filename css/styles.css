@@ -92,6 +92,33 @@ a { color: var(--accent); }
 .save-status.ok::before { content: "● "; color: var(--ok); }
 .save-status.err { color: var(--danger); }
 
+.save-status.busy::before { content: "● "; color: #c9a227; }
+.save-status.warn { color: #9a6b00; }
+.save-status.warn::before { content: "● "; color: #c9a227; }
+.save-status.err::before { content: "● "; }
+
+/* Server mode: signed-in user, login page, accounts */
+.user-box { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; margin-left: auto; padding-left: .8rem; }
+.user-box[hidden] { display: none; }
+.user-link { text-decoration: none; font-weight: 600; max-width: 14rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body.booting #view, body.booting .main-nav, body.booting .context-switch { visibility: hidden; }
+body.mode-login .context-switch, body.mode-login .main-nav, body.mode-login #save-status { display: none; }
+body.role-org .nav-facilitator, body.role-org .facilitator-link, body.role-org .demo-card { display: none; }
+.login-card { max-width: 26rem; margin: 3rem auto; }
+.login-form { display: grid; gap: .8rem; margin: 1rem 0; }
+.login-form .btn { justify-self: start; }
+.login-error, .form-message { min-height: 1.2em; margin: 0; font-size: .9rem; }
+.login-error, .form-message.err { color: var(--danger); }
+.form-message.ok { color: var(--ok); }
+.form-grid.narrow { max-width: 28rem; grid-template-columns: 1fr; }
+.account-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .6rem 1.2rem; margin: 0 0 1rem; }
+.account-facts dt { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.account-facts dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.input-with-button { display: flex; gap: .4rem; }
+.input-with-button input { flex: 1; min-width: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.table.accounts tr.inactive td { color: var(--muted); }
+.account-form .field[hidden] { display: none; }
+
 .lang-switch { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
 .lang-switch button { border: 0; background: transparent; color: var(--muted); padding: .25rem .65rem; font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
 .lang-switch button.active { background: var(--accent); color: var(--accent-text); }
@@ -172,7 +199,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem 3rem; outline: n
 
 .actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .6rem; }
 
-select, input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="month"], textarea {
+select, input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="month"], textarea {
   width: 100%;
   padding: .5rem .6rem;
   border: 1px solid var(--border);
