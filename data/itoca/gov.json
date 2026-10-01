@@ -1,0 +1,279 @@
+{
+  "id": "itoca-gov",
+  "name": { "fr": "Gouvernance", "en": "Governance" },
+  "shortName": { "fr": "Gouvernance", "en": "Governance" },
+  "items": [
+    {
+      "id": "itoca-gov-board-roles",
+      "name": { "fr": "Rôles du conseil d'administration", "en": "Board roles and responsibilities" },
+      "statement": {
+        "fr": "Les membres du conseil d'administration de l'organisation comprennent leurs rôles et responsabilités.",
+        "en": "The members of the organisation's board of directors understand their roles and responsibilities."
+      },
+      "levels": [
+        {
+          "fr": "Le conseil d'administration de l'organisation est inactif.",
+          "en": "The organisation's board of directors is inactive."
+        },
+        {
+          "fr": "Le conseil d'administration de l'organisation n'a pas encore défini ses responsabilités et n'est pas en mesure de les articuler.",
+          "en": "The organisation's board of directors has not yet defined its responsibilities and is unable to articulate them."
+        },
+        {
+          "fr": "Les responsabilités du conseil d'administration sont documentées et connues par les membres du CA et sont comprises par le personnel.",
+          "en": "The responsibilities of the board of directors are documented and known by board members, and are understood by staff."
+        },
+        {
+          "fr": "Le CA connaît ses responsabilités, le personnel les comprend aussi, il existe une documentation sur ces responsabilités et le CA fournit régulièrement de la rétroaction au personnel et/ou à la communauté.",
+          "en": "The board knows its responsibilities, staff also understand them, the responsibilities are documented, and the board regularly provides feedback to staff and/or the community."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger un document des rôles et responsabilités du CA, le faire adopter et le présenter au personnel.",
+        "en": "Draft a board roles and responsibilities document, have it adopted and present it to staff."
+      },
+      "verification": {
+        "fr": "Document adopté et procès-verbal de présentation",
+        "en": "Adopted document and minutes of the staff briefing"
+      }
+    },
+    {
+      "id": "itoca-gov-governance-policy",
+      "name": { "fr": "Politique et principes de gouvernance", "en": "Governance policy and principles" },
+      "statement": {
+        "fr": "L'organisation a une politique documentée et mise en œuvre qui définit les principes directeurs du fonctionnement des membres du conseil d'administration et des organisations.",
+        "en": "The organisation has a documented and implemented policy that sets out the guiding principles for how board members and the organisation operate."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation dispose de politiques et de principes directeurs clairs couvrant les domaines suivants : les rôles et les responsabilités, la relève, la durée du mandat, le code de conduite, les conflits d'intérêts, la surveillance programmatique et financière, la séparation des fonctions, etc., mais ils ne sont utilisés que lorsque des défis et des conflits apparaissent.",
+          "en": "The organisation has clear policies and guiding principles covering the following areas: roles and responsibilities, succession, term of office, code of conduct, conflicts of interest, programmatic and financial oversight, segregation of duties, etc., but they are only used when challenges and conflicts arise."
+        },
+        {
+          "fr": "L'organisation dispose de politiques et de principes directeurs clairs servant de base à la définition des rôles et des responsabilités, de la relève, de la durée du mandat, du code de conduite, des conflits d'intérêts, de la surveillance programmatique et financière, de la séparation des fonctions, etc., mais ils ne sont utilisés que lorsque des défis et des conflits apparaissent.",
+          "en": "The organisation has clear policies and guiding principles that serve as the basis for defining roles and responsibilities, succession, term of office, code of conduct, conflicts of interest, programmatic and financial oversight, segregation of duties, etc., but they are only used when challenges and conflicts arise."
+        },
+        {
+          "fr": "L'organisation dispose de politiques et de principes directeurs clairs et bien respectés par tous, servant de base à la définition des rôles et des responsabilités, de la relève, de la durée du mandat, du code de conduite, des conflits d'intérêts, de la surveillance programmatique et financière, de la séparation des fonctions, etc.",
+          "en": "The organisation has clear policies and guiding principles, well respected by all, that serve as the basis for defining roles and responsibilities, succession, term of office, code of conduct, conflicts of interest, programmatic and financial oversight, segregation of duties, etc."
+        },
+        {
+          "fr": "L'organisation dispose de politiques et de principes directeurs clairs et bien respectés par tous, servant de base à la définition des rôles et des responsabilités, de la relève, de la durée du mandat, du code de conduite, des conflits d'intérêts, de la surveillance programmatique et financière, de la séparation des fonctions, etc. Ils sont revus et mis à jour pour refléter les changements.",
+          "en": "The organisation has clear policies and guiding principles, well respected by all, that serve as the basis for defining roles and responsibilities, succession, term of office, code of conduct, conflicts of interest, programmatic and financial oversight, segregation of duties, etc. They are reviewed and updated to reflect changes."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une charte de gouvernance couvrant relève, mandats, code de conduite et séparation des fonctions, révisée tous les deux ans.",
+        "en": "Adopt a governance charter covering succession, terms, code of conduct and segregation of duties, reviewed every two years."
+      },
+      "verification": {
+        "fr": "Charte de gouvernance approuvée et datée",
+        "en": "Approved, dated governance charter"
+      }
+    },
+    {
+      "id": "itoca-gov-conflict-of-interest",
+      "name": { "fr": "Politique de conflits d'intérêts", "en": "Conflict of interest policy" },
+      "statement": {
+        "fr": "L'organisation (conseil d'administration, assemblée générale, personnel) a une politique écrite sur les conflits d'intérêts acceptée et signée par tous les membres de l'organisation.",
+        "en": "The organisation (board of directors, general assembly, staff) has a written conflict of interest policy accepted and signed by all members of the organisation."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de politique écrite en matière de conflits d'intérêts.",
+          "en": "The organisation has no written conflict of interest policy."
+        },
+        {
+          "fr": "L'organisation a une politique écrite sur les conflits d'intérêts ; tous les membres l'ont signée et ont déclaré tout conflit d'intérêts.",
+          "en": "The organisation has a written conflict of interest policy; all members have signed it and declared any conflict of interest."
+        },
+        {
+          "fr": "L'organisation a une politique écrite sur les conflits d'intérêts ; tous les membres l'ont signée et ont déclaré tout conflit d'intérêts, y compris les conflits liés au financement.",
+          "en": "The organisation has a written conflict of interest policy; all members have signed it and declared any conflict of interest, including funding-related conflicts."
+        },
+        {
+          "fr": "L'organisation a une politique écrite sur les conflits d'intérêts ; tous les membres l'ont signée et ont déclaré tout conflit d'intérêts, y compris les conflits liés au financement. Des mises à jour de la politique sont faites régulièrement.",
+          "en": "The organisation has a written conflict of interest policy; all members have signed it and declared any conflict of interest, including funding-related conflicts. The policy is updated regularly."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger et adopter une politique de conflits d'intérêts signée par tous les membres, avec déclaration annuelle.",
+        "en": "Draft and adopt a conflict of interest policy signed by all members, with an annual declaration."
+      },
+      "verification": {
+        "fr": "Politique et déclarations signées archivées",
+        "en": "Signed policy and declarations on file"
+      }
+    },
+    {
+      "id": "itoca-gov-supervision",
+      "name": { "fr": "Supervision et encadrement", "en": "Supervision and support" },
+      "statement": {
+        "fr": "Il existe un système de soutien et d'encadrement (ou de supervision) à tous les niveaux de l'organisation pour assurer le suivi périodique des succès et des défis.",
+        "en": "There is a system of support and coaching (or supervision) at all levels of the organisation to ensure periodic follow-up of successes and challenges."
+      },
+      "levels": [
+        {
+          "fr": "Les superviseurs ou encadreurs sont parfois disponibles pour répondre aux besoins du personnel, des volontaires et des stagiaires, en matière d'appui et d'orientation.",
+          "en": "Supervisors or coaches are sometimes available to respond to the support and guidance needs of staff, volunteers and interns."
+        },
+        {
+          "fr": "Les superviseurs ou encadreurs sont toujours disponibles pour répondre aux besoins du personnel, des volontaires et des stagiaires, en matière d'appui et d'orientation.",
+          "en": "Supervisors or coaches are always available to respond to the support and guidance needs of staff, volunteers and interns."
+        },
+        {
+          "fr": "Les superviseurs ou encadreurs sont toujours disponibles pour répondre aux besoins du personnel, des volontaires et des stagiaires, en matière d'appui et d'orientation. Des évaluations formelles sont parfois effectuées.",
+          "en": "Supervisors or coaches are always available to respond to the support and guidance needs of staff, volunteers and interns. Formal appraisals are sometimes carried out."
+        },
+        {
+          "fr": "Les superviseurs ou encadreurs sont toujours disponibles pour répondre aux besoins du personnel, des volontaires et des stagiaires, en matière d'appui et d'orientation. Des évaluations formelles sont effectuées et documentées annuellement. Les superviseurs/encadreurs discutent de leurs défis et de leurs réussites avec leurs subordonnés directs au moins une fois par mois. Les promotions sont basées sur la performance.",
+          "en": "Supervisors or coaches are always available to respond to the support and guidance needs of staff, volunteers and interns. Formal appraisals are carried out and documented annually. Supervisors/coaches discuss challenges and successes with their direct reports at least once a month. Promotions are based on performance."
+        }
+      ],
+      "action": {
+        "fr": "Instaurer des entretiens mensuels de supervision documentés et une évaluation annuelle formelle pour chaque employé.",
+        "en": "Introduce documented monthly supervision meetings and a formal annual appraisal for every staff member."
+      },
+      "verification": {
+        "fr": "Fiches de supervision et évaluations annuelles signées",
+        "en": "Supervision notes and signed annual appraisals"
+      }
+    },
+    {
+      "id": "itoca-gov-participatory-planning",
+      "name": { "fr": "Planification participative", "en": "Participatory planning and decision-making" },
+      "statement": {
+        "fr": "La planification et la prise de décision sont participatives et impliquent les membres de l'organisation, le bureau exécutif et le conseil d'administration.",
+        "en": "Planning and decision-making are participatory and involve the organisation's members, the executive committee and the board of directors."
+      },
+      "levels": [
+        {
+          "fr": "Il existe un système de planification et de description.",
+          "en": "A planning and description system exists."
+        },
+        {
+          "fr": "Les membres, le bureau exécutif et le conseil d'administration sont directement impliqués.",
+          "en": "Members, the executive committee and the board of directors are directly involved."
+        },
+        {
+          "fr": "Les membres, le bureau exécutif et le conseil d'administration sont directement impliqués dans la planification, la mise en œuvre et la réalisation des activités.",
+          "en": "Members, the executive committee and the board of directors are directly involved in planning, implementing and carrying out activities."
+        },
+        {
+          "fr": "Les membres, le bureau exécutif et le conseil d'administration participent directement à la planification, à la mise en œuvre et à la réalisation des activités, ainsi qu'à l'examen et à la mise à jour du système.",
+          "en": "Members, the executive committee and the board of directors take a direct part in planning, implementing and carrying out activities, as well as in reviewing and updating the system."
+        }
+      ],
+      "action": {
+        "fr": "Organiser un atelier annuel de planification réunissant membres, bureau exécutif et CA, avec revue du processus.",
+        "en": "Hold an annual planning workshop bringing together members, the executive committee and the board, including a process review."
+      },
+      "verification": {
+        "fr": "Liste de présence et rapport d'atelier",
+        "en": "Attendance list and workshop report"
+      }
+    },
+    {
+      "id": "itoca-gov-staff-meetings",
+      "name": { "fr": "Réunions du personnel", "en": "Staff meetings" },
+      "statement": {
+        "fr": "Des réunions du personnel ont lieu régulièrement et les procès-verbaux sont communiqués à tout le personnel.",
+        "en": "Staff meetings are held regularly and minutes are shared with all staff."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation a programmé des réunions avec tout le personnel.",
+          "en": "The organisation has scheduled meetings with all staff."
+        },
+        {
+          "fr": "L'organisation a programmé des réunions de tout le personnel, ainsi que des réunions spécifiques à chaque équipe technique, par exemple des réunions du personnel des finances.",
+          "en": "The organisation has scheduled all-staff meetings, as well as specific meetings for each technical team, for example finance staff meetings."
+        },
+        {
+          "fr": "L'organisation a programmé des réunions de tout le personnel, ainsi que des réunions spécifiques à chaque équipe technique. Les ordres du jour sont communiqués au moins 24 heures avant la réunion. Les procès-verbaux de toutes les réunions sont dressés et classés pour référence.",
+          "en": "The organisation has scheduled all-staff meetings, as well as specific meetings for each technical team. Agendas are circulated at least 24 hours before the meeting. Minutes of all meetings are taken and filed for reference."
+        },
+        {
+          "fr": "L'organisation a programmé des réunions de tout le personnel, ainsi que des réunions spécifiques à chaque équipe technique. Les ordres du jour sont communiqués au moins 24 heures avant la réunion. Les procès-verbaux de toutes les réunions sont dressés et classés pour référence. Les points d'action font l'objet d'un suivi.",
+          "en": "The organisation has scheduled all-staff meetings, as well as specific meetings for each technical team. Agendas are circulated at least 24 hours before the meeting. Minutes of all meetings are taken and filed for reference. Action points are followed up."
+        }
+      ],
+      "action": {
+        "fr": "Fixer un calendrier de réunions, diffuser l'ordre du jour 24 h avant et suivre les points d'action dans les procès-verbaux.",
+        "en": "Set a meeting calendar, circulate agendas 24 hours ahead and track action points in the minutes."
+      },
+      "verification": {
+        "fr": "Calendrier, ordres du jour et procès-verbaux classés",
+        "en": "Calendar, agendas and filed minutes"
+      }
+    },
+    {
+      "id": "itoca-gov-internal-communication",
+      "name": { "fr": "Communication interne", "en": "Internal communication" },
+      "statement": {
+        "fr": "La direction exploite un système de communication verticale et horizontale grâce auquel le personnel, les bénévoles, les intervenants et les donateurs partagent aisément l'information positive et négative.",
+        "en": "Management operates a vertical and horizontal communication system through which staff, volunteers, stakeholders and donors readily share both positive and negative information."
+      },
+      "levels": [
+        {
+          "fr": "La direction n'a pas de système de partage d'informations.",
+          "en": "Management has no information-sharing system."
+        },
+        {
+          "fr": "La direction partage toutes les informations importantes, les leçons apprises et les réalisations avec l'ensemble du personnel et vice versa, pendant les réunions du personnel et par courriel.",
+          "en": "Management shares all important information, lessons learned and achievements with all staff, and vice versa, during staff meetings and by email."
+        },
+        {
+          "fr": "La direction partage toutes les informations importantes, les leçons apprises et les réalisations avec l'ensemble du personnel et vice versa, pendant les réunions du personnel et par courriel. Les différents départements et projets communiquent ouvertement et librement les uns avec les autres, en partageant les informations le cas échéant.",
+          "en": "Management shares all important information, lessons learned and achievements with all staff, and vice versa, during staff meetings and by email. The various departments and projects communicate openly and freely with one another, sharing information where appropriate."
+        },
+        {
+          "fr": "La direction partage régulièrement l'information importante, les leçons apprises et les réalisations avec tout le personnel et vice versa, ainsi qu'avec les bénévoles, les intervenants et les donateurs. Les différents départements et projets communiquent ouvertement et librement les uns avec les autres, en partageant les informations le cas échéant. La direction applique une politique de la porte ouverte et le personnel partage aisément les informations positives et négatives.",
+          "en": "Management regularly shares important information, lessons learned and achievements with all staff, and vice versa, as well as with volunteers, stakeholders and donors. The various departments and projects communicate openly and freely with one another, sharing information where appropriate. Management applies an open-door policy and staff readily share positive and negative information."
+        }
+      ],
+      "action": {
+        "fr": "Mettre en place un bulletin interne mensuel et un canal partagé entre départements et projets.",
+        "en": "Set up a monthly internal newsletter and a shared channel across departments and projects."
+      },
+      "verification": {
+        "fr": "Exemplaires du bulletin et canal actif",
+        "en": "Newsletter issues and active shared channel"
+      }
+    },
+    {
+      "id": "itoca-gov-leadership-innovation",
+      "name": { "fr": "Leadership et innovation", "en": "Leadership and innovation" },
+      "statement": {
+        "fr": "Le personnel et les membres de l'organisation ont des possibilités d'assumer des rôles de leadership, et l'innovation est encouragée et recherchée au sein de l'organisation.",
+        "en": "Staff and members of the organisation have opportunities to take on leadership roles, and innovation is encouraged and sought within the organisation."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de système ni d'opportunités de leadership et d'innovation.",
+          "en": "There is no system and there are no opportunities for leadership and innovation."
+        },
+        {
+          "fr": "Le personnel et les membres ont parfois l'occasion d'assumer des rôles de leadership au sein de l'organisation ; il peut s'agir de diriger une initiative spéciale, de représenter l'organisation à un événement externe ou d'assumer une responsabilité habituellement associée à la gestion.",
+          "en": "Staff and members sometimes have the opportunity to take on leadership roles within the organisation; this may involve leading a special initiative, representing the organisation at an external event or taking on a responsibility usually associated with management."
+        },
+        {
+          "fr": "Le personnel et les membres ont souvent l'occasion d'assumer des rôles de leadership au sein de l'organisation ; il peut s'agir de diriger une initiative spéciale, de représenter l'organisation à un événement externe ou d'assumer une responsabilité habituellement associée à la gestion. L'innovation est encouragée et recherchée au sein de l'organisation.",
+          "en": "Staff and members often have the opportunity to take on leadership roles within the organisation; this may involve leading a special initiative, representing the organisation at an external event or taking on a responsibility usually associated with management. Innovation is encouraged and sought within the organisation."
+        },
+        {
+          "fr": "Le personnel et les membres ont souvent l'occasion d'assumer des rôles de leadership au sein de l'organisation ; il peut s'agir de diriger une initiative spéciale, de représenter l'organisation à un événement externe ou d'assumer une responsabilité habituellement associée à la gestion. L'innovation est encouragée et recherchée au sein de l'organisation. Lorsque les innovations sont couronnées de succès, le bon travail est récompensé et les innovations sont intégrées dans la pratique courante.",
+          "en": "Staff and members often have the opportunity to take on leadership roles within the organisation; this may involve leading a special initiative, representing the organisation at an external event or taking on a responsibility usually associated with management. Innovation is encouraged and sought within the organisation. When innovations succeed, good work is rewarded and the innovations are integrated into standard practice."
+        }
+      ],
+      "action": {
+        "fr": "Confier par rotation la conduite d'initiatives et la représentation externe au personnel, et récompenser les innovations réussies.",
+        "en": "Rotate leadership of initiatives and external representation among staff, and reward successful innovations."
+      },
+      "verification": {
+        "fr": "Tableau des délégations et innovations reconnues",
+        "en": "Delegation log and record of recognised innovations"
+      }
+    }
+  ]
+}

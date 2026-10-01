@@ -1,7 +1,9 @@
 /*
  * Demo data for testing the tool: three fictitious organisations with
- * different profiles, one of them with two assessments to show the
- * comparison. Loading the demo again replaces the demo organisations only.
+ * different profiles. The first one has three half-yearly Barometer
+ * assessments, two ITOCA assessments (2024 and 2026) and one OPI, to show
+ * comparisons over time. Loading the demo again replaces the demo
+ * organisations only.
  */
 (function (root) {
   'use strict';
@@ -10,19 +12,20 @@
   var F = isNode ? require('./framework.js') : root.BarometerFramework;
   var Store = isNode ? require('./storage.js') : root.BarometerStorage;
   var Plan = isNode ? require('./plan.js') : root.BarometerPlan;
+  var Models = isNode ? require('./models.js') : root.BarometerModels;
 
-  function answers(fn) {
+  function answers(fn, fw) {
     var out = {};
-    F.allComponents().forEach(function (e, i) { out[e.component.id] = fn(e, i); });
+    (fw || F).allComponents().forEach(function (e, i) { out[e.component.id] = fn(e, i); });
     return out;
   }
 
-  function assessment(seq, year, ans, startMonth) {
-    var a = Store.newAssessment(seq, year);
-    a.id = 'demo-a-' + seq + '-' + year + '-' + Math.random().toString(36).slice(2, 6);
+  function assessment(seq, year, ans, startMonth, model) {
+    var a = Store.newAssessment(seq, year, model);
+    a.id = 'demo-a-' + (model || 'barometer') + '-' + seq + '-' + year + '-' + Math.random().toString(36).slice(2, 6);
     a.answers = ans;
     a.plan.startMonth = startMonth || '';
-    Plan.syncStandardActivities(F, a);
+    Plan.syncStandardActivities(Models.get(a.model), a);
     return a;
   }
 
@@ -78,11 +81,31 @@
     general.title = en ? 'Hold the annual general assembly' : 'Tenir l’assemblée générale annuelle';
     general.start = 11; general.end = 11; general.status = 'planned';
 
+    // ITOCA in 2024 and 2026 (capacity), OPI in 2026 (performance).
+    var IT = Models.get('itoca');
+    var it1 = assessment(1, 2024, answers(function (e, i) {
+      var byDomain = { 'itoca-gov': 2, 'itoca-purpose': 2, 'itoca-finance': 1, 'itoca-award': 1, 'itoca-hr': 2, 'itoca-network': 3, 'itoca-advocacy': 3, 'itoca-nrm': 2, 'itoca-gender': 1, 'itoca-merl': 1 };
+      return Math.max(1, Math.min(4, byDomain[e.pillar.id] + (i % 3 === 0 ? 1 : 0) - (i % 7 === 0 ? 1 : 0)));
+    }, IT), '2024-07', 'itoca');
+    it1.period = '2024-06';
+    it1.plan.activities.forEach(function (act, i) { act.status = i % 4 === 0 ? 'ongoing' : 'done'; act.edited = true; });
+    var it2 = assessment(2, 2026, answers(function (e, i) {
+      return Math.min(4, it1.answers[e.component.id] + (i % 2 === 0 ? 1 : 0));
+    }, IT), '2026-07', 'itoca');
+    it2.period = '2026-06';
+    var OP = Models.get('opi');
+    var op1 = assessment(1, 2026, answers(function (e, i) { return [3, 2, 2, 3, 3, 2, 2, 3, 2, 3][i]; }, OP), '2026-07', 'opi');
+    op1.period = '2026-06';
+    OP.allComponents().forEach(function (e, i) {
+      op1.evidence[e.component.id] = en ? 'Annual report 2025, monitoring data (p. ' + (i + 3) + ')' : 'Rapport annuel 2025, données de suivi (p. ' + (i + 3) + ')';
+      if (i % 3 !== 2) op1.verified[e.component.id] = true;
+    });
+
     var o1 = org('demo-org-1', {
       name: en ? 'Women Farmers Network (demo)' : 'Réseau des Femmes Agricultrices (démo)',
-      acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', region: 'Analamanga',
+      acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', region: 'Analamanga', founded: '2012',
       address: 'Antananarivo', focalPoint: 'Hanta R.', phone: '+261 34 00 000 01', email: 'contact@example.org'
-    }, [a0, a1, a2]);
+    }, [a0, a1, it1, it2, op1, a2]);
 
     // 2. Well-established NGO: mostly strong, a few opportunities.
     var o2 = org('demo-org-2', {

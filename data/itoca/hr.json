@@ -1,0 +1,313 @@
+{
+  "id": "itoca-hr",
+  "name": { "fr": "Gestion des ressources humaines", "en": "Human resource management" },
+  "shortName": { "fr": "Ressources humaines", "en": "Human resources" },
+  "items": [
+    {
+      "id": "itoca-hr-recruitment-retention",
+      "name": { "fr": "Recrutement et rétention du personnel", "en": "Staff recruitment and retention" },
+      "statement": {
+        "fr": "L'organisation dispose d'un système (système de compétences) pour assurer la rétention et le remplacement du personnel qualifié, le cas échéant.",
+        "en": "The organisation has a system (competency system) to ensure the retention and, where necessary, the replacement of qualified staff."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation annonce parfois des postes et documente son processus de recrutement du personnel, p. ex. procès-verbaux de réunions, notes d'entrevues, etc.",
+          "en": "The organisation sometimes advertises positions and documents its staff recruitment process, e.g. meeting minutes, interview notes, etc."
+        },
+        {
+          "fr": "L'organisation suit un processus de recrutement du personnel clairement défini et documenté. Le recrutement est conforme aux lois locales, les postes sont toujours annoncés et au moins deux candidats sont interviewés par poste.",
+          "en": "The organisation follows a clearly defined and documented staff recruitment process. Recruitment complies with local laws, positions are always advertised and at least two candidates are interviewed per position."
+        },
+        {
+          "fr": "L'organisation suit un processus de recrutement du personnel clairement défini et documenté. Les postes sont toujours annoncés conformément aux lois locales, au moins trois candidats sont interviewés par poste, les références sont toujours vérifiées avant l'embauche et les formulaires de données biographiques sont remplis. Lorsque le personnel quitte l'organisation, celle-ci dispose de systèmes, de procédures et de ressources pour recruter des remplaçants dans les deux mois suivant la vacance du poste.",
+          "en": "The organisation follows a clearly defined and documented staff recruitment process. Positions are always advertised in accordance with local laws, at least three candidates are interviewed per position, references are always checked before hiring and biographical data forms are completed. When staff leave, the organisation has systems, procedures and resources to recruit replacements within two months of the position becoming vacant."
+        },
+        {
+          "fr": "L'organisation recrute du personnel en fonction de ses besoins actuels. Les postes sont toujours annoncés conformément aux lois locales, au moins trois candidats sont interviewés par poste, les références sont toujours vérifiées avant l'embauche et les formulaires de données biographiques sont remplis. Le comité d'examen des candidatures est établi et transparent. L'organisation dispose de systèmes, de procédures et de ressources pour recruter des remplaçants dans un délai d'un mois après la vacance du poste (banque de CV).",
+          "en": "The organisation recruits staff according to its current needs. Positions are always advertised in accordance with local laws, at least three candidates are interviewed per position, references are always checked before hiring and biographical data forms are completed. The application review committee is established and transparent. The organisation has systems, procedures and resources to recruit replacements within one month of the position becoming vacant (CV bank)."
+        }
+      ],
+      "action": {
+        "fr": "Formaliser une procédure de recrutement (annonce, trois candidats, vérification des références) et constituer une banque de CV.",
+        "en": "Formalise a recruitment procedure (advertising, three candidates, reference checks) and build up a CV bank."
+      },
+      "verification": {
+        "fr": "Procédure écrite et dossiers de recrutement complets",
+        "en": "Written procedure and complete recruitment files"
+      }
+    },
+    {
+      "id": "itoca-hr-job-descriptions",
+      "name": { "fr": "Rôles et descriptions de poste", "en": "Roles and job descriptions" },
+      "statement": {
+        "fr": "L'organisation veille à ce que les rôles et responsabilités du personnel soient clairs et pertinents.",
+        "en": "The organisation ensures that staff roles and responsibilities are clear and relevant."
+      },
+      "levels": [
+        {
+          "fr": "Chaque membre du personnel et chaque bénévole comprend son rôle au sein de l'organisation.",
+          "en": "Every staff member and volunteer understands their role within the organisation."
+        },
+        {
+          "fr": "Chaque membre du personnel et chaque bénévole comprend son rôle au sein de l'organisation et possède une description de poste écrite qui décrit clairement les attentes de l'organisation en ce qui a trait aux principales responsabilités et tâches.",
+          "en": "Every staff member and volunteer understands their role within the organisation and has a written job description that clearly sets out the organisation's expectations regarding their main responsibilities and tasks."
+        },
+        {
+          "fr": "Chaque membre du personnel et chaque bénévole comprend son rôle au sein de l'organisation et dispose d'une description de poste écrite qui décrit clairement les attentes de l'organisation concernant les principales responsabilités et tâches, et qui sert de base à l'évaluation du rendement du personnel.",
+          "en": "Every staff member and volunteer understands their role within the organisation and has a written job description that clearly sets out the organisation's expectations regarding their main responsibilities and tasks, and which serves as the basis for staff performance appraisal."
+        },
+        {
+          "fr": "Chaque membre du personnel et chaque bénévole comprend son rôle au sein de l'organisation et dispose d'une description de poste écrite qui décrit clairement les attentes de l'organisation concernant les principales responsabilités et tâches, et qui sert de base à l'évaluation du rendement du personnel. Les descriptions de poste sont révisées au moins une fois par an pour s'assurer qu'elles reflètent les besoins du personnel et de l'organisation.",
+          "en": "Every staff member and volunteer understands their role within the organisation and has a written job description that clearly sets out the organisation's expectations regarding their main responsibilities and tasks, and which serves as the basis for staff performance appraisal. Job descriptions are reviewed at least once a year to ensure they reflect the needs of staff and the organisation."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger une description de poste signée pour chaque employé et bénévole, et la réviser lors de l'évaluation annuelle.",
+        "en": "Write a signed job description for every staff member and volunteer, and review it at the annual appraisal."
+      },
+      "verification": {
+        "fr": "Descriptions de poste signées dans les dossiers",
+        "en": "Signed job descriptions in personnel files"
+      }
+    },
+    {
+      "id": "itoca-hr-professional-development",
+      "name": { "fr": "Perfectionnement professionnel", "en": "Professional development" },
+      "statement": {
+        "fr": "Le personnel et les membres possèdent une expertise, et les possibilités de perfectionnement professionnel sont explicitement liées à une évaluation annuelle du rendement et à un plan de gestion des talents à l'échelle de l'organisation, y compris les possibilités externes.",
+        "en": "Staff and members have expertise, and professional development opportunities, including external ones, are explicitly linked to an annual performance appraisal and an organisation-wide talent management plan."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne possède pas de système de renforcement des capacités du personnel et des membres.",
+          "en": "The organisation has no system for building the capacity of staff and members."
+        },
+        {
+          "fr": "L'expertise du personnel et des membres de l'organisation est renforcée par une orientation initiale et des formations en cours d'emploi pertinentes.",
+          "en": "The expertise of the organisation's staff and members is strengthened through initial induction and relevant in-service training."
+        },
+        {
+          "fr": "L'expertise du personnel et des membres est renforcée par une orientation initiale et des formations en cours d'emploi pertinentes. Les possibilités de perfectionnement professionnel sont explicitement liées à une évaluation annuelle du rendement et à un plan de perfectionnement professionnel individuel.",
+          "en": "The expertise of staff and members is strengthened through initial induction and relevant in-service training. Professional development opportunities are explicitly linked to an annual performance appraisal and an individual professional development plan."
+        },
+        {
+          "fr": "L'expertise du personnel et des membres est renforcée pour assurer la capacité de respecter les normes nationales et les directives des donateurs. Ceci est réalisé par une orientation initiale et des formations en cours d'emploi pertinentes, du mentorat, la participation à des conférences, etc. Les possibilités de perfectionnement professionnel sont explicitement liées à une évaluation annuelle du rendement et à un plan de gestion des talents à l'échelle de l'organisation. Les occasions externes auxquelles assiste le personnel sont partagées par le biais de la distribution de documents et de discussions lors des réunions du personnel.",
+          "en": "The expertise of staff and members is strengthened to ensure the capacity to meet national standards and donor requirements. This is achieved through initial induction and relevant in-service training, mentoring, conference attendance, etc. Professional development opportunities are explicitly linked to an annual performance appraisal and an organisation-wide talent management plan. External opportunities attended by staff are shared through the distribution of materials and discussions at staff meetings."
+        }
+      ],
+      "action": {
+        "fr": "Établir un plan individuel de perfectionnement issu de l'évaluation annuelle et un plan de formation annuel de l'organisation.",
+        "en": "Draw up individual development plans from the annual appraisal and an annual organisational training plan."
+      },
+      "verification": {
+        "fr": "Plans de perfectionnement et registre des formations",
+        "en": "Development plans and training register"
+      }
+    },
+    {
+      "id": "itoca-hr-hr-policy",
+      "name": { "fr": "Politique et manuel du personnel", "en": "HR policy and staff manual" },
+      "statement": {
+        "fr": "L'organisation a une politique et des procédures de recrutement.",
+        "en": "The organisation has a recruitment policy and procedures."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne possède pas de politique en matière de ressources humaines.",
+          "en": "The organisation has no human resources policy."
+        },
+        {
+          "fr": "L'organisation possède une politique en matière de ressources humaines guidée par un manuel écrit du personnel (code de conduite/de procédures).",
+          "en": "The organisation has a human resources policy guided by a written staff manual (code of conduct/procedures)."
+        },
+        {
+          "fr": "La conduite de l'organisation est guidée par un manuel écrit du personnel (code de conduite/de procédures) et une politique conforme à la législation locale du travail, qui comprend les heures de travail, la présence, les congés de maladie et personnels, les voyages, les procédures de recrutement, l'échelle des salaires, le code de déontologie, les procédures disciplinaires et de sortie et la politique antidiscrimination.",
+          "en": "The organisation's conduct is guided by a written staff manual (code of conduct/procedures) and a policy compliant with local labour law, covering working hours, attendance, sick and personal leave, travel, recruitment procedures, salary scale, code of ethics, disciplinary and exit procedures and anti-discrimination policy."
+        },
+        {
+          "fr": "La conduite du personnel et des membres est guidée par un manuel et une politique du personnel écrits, approuvés par le conseil d'administration et conformes aux lois locales sur le travail, qui comprennent les heures de travail, la présence, les congés de maladie et personnels, les déplacements, les procédures de recrutement, l'échelle salariale, le code de déontologie, les procédures disciplinaires et de sortie, la politique antidiscrimination, la politique en matière de drogues, le code de conduite, la conformité environnementale et la politique en cas de handicap.",
+          "en": "The conduct of staff and members is guided by a written staff manual and policy, approved by the board of directors and compliant with local labour laws, covering working hours, attendance, sick and personal leave, travel, recruitment procedures, salary scale, code of ethics, disciplinary and exit procedures, anti-discrimination policy, drug policy, code of conduct, environmental compliance and disability policy."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger un manuel du personnel conforme au droit du travail local et le faire approuver par le CA.",
+        "en": "Write a staff manual compliant with local labour law and have it approved by the board."
+      },
+      "verification": {
+        "fr": "Manuel approuvé et PV du CA",
+        "en": "Approved manual and board minutes"
+      }
+    },
+    {
+      "id": "itoca-hr-non-discrimination",
+      "name": { "fr": "Non-discrimination et diversité", "en": "Non-discrimination and diversity" },
+      "statement": {
+        "fr": "L'organisation s'efforce d'avoir des politiques internes de non-discrimination.",
+        "en": "The organisation strives to have internal non-discrimination policies."
+      },
+      "levels": [
+        {
+          "fr": "Le personnel comprend des représentants de certains groupes culturels, du sexe, de la religion, de l'âge et des antécédents économiques des populations cibles desservies par l'organisation. Au moins un membre du personnel représente un ou plusieurs de ces antécédents.",
+          "en": "Staff include representatives of some of the cultural groups, gender, religion, age and economic backgrounds of the target populations served by the organisation. At least one staff member represents one or more of these backgrounds."
+        },
+        {
+          "fr": "Le personnel comprend des représentants de certains groupes culturels, du sexe, de la religion, de l'âge et des antécédents économiques des populations cibles desservies par l'organisation. Au moins deux membres du personnel représentent un ou plusieurs des antécédents susmentionnés.",
+          "en": "Staff include representatives of some of the cultural groups, gender, religion, age and economic backgrounds of the target populations served by the organisation. At least two staff members represent one or more of the above backgrounds."
+        },
+        {
+          "fr": "Le personnel comprend une représentation adéquate de la culture, du sexe, de la religion, de l'âge et des antécédents économiques des populations cibles desservies par l'organisation. Adéquat signifie que plus de deux membres du personnel représentent un ou plusieurs des antécédents susmentionnés.",
+          "en": "Staff include adequate representation of the culture, gender, religion, age and economic backgrounds of the target populations served by the organisation. Adequate means that more than two staff members represent one or more of the above backgrounds."
+        },
+        {
+          "fr": "Le personnel comprend une représentation adéquate de la culture, du sexe, de la religion, de l'âge et des antécédents économiques des populations cibles desservies par l'organisation. Adéquat signifie que plus de deux membres du personnel représentent un ou plusieurs des antécédents susmentionnés. La diversité des sexes et des groupes est représentée dans la gestion de l'organisation.",
+          "en": "Staff include adequate representation of the culture, gender, religion, age and economic backgrounds of the target populations served by the organisation. Adequate means that more than two staff members represent one or more of the above backgrounds. Gender and group diversity is represented in the organisation's management."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une politique de non-discrimination et suivre annuellement la diversité du personnel et de la direction.",
+        "en": "Adopt a non-discrimination policy and track staff and management diversity annually."
+      },
+      "verification": {
+        "fr": "Politique adoptée et tableau annuel de diversité",
+        "en": "Adopted policy and annual diversity table"
+      }
+    },
+    {
+      "id": "itoca-hr-salary-scale",
+      "name": { "fr": "Rémunération et échelle salariale", "en": "Pay and salary scale" },
+      "statement": {
+        "fr": "L'organisation offre des salaires compétitifs basés sur les taux du marché et guidés par une échelle salariale écrite.",
+        "en": "The organisation offers competitive salaries based on market rates and guided by a written salary scale."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas mis en place de politiques pour gérer et offrir les prestations minimales exigées par le taux du marché.",
+          "en": "The organisation has not put in place policies to manage and provide the minimum benefits required by market rates."
+        },
+        {
+          "fr": "Les salaires sont fixés en fonction d'une échelle salariale écrite qui comprend tous les avantages sociaux exigés par le taux du marché.",
+          "en": "Salaries are set according to a written salary scale that includes all the benefits required by market rates."
+        },
+        {
+          "fr": "Les salaires sont fixés à l'intérieur d'une échelle salariale écrite qui est conforme à celle d'autres organisations semblables et qui comprend tous les avantages sociaux exigés par le marché.",
+          "en": "Salaries are set within a written salary scale that is in line with those of similar organisations and includes all the benefits required by the market."
+        },
+        {
+          "fr": "Les salaires sont fixés à l'intérieur d'une échelle salariale écrite qui est conforme à celle d'autres organisations semblables et qui comprend tous les avantages sociaux exigés par le taux du marché. L'organisation révise son échelle salariale une fois tous les trois ans.",
+          "en": "Salaries are set within a written salary scale that is in line with those of similar organisations and includes all the benefits required by market rates. The organisation reviews its salary scale every three years."
+        }
+      ],
+      "action": {
+        "fr": "Réaliser une enquête salariale auprès d'organisations similaires et adopter une échelle salariale révisée tous les trois ans.",
+        "en": "Conduct a salary survey of similar organisations and adopt a salary scale reviewed every three years."
+      },
+      "verification": {
+        "fr": "Enquête salariale et grille approuvée",
+        "en": "Salary survey and approved salary scale"
+      }
+    },
+    {
+      "id": "itoca-hr-performance-appraisal",
+      "name": { "fr": "Qualifications et évaluation du rendement", "en": "Staff qualifications and appraisal" },
+      "statement": {
+        "fr": "Les membres du personnel possèdent les qualifications et l'expérience requises pour assurer un rendement efficace.",
+        "en": "Staff members have the qualifications and experience required to perform effectively."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne dispose pas d'un processus d'évaluation annuel dans le cadre duquel les superviseurs notent leurs employés.",
+          "en": "The organisation has no annual appraisal process in which supervisors rate their staff."
+        },
+        {
+          "fr": "L'organisation dispose d'un processus d'évaluation annuel dans le cadre duquel les superviseurs notent leurs employés. Il n'y a pas de mécanisme de rétroaction.",
+          "en": "The organisation has an annual appraisal process in which supervisors rate their staff. There is no feedback mechanism."
+        },
+        {
+          "fr": "L'organisation dispose d'un processus d'évaluation annuel dans le cadre duquel les superviseurs notent leurs employés. Les résultats de l'évaluation sont examinés avec le salarié.",
+          "en": "The organisation has an annual appraisal process in which supervisors rate their staff. Appraisal results are discussed with the employee."
+        },
+        {
+          "fr": "L'organisation dispose d'un processus d'évaluation annuel dans le cadre duquel les superviseurs notent leurs employés. Les résultats de l'évaluation sont examinés avec l'employé et utilisés pour élaborer un plan d'amélioration et de croissance.",
+          "en": "The organisation has an annual appraisal process in which supervisors rate their staff. Appraisal results are discussed with the employee and used to develop an improvement and growth plan."
+        }
+      ],
+      "action": {
+        "fr": "Introduire un formulaire d'évaluation annuelle discuté avec chaque employé et débouchant sur un plan d'amélioration.",
+        "en": "Introduce an annual appraisal form discussed with each employee and leading to an improvement plan."
+      },
+      "verification": {
+        "fr": "Évaluations signées par l'employé et le superviseur",
+        "en": "Appraisals signed by employee and supervisor"
+      }
+    },
+    {
+      "id": "itoca-hr-payroll-deductions",
+      "name": { "fr": "Retenues sur la paie", "en": "Payroll deductions" },
+      "statement": {
+        "fr": "L'organisation verse toutes les retenues sur la paie (pension, assurance maladie, impôts) aux institutions concernées dans la période de paie courante et informe chaque membre du personnel de ses retenues.",
+        "en": "The organisation remits all payroll deductions (pension, health insurance, taxes) to the relevant institutions within the current pay period and informs every staff member of their deductions."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne verse pas toutes les retenues sur la paie aux institutions respectives. Les versements ne sont pas toujours effectués dans la période de paie courante.",
+          "en": "The organisation does not remit all payroll deductions to the respective institutions. Payments are not always made within the current pay period."
+        },
+        {
+          "fr": "L'organisation verse toutes les retenues sur la paie (pension, assurance maladie, impôts) aux institutions respectives. Les versements ne sont pas toujours effectués dans la période de paie courante.",
+          "en": "The organisation remits all payroll deductions (pension, health insurance, taxes) to the respective institutions. Payments are not always made within the current pay period."
+        },
+        {
+          "fr": "L'organisation verse toutes les retenues sur la paie (pension, assurance maladie, impôts) aux institutions respectives. Les versements sont toujours effectués dans la période de paie courante.",
+          "en": "The organisation remits all payroll deductions (pension, health insurance, taxes) to the respective institutions. Payments are always made within the current pay period."
+        },
+        {
+          "fr": "L'organisation verse toutes les retenues sur la paie (pension, assurance maladie, impôts) aux institutions respectives. Les versements sont toujours effectués dans la période de paie courante. Tous les membres du personnel reçoivent un avis de leurs retenues.",
+          "en": "The organisation remits all payroll deductions (pension, health insurance, taxes) to the respective institutions. Payments are always made within the current pay period. All staff members receive a statement of their deductions."
+        }
+      ],
+      "action": {
+        "fr": "Établir un calendrier mensuel de versement des retenues et remettre un bulletin de paie détaillé à chaque employé.",
+        "en": "Set a monthly schedule for remitting deductions and give each employee a detailed payslip."
+      },
+      "verification": {
+        "fr": "Reçus de versement et bulletins de paie",
+        "en": "Remittance receipts and payslips"
+      }
+    },
+    {
+      "id": "itoca-hr-personnel-records",
+      "name": { "fr": "Gestion des dossiers du personnel", "en": "Personnel records management" },
+      "statement": {
+        "fr": "L'organisation tient des dossiers complets sur les employés et dispose de politiques écrites de gestion des dossiers, conformes aux règlements du gouvernement et des donateurs.",
+        "en": "The organisation keeps complete personnel files and has written records management policies, in line with government and donor regulations."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation dispose de méthodes informelles de stockage d'informations ou de dossiers sur les employés. Il s'agit de méthodes qui sont connues du personnel, mais qui ne sont pas nécessairement documentées.",
+          "en": "The organisation has informal methods for storing information or files on employees. These methods are known to staff but are not necessarily documented."
+        },
+        {
+          "fr": "L'organisation tient des dossiers sur les employés, bien qu'ils puissent être incomplets, et a des politiques écrites qui couvrent la gestion des dossiers de base.",
+          "en": "The organisation keeps employee files, although they may be incomplete, and has written policies covering basic records management."
+        },
+        {
+          "fr": "L'organisation tient des dossiers complets sur les employés (y compris les curriculum vitae, les lettres d'offre, les augmentations salariales, les avantages sociaux, les évaluations annuelles et les avis disciplinaires) et a des politiques écrites qui couvrent la gestion des dossiers de base.",
+          "en": "The organisation keeps complete employee files (including CVs, offer letters, salary increases, benefits, annual appraisals and disciplinary notices) and has written policies covering basic records management."
+        },
+        {
+          "fr": "L'organisation tient des dossiers complets sur les employés (y compris les curriculum vitae, les lettres d'offre, les augmentations salariales, les avantages sociaux, les évaluations annuelles et les avis disciplinaires) et a des politiques écrites qui couvrent la gestion des dossiers de base. Les documents sont conservés conformément aux règlements du gouvernement et des donateurs.",
+          "en": "The organisation keeps complete employee files (including CVs, offer letters, salary increases, benefits, annual appraisals and disciplinary notices) and has written policies covering basic records management. Documents are retained in accordance with government and donor regulations."
+        }
+      ],
+      "action": {
+        "fr": "Créer un dossier individuel standard par employé avec liste de contrôle des pièces et règles de conservation.",
+        "en": "Create a standard file for each employee with a document checklist and retention rules."
+      },
+      "verification": {
+        "fr": "Dossiers complets selon la liste de contrôle",
+        "en": "Files complete against the checklist"
+      }
+    }
+  ]
+}

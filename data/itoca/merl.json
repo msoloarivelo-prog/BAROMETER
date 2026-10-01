@@ -1,0 +1,420 @@
+{
+  "id": "itoca-merl",
+  "name": {
+    "fr": "Suivi, évaluation, redevabilité et apprentissage (MERL)",
+    "en": "Monitoring, evaluation, research and learning (MERL)"
+  },
+  "shortName": {
+    "fr": "MERL",
+    "en": "MERL"
+  },
+  "items": [
+    {
+      "id": "itoca-merl-system",
+      "name": {
+        "fr": "Système et plan MERL",
+        "en": "MERL system and plan"
+      },
+      "statement": {
+        "fr": "L'organisation a développé un système MERL qui répond à ses besoins.",
+        "en": "The organisation has developed a MERL system that meets its needs."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation a mis au point un plan MERL de base axé sur les extrants et les indicateurs au niveau des extrants.",
+          "en": "The organisation has developed a basic MERL plan focused on outputs and output-level indicators."
+        },
+        {
+          "fr": "L'organisation a élaboré un plan MERL de base axé sur les cibles, les indicateurs et les outils de mesure, tant au niveau des extrants que des résultats.",
+          "en": "The organisation has developed a basic MERL plan focused on targets, indicators and measurement tools at both output and outcome levels."
+        },
+        {
+          "fr": "L'organisation a mis au point un plan MERL qui comprend un cadre conceptuel (cadre logique, cadre de résultats, etc.) axé sur les cibles, les indicateurs et les outils de mesure, tant au niveau des extrants que des résultats.",
+          "en": "The organisation has developed a MERL plan that includes a conceptual framework (logframe, results framework, etc.) focused on targets, indicators and measurement tools at both output and outcome levels."
+        },
+        {
+          "fr": "L'organisation a mis au point un système MERL complet, conforme aux normes, et le met en œuvre.",
+          "en": "The organisation has developed a comprehensive MERL system that meets standards, and implements it."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer un plan MERL avec cadre logique, indicateurs d'extrants et de résultats, cibles et outils de mesure",
+        "en": "Develop a MERL plan with a logframe, output and outcome indicators, targets and measurement tools"
+      },
+      "verification": {
+        "fr": "Plan MERL et cadre logique validés",
+        "en": "Approved MERL plan and logframe"
+      }
+    },
+    {
+      "id": "itoca-merl-budget",
+      "name": {
+        "fr": "Budget MERL",
+        "en": "MERL budget"
+      },
+      "statement": {
+        "fr": "L'organisation a alloué un budget suffisant pour mettre en œuvre efficacement le système MERL.",
+        "en": "The organisation has allocated sufficient budget to implement the MERL system effectively."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation consacre au moins 5 % du budget annuel du programme au MERL. Les budgets de l'organisation sont alloués aux dépenses MERL clés comme le personnel.",
+          "en": "The organisation devotes at least 5% of the annual programme budget to MERL. The organisation's budgets are allocated to key MERL expenses such as staff."
+        },
+        {
+          "fr": "L'organisation consacre au moins 10 % du budget annuel du programme au MERL. Les budgets de l'organisation sont alloués aux dépenses MERL clés comme le personnel.",
+          "en": "The organisation devotes at least 10% of the annual programme budget to MERL. The organisation's budgets are allocated to key MERL expenses such as staff."
+        },
+        {
+          "fr": "L'organisation consacre au moins 10 % du budget annuel du programme au MERL. Les budgets de l'organisation sont alloués aux dépenses MERL clés, telles que le personnel et l'infrastructure informatique connexe.",
+          "en": "The organisation devotes at least 10% of the annual programme budget to MERL. The organisation's budgets are allocated to key MERL expenses, such as staff and related IT infrastructure."
+        },
+        {
+          "fr": "L'organisation consacre au moins 10 % du budget annuel du programme au MERL. Les budgets de l'organisation couvrent les principales activités MERL telles que les évaluations/enquêtes, le personnel et l'infrastructure informatique MERL connexe. Des améliorations tangibles ont été apportées à l'infrastructure MERL dans chacun des domaines susmentionnés au cours des deux dernières années.",
+          "en": "The organisation devotes at least 10% of the annual programme budget to MERL. The organisation's budgets cover key MERL activities such as evaluations/surveys, staff and related MERL IT infrastructure. Tangible improvements have been made to the MERL infrastructure in each of these areas over the past two years."
+        }
+      ],
+      "action": {
+        "fr": "Inscrire une ligne budgétaire MERL d'au moins 10 % dans chaque budget de programme",
+        "en": "Include a MERL budget line of at least 10% in every programme budget"
+      },
+      "verification": {
+        "fr": "Budgets de programme avec ligne MERL identifiée",
+        "en": "Programme budgets showing the MERL line"
+      }
+    },
+    {
+      "id": "itoca-merl-staff",
+      "name": {
+        "fr": "Personnel MERL qualifié",
+        "en": "Qualified MERL staff"
+      },
+      "statement": {
+        "fr": "L'organisation a recruté du personnel qualifié et dédié au MERL.",
+        "en": "The organisation has hired qualified, dedicated MERL staff."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation compte au moins un membre du personnel dédié au suivi et évaluation, qui a reçu une formation sur les principes de base du MERL et est bien informé sur l'utilisation des procédures MERL et des systèmes de gestion électronique des données.",
+          "en": "The organisation has at least one staff member dedicated to monitoring and evaluation who has been trained in basic MERL principles and is well informed on the use of MERL procedures and electronic data management systems."
+        },
+        {
+          "fr": "L'organisation dispose d'un ou de plusieurs employés dédiés au suivi et évaluation, formés aux principes de base du MERL et à la gestion de la qualité des données (DQM). Le personnel est bien informé sur l'utilisation des procédures MERL et des systèmes de gestion électronique des données. L'un des membres du personnel peut faciliter les ateliers MERL et DQM, assurer le mentorat et le coaching, et peut mener des évaluations de routine de la qualité des données (RDQA).",
+          "en": "The organisation has one or more staff dedicated to monitoring and evaluation, trained in basic MERL principles and data quality management (DQM). Staff are well informed on the use of MERL procedures and electronic data management systems. One staff member can facilitate MERL and DQM workshops, provide mentoring and coaching, and can conduct routine data quality assessments (RDQAs)."
+        },
+        {
+          "fr": "L'organisation dispose d'un ou de plusieurs employés qui se consacrent au suivi et évaluation et qui sont compétents pour travailler avec les procédures MERL et les systèmes de gestion électronique des données. Au moins un employé est en mesure d'effectuer des analyses de données et des rapports plus complexes. L'un des membres du personnel peut faciliter les ateliers MERL, DQM et évaluation, assurer le mentorat et le coaching, et peut mener des RDQA.",
+          "en": "The organisation has one or more staff dedicated to monitoring and evaluation who are competent in working with MERL procedures and electronic data management systems. At least one staff member can carry out more complex data analysis and reporting. One staff member can facilitate MERL, DQM and evaluation workshops, provide mentoring and coaching, and can conduct RDQAs."
+        },
+        {
+          "fr": "L'organisation compte au moins deux employés qui se consacrent au suivi et évaluation et qui sont compétents pour travailler avec les procédures MERL et les systèmes de gestion électronique des données. Un ou plusieurs employés sont en mesure d'effectuer des analyses et des rapports de données plus complexes et ont de l'expérience dans l'utilisation de logiciels d'analyse de données et d'Excel avancé. Tout le personnel MERL peut faciliter des ateliers MERL, DQM, d'analyse de données, de planification de projet, de conception et d'évaluation, fournir le mentorat et le coaching, et peut mener des RDQA.",
+          "en": "The organisation has at least two staff dedicated to monitoring and evaluation who are competent in working with MERL procedures and electronic data management systems. One or more staff can carry out more complex data analysis and reporting and have experience using data analysis software and advanced Excel. All MERL staff can facilitate MERL, DQM, data analysis, project planning, design and evaluation workshops, provide mentoring and coaching, and can conduct RDQAs."
+        }
+      ],
+      "action": {
+        "fr": "Désigner ou recruter un chargé MERL dédié et le former à la gestion de la qualité et à l'analyse des données",
+        "en": "Assign or recruit a dedicated MERL officer and train them in data quality management and data analysis"
+      },
+      "verification": {
+        "fr": "Fiche de poste et attestations de formation",
+        "en": "Job description and training certificates"
+      }
+    },
+    {
+      "id": "itoca-merl-it-infrastructure",
+      "name": {
+        "fr": "Infrastructure informatique MERL",
+        "en": "MERL IT infrastructure"
+      },
+      "statement": {
+        "fr": "L'organisation dispose d'une infrastructure informatique appropriée pour le MERL.",
+        "en": "The organisation has appropriate information technology infrastructure for MERL."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation dispose d'une infrastructure informatique pour soutenir le MERL qui comprend des ordinateurs avec MS Office pour plusieurs employés.",
+          "en": "The organisation has IT infrastructure to support MERL, including computers with MS Office for several staff members."
+        },
+        {
+          "fr": "L'organisation dispose de l'infrastructure informatique suivante pour soutenir le MERL : ordinateurs avec MS Office pour tout le personnel concerné, disque dur externe pour les sauvegardes de données et logiciels antivirus appropriés. Les données sont sauvegardées mensuellement.",
+          "en": "The organisation has the following IT infrastructure to support MERL: computers with MS Office for all relevant staff, an external hard drive for data backups and appropriate antivirus software. Data are backed up monthly."
+        },
+        {
+          "fr": "L'organisation dispose de l'infrastructure informatique suivante pour soutenir le MERL : ordinateurs avec MS Office pour tout le personnel concerné, logiciel d'analyse de données, disque dur externe pour les sauvegardes de données et logiciels antivirus appropriés. Les données sont sauvegardées toutes les deux semaines.",
+          "en": "The organisation has the following IT infrastructure to support MERL: computers with MS Office for all relevant staff, data analysis software, an external hard drive for data backups and appropriate antivirus software. Data are backed up every two weeks."
+        },
+        {
+          "fr": "L'organisation dispose de l'infrastructure informatique suivante pour soutenir le MERL : ordinateurs avec MS Office pour tout le personnel concerné, logiciel d'analyse de données, disque dur externe pour les sauvegardes de données et logiciels antivirus appropriés. L'organisation dispose d'un serveur et d'un matériel approprié de sauvegarde des données hors site. Les données sont sauvegardées chaque semaine.",
+          "en": "The organisation has the following IT infrastructure to support MERL: computers with MS Office for all relevant staff, data analysis software, an external hard drive for data backups and appropriate antivirus software. The organisation has a server and appropriate off-site data backup hardware. Data are backed up weekly."
+        }
+      ],
+      "action": {
+        "fr": "Mettre en place une procédure de sauvegarde hebdomadaire des données MERL, avec une copie hors site",
+        "en": "Set up a weekly MERL data backup procedure, with an off-site copy"
+      },
+      "verification": {
+        "fr": "Procédure de sauvegarde et journal des sauvegardes",
+        "en": "Backup procedure and backup log"
+      }
+    },
+    {
+      "id": "itoca-merl-monitoring",
+      "name": {
+        "fr": "Suivi des indicateurs",
+        "en": "Indicator monitoring"
+      },
+      "statement": {
+        "fr": "L'organisation met en œuvre un système de suivi efficace (y compris des indicateurs).",
+        "en": "The organisation implements an effective monitoring system (including indicators)."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation a des processus et des procédures pour suivre les progrès par rapport à un éventail d'indicateurs spécifiés par les programmes ou les donateurs.",
+          "en": "The organisation has processes and procedures to track progress against a range of indicators specified by programmes or donors."
+        },
+        {
+          "fr": "L'organisation suit les progrès réalisés par rapport à une série d'indicateurs appropriés liés à ses propres cadres conceptuels et aux besoins des donateurs.",
+          "en": "The organisation tracks progress against a set of appropriate indicators linked to its own conceptual frameworks and to donor needs."
+        },
+        {
+          "fr": "L'organisation suit les progrès réalisés par rapport à une série d'indicateurs appropriés liés à ses propres cadres conceptuels et aux besoins des donateurs. L'unité MERL a documenté la définition des indicateurs et les lignes directrices relatives aux rapports.",
+          "en": "The organisation tracks progress against a set of appropriate indicators linked to its own conceptual frameworks and to donor needs. The MERL unit has documented indicator definitions and reporting guidelines."
+        },
+        {
+          "fr": "L'organisation suit les progrès réalisés par rapport à une série d'indicateurs appropriés liés à ses propres cadres conceptuels et aux besoins des donateurs. L'unité MERL a documenté et partagé la définition des indicateurs et les lignes directrices relatives aux rapports avec tous les employés et partenaires concernés.",
+          "en": "The organisation tracks progress against a set of appropriate indicators linked to its own conceptual frameworks and to donor needs. The MERL unit has documented indicator definitions and reporting guidelines and shared them with all relevant staff and partners."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger des fiches de définition des indicateurs et les partager avec le personnel et les partenaires",
+        "en": "Write indicator reference sheets and share them with staff and partners"
+      },
+      "verification": {
+        "fr": "Fiches d'indicateurs diffusées",
+        "en": "Indicator reference sheets circulated"
+      }
+    },
+    {
+      "id": "itoca-merl-data-collection",
+      "name": {
+        "fr": "Outils de collecte de données",
+        "en": "Data collection tools"
+      },
+      "statement": {
+        "fr": "L'organisation a mis au point des outils et des processus efficaces de collecte de données.",
+        "en": "The organisation has developed effective data collection tools and processes."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation dispose de certains outils que le personnel utilise pour la collecte de données aux fins de rapportage aux bailleurs.",
+          "en": "The organisation has some tools that staff use to collect data for donor reporting."
+        },
+        {
+          "fr": "L'organisation a élaboré des formulaires/outils normalisés de collecte de données et de rapports qui sont utilisés par certains membres du personnel. Les formulaires/outils de collecte de données et de rapport comportent des instructions sur la façon de les remplir.",
+          "en": "The organisation has developed standardised data collection and reporting forms/tools that are used by some staff. The data collection and reporting forms/tools include instructions on how to complete them."
+        },
+        {
+          "fr": "L'organisation a élaboré et utilise des formulaires/outils de collecte de données normalisés à tous les niveaux de rapportage. Des instructions et une formation claires ont été fournies au personnel et aux partenaires sur la façon de remplir les formulaires/outils de collecte de données et de rapports.",
+          "en": "The organisation has developed and uses standardised data collection forms/tools at all reporting levels. Clear instructions and training have been provided to staff and partners on how to complete the data collection and reporting forms/tools."
+        },
+        {
+          "fr": "L'organisation a élaboré et utilise des formulaires/outils de collecte de données normalisés à tous les niveaux de rapportage. Des instructions et une formation claires ont été fournies au personnel et aux partenaires sur la façon de remplir les formulaires/outils de collecte de données et de rapports. Des vérifications ponctuelles sont effectuées pour s'assurer que ceux-ci sont correctement utilisés.",
+          "en": "The organisation has developed and uses standardised data collection forms/tools at all reporting levels. Clear instructions and training have been provided to staff and partners on how to complete the data collection and reporting forms/tools. Spot checks are carried out to ensure they are used correctly."
+        }
+      ],
+      "action": {
+        "fr": "Standardiser les formulaires de collecte avec instructions, former les utilisateurs et vérifier ponctuellement leur utilisation",
+        "en": "Standardise data collection forms with instructions, train users and spot-check their use"
+      },
+      "verification": {
+        "fr": "Formulaires normalisés et rapports de vérification",
+        "en": "Standardised forms and spot-check reports"
+      }
+    },
+    {
+      "id": "itoca-merl-data-management",
+      "name": {
+        "fr": "Gestion des données",
+        "en": "Data management"
+      },
+      "statement": {
+        "fr": "L'organisation a mis au point un système efficace de gestion des données.",
+        "en": "The organisation has developed an effective data management system."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation dispose d'un système de base de gestion électronique des données pour la compilation et le rapportage des données.",
+          "en": "The organisation has a basic electronic data management system for compiling and reporting data."
+        },
+        {
+          "fr": "L'organisation dispose d'un système électronique de gestion des données pour la compilation et le rapportage des données. L'organisation est en mesure d'effectuer une analyse de base pour rendre compte des indicateurs d'extrants.",
+          "en": "The organisation has an electronic data management system for compiling and reporting data. The organisation can carry out basic analysis to report on output indicators."
+        },
+        {
+          "fr": "L'organisation dispose d'un système électronique de gestion des données pour la compilation et le rapportage des données. L'organisation est en mesure d'effectuer des analyses plus complexes pour rendre compte des indicateurs de résultats.",
+          "en": "The organisation has an electronic data management system for compiling and reporting data. The organisation can carry out more complex analysis to report on outcome indicators."
+        },
+        {
+          "fr": "L'organisation dispose d'un système électronique de gestion des données pour la compilation et le rapportage des données. L'organisation est en mesure d'effectuer des analyses plus complexes pour rendre compte des indicateurs de résultats. Le système appuie le rapportage dans les systèmes nationaux et la constitution de partenariats.",
+          "en": "The organisation has an electronic data management system for compiling and reporting data. The organisation can carry out more complex analysis to report on outcome indicators. The system supports reporting into national-level systems and partnership building."
+        }
+      ],
+      "action": {
+        "fr": "Mettre en place une base de données électronique unique permettant l'analyse des indicateurs d'extrants et de résultats",
+        "en": "Set up a single electronic database enabling analysis of output and outcome indicators"
+      },
+      "verification": {
+        "fr": "Base de données opérationnelle et rapports générés",
+        "en": "Operational database and generated reports"
+      }
+    },
+    {
+      "id": "itoca-merl-data-quality",
+      "name": {
+        "fr": "Qualité des données",
+        "en": "Data quality"
+      },
+      "statement": {
+        "fr": "L'organisation assure la qualité des données.",
+        "en": "The organisation ensures data quality."
+      },
+      "levels": [
+        {
+          "fr": "Certains mécanismes sont en place pour assurer la qualité des données. Ceux-ci peuvent inclure l'application de procédures opératoires normalisées et la réalisation d'évaluations périodiques de la qualité.",
+          "en": "Some mechanisms are in place to ensure data quality. These may include applying standard operating procedures and conducting periodic quality assessments."
+        },
+        {
+          "fr": "Des mécanismes appropriés sont en place pour assurer la qualité des données. Il s'agit notamment de l'application des procédures opératoires normalisées et de la réalisation d'évaluations régulières de la qualité. Les problèmes de qualité des données sont documentés et inclus dans les rapports, par exemple au donateur.",
+          "en": "Appropriate mechanisms are in place to ensure data quality. These include applying standard operating procedures and conducting regular quality assessments. Data quality issues are documented and included in reports, for example to the donor."
+        },
+        {
+          "fr": "Des mécanismes appropriés sont en place pour assurer la qualité des données. Il s'agit notamment de l'application des procédures opératoires normalisées et de la réalisation d'évaluations régulières de la qualité. Les problèmes de qualité des données sont documentés et inclus dans les rapports, par exemple au donateur. L'organisation dispose d'une procédure de tenue des dossiers qui est mise en œuvre systématiquement et maintient les pistes d'audit nécessaires.",
+          "en": "Appropriate mechanisms are in place to ensure data quality. These include applying standard operating procedures and conducting regular quality assessments. Data quality issues are documented and included in reports, for example to the donor. The organisation has a record-keeping procedure that is systematically implemented and maintains the necessary audit trails."
+        },
+        {
+          "fr": "Des mécanismes appropriés sont en place pour assurer la qualité des données. Il s'agit notamment de l'application des procédures opératoires normalisées et de la réalisation d'évaluations régulières de la qualité. Les problèmes de qualité des données sont documentés et inclus dans les rapports, par exemple au donateur. L'organisation dispose d'une procédure de tenue des dossiers qui est mise en œuvre systématiquement et maintient les pistes d'audit nécessaires. L'accès aux données est correctement protégé par des mots de passe.",
+          "en": "Appropriate mechanisms are in place to ensure data quality. These include applying standard operating procedures and conducting regular quality assessments. Data quality issues are documented and included in reports, for example to the donor. The organisation has a record-keeping procedure that is systematically implemented and maintains the necessary audit trails. Access to data is properly password-protected."
+        }
+      ],
+      "action": {
+        "fr": "Adopter des procédures opératoires normalisées de qualité des données et réaliser des RDQA trimestrielles",
+        "en": "Adopt data quality standard operating procedures and conduct quarterly RDQAs"
+      },
+      "verification": {
+        "fr": "Procédures adoptées et rapports de RDQA",
+        "en": "Adopted SOPs and RDQA reports"
+      }
+    },
+    {
+      "id": "itoca-merl-reporting",
+      "name": {
+        "fr": "Rapportage efficace et ponctuel",
+        "en": "Timely and effective reporting"
+      },
+      "statement": {
+        "fr": "L'organisation dispose d'un processus de rapportage efficace et respectant les délais impartis.",
+        "en": "The organisation has an effective and timely reporting process."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation soumet les rapports aux donateurs à temps, en fournissant des données de suivi-évaluation.",
+          "en": "The organisation submits reports to donors on time, providing M&E data."
+        },
+        {
+          "fr": "L'organisation soumet les rapports aux donateurs à temps, en fournissant des données de suivi-évaluation et en analysant/expliquant les résultats. Les rapports suivent les modèles et les directives des donateurs. Le personnel MERL contribue à l'élaboration du rapport. L'organisation a un calendrier de rapportage documenté pour tous les publics clés.",
+          "en": "The organisation submits reports to donors on time, providing M&E data and analysing/explaining the results. Reports follow donor templates and guidelines. MERL staff contribute to preparing the report. The organisation has a documented reporting schedule for all key audiences."
+        },
+        {
+          "fr": "L'organisation soumet les rapports aux donateurs à temps, en fournissant des données de suivi-évaluation et en analysant/expliquant les résultats. Les rapports suivent les modèles et les directives des donateurs. Tout le personnel clé contribue à l'élaboration du rapport. Les mêmes rapports sont préparés et remis aux bénéficiaires. L'organisation a un calendrier de rapportage documenté pour tous les publics clés.",
+          "en": "The organisation submits reports to donors on time, providing M&E data and analysing/explaining the results. Reports follow donor templates and guidelines. All key staff contribute to preparing the report. The same reports are prepared and delivered to beneficiary audiences. The organisation has a documented reporting schedule for all key audiences."
+        },
+        {
+          "fr": "L'organisation soumet les rapports aux donateurs à temps, en fournissant des données de suivi-évaluation et en analysant/expliquant les résultats. Les rapports suivent les modèles et les directives des donateurs. Tout le personnel clé contribue à l'élaboration du rapport. Des versions personnalisées des rapports sont préparées et remises à tous les publics concernés (bénéficiaires, ministères, conseils d'administration, etc.). L'organisation a un calendrier de rapportage documenté pour tous les publics clés.",
+          "en": "The organisation submits reports to donors on time, providing M&E data and analysing/explaining the results. Reports follow donor templates and guidelines. All key staff contribute to preparing the report. Tailored versions of reports are prepared and delivered to all relevant audiences (beneficiaries, ministries, boards of directors, etc.). The organisation has a documented reporting schedule for all key audiences."
+        }
+      ],
+      "action": {
+        "fr": "Établir un calendrier de rapportage pour tous les publics clés et préparer des versions adaptées des rapports",
+        "en": "Establish a reporting schedule for all key audiences and prepare tailored versions of reports"
+      },
+      "verification": {
+        "fr": "Calendrier de rapportage et rapports diffusés",
+        "en": "Reporting schedule and disseminated reports"
+      }
+    },
+    {
+      "id": "itoca-merl-evaluation",
+      "name": {
+        "fr": "Système d'évaluation",
+        "en": "Evaluation system"
+      },
+      "statement": {
+        "fr": "L'organisation met en œuvre un système d'évaluation efficace.",
+        "en": "The organisation implements an effective evaluation system."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation mène occasionnellement des évaluations qui sont dirigées par des donateurs. Les données de base sont rarement collectées.",
+          "en": "The organisation occasionally conducts donor-led evaluations. Baseline data are rarely collected."
+        },
+        {
+          "fr": "L'organisation mène occasionnellement des évaluations qui sont dirigées par des donateurs. Les données de base sont généralement collectées et permettent une comparaison dans le temps.",
+          "en": "The organisation occasionally conducts donor-led evaluations. Baseline data are generally collected and allow comparison over time."
+        },
+        {
+          "fr": "L'organisation mène des études d'évaluation pour établir les résultats du programme, par exemple étude de base, évaluations à mi-parcours et finale. Les évaluations sont souvent dirigées par des donateurs ou menées en interne. Les résultats de l'évaluation sont partagés avec les parties prenantes.",
+          "en": "The organisation conducts evaluation studies to establish programme results, e.g. baseline study, mid-term and final evaluations. Evaluations are often donor-led or internal. Evaluation findings are shared with stakeholders."
+        },
+        {
+          "fr": "L'organisation mène des études d'évaluation pour établir les résultats du programme, par exemple étude de base, évaluations à mi-parcours et finale. Les évaluations utilisent une approche avec groupe témoin et sont menées par un évaluateur externe. Les résultats de l'évaluation sont partagés avec les parties prenantes.",
+          "en": "The organisation conducts evaluation studies to establish programme results, e.g. baseline study, mid-term and final evaluations. Evaluations use a comparison group approach and are conducted by an external evaluator. Evaluation findings are shared with stakeholders."
+        }
+      ],
+      "action": {
+        "fr": "Planifier et budgétiser pour chaque projet une étude de base et des évaluations à mi-parcours et finale",
+        "en": "Plan and budget a baseline study and mid-term and final evaluations for every project"
+      },
+      "verification": {
+        "fr": "Plan d'évaluation et rapports d'évaluation",
+        "en": "Evaluation plan and evaluation reports"
+      }
+    },
+    {
+      "id": "itoca-merl-cla",
+      "name": {
+        "fr": "Collaboration, apprentissage et adaptation",
+        "en": "Collaboration, learning and adapting"
+      },
+      "statement": {
+        "fr": "L'organisation met en œuvre un système efficace de collaboration, d'apprentissage et d'adaptation.",
+        "en": "The organisation implements an effective collaborating, learning and adapting (CLA) system."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation utilise les informations de suivi et évaluation pour analyser la programmation en cours lorsque les donateurs l'exigent.",
+          "en": "The organisation uses monitoring and evaluation information to analyse current programming when donors require it."
+        },
+        {
+          "fr": "L'organisation utilise chaque année des données de suivi et évaluation pour réfléchir aux résultats du programme et influencer le plan de travail de l'année suivante.",
+          "en": "The organisation uses monitoring and evaluation data each year to reflect on programme results and inform the following year's work plan."
+        },
+        {
+          "fr": "L'organisation utilise les données trimestrielles de suivi et évaluation pour réfléchir aux résultats, influencer la conception des programmes et des projets, prendre des décisions stratégiques et ajuster les plans de programmes.",
+          "en": "The organisation uses quarterly monitoring and evaluation data to reflect on results, inform programme and project design, make strategic decisions and adjust programme plans."
+        },
+        {
+          "fr": "L'organisation utilise les données trimestrielles de suivi et évaluation pour réfléchir aux constats, influencer la conception des programmes et des projets, prendre des décisions stratégiques et ajuster les plans de programmes. Les informations provenant de l'environnement externe sont également utilisées pour éclairer la prise de décision.",
+          "en": "The organisation uses quarterly monitoring and evaluation data to reflect on findings, inform programme and project design, make strategic decisions and adjust programme plans. Information from the external environment is also used to inform decision-making."
+        }
+      ],
+      "action": {
+        "fr": "Tenir des revues trimestrielles des données avec l'équipe pour ajuster les plans de travail",
+        "en": "Hold quarterly data review meetings with the team to adjust work plans"
+      },
+      "verification": {
+        "fr": "Comptes rendus des revues et plans de travail ajustés",
+        "en": "Review minutes and adjusted work plans"
+      }
+    }
+  ]
+}

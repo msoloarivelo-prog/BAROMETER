@@ -696,12 +696,18 @@
         key: componentId + ':' + category + ':' + i,
         title: item.title,
         indicator: item.indicator,
+        verification: item.verification || null,
         months: months
       };
     });
   }
 
-  var Activities = { LIBRARY: LIBRARY, DEFAULT_MONTHS: DEFAULT_MONTHS, get: get };
+  /** Adds the suggested actions of another assessment model (ITOCA, OPI...). */
+  function register(componentId, entry) {
+    LIBRARY[componentId] = entry;
+  }
+
+  var Activities = { LIBRARY: LIBRARY, DEFAULT_MONTHS: DEFAULT_MONTHS, get: get, register: register };
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = Activities;

@@ -23,9 +23,7 @@
     Charts: Charts,
     Plan: window.BarometerPlan,
     Activities: window.BarometerActivities,
-    PILLAR_COLORS: { gov: '#2f6f9f', plan: '#3f8f5f', hr: '#c9822b', fin: '#8a4f9e' },
-    // Lighter tones used in the printed report.
-    REPORT_COLORS: { gov: '#7fb0d6', plan: '#86c49c', hr: '#ecb877', fin: '#b99ad0' },
+    Models: window.BarometerModels,
     CAT_ICONS: { maintain: '▲', opportunity: '◆', address: '▼', other: '●' },
     ws: Store.load(),
     ui: { compareWith: null, planFilter: 'all', flash: null },
@@ -61,23 +59,35 @@
     return org.assessments.filter(function (a) { return a.id === org.activeAssessmentId; })[0] || org.assessments[0];
   };
 
-  /** Assessments of an organisation, oldest first (period, year, then sequence). */
-  App.chronological = function (org) { return window.BarometerEvolution.chronological(org.assessments); };
+  /** Assessment model (Barometer, ITOCA, OPI) of an assessment. */
+  App.fw = function (a) { return App.Models.get((a || App.assessment()).model); };
 
-  /** Most recent assessment. */
-  App.latestAssessment = function (org) {
-    var list = App.chronological(org);
-    return list[list.length - 1];
+  /**
+   * Assessments of an organisation, oldest first (period, year, then sequence).
+   * With `model`, only assessments of that model (comparisons stay within one model).
+   */
+  App.chronological = function (org, model) {
+    var list = model ? org.assessments.filter(function (a) { return a.model === model; }) : org.assessments;
+    return window.BarometerEvolution.chronological(list);
   };
 
-  /** Assessment just before `a` in time, used as default comparison. */
+  /** Most recent assessment (of a given model if specified). */
+  App.latestAssessment = function (org, model) {
+    var list = App.chronological(org, model);
+    return list[list.length - 1] || null;
+  };
+
+  /** Assessment of the same model just before `a` in time, used as default comparison. */
   App.previousAssessment = function (org, a) {
-    var list = App.chronological(org);
+    var list = App.chronological(org, a.model);
     var i = list.indexOf(a);
     return i > 0 ? list[i - 1] : null;
   };
 
-  App.scores = function (a) { return S.computeScores(F, a.answers, App.settings()); };
+  App.scores = function (a) {
+    var fw = App.fw(a);
+    return S.computeScores(fw, a.answers, App.Models.scoringSettings(fw, App.settings()));
+  };
 
   App.orgName = function (org) {
     var o = (org || App.org()).organization;
@@ -109,7 +119,9 @@
     return String(a.year);
   };
 
-  App.assessmentLabel = function (a) { return App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a); };
+  App.assessmentLabel = function (a) {
+    return App.L(App.fw(a).shortName) + ' · ' + App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a);
+  };
 
   App.levelBadge = function (score) {
     return score ? '<span class="level-badge level-' + score + '">' + score + '</span>' : '<span class="tag">' + App.esc(App.t('notAnswered')) + '</span>';
@@ -120,12 +132,22 @@
     return '<span class="cat-tag cat-' + cat + '">' + App.CAT_ICONS[cat] + ' ' + App.esc(App.t('cat.' + cat)) + '</span>';
   };
 
-  App.findComponent = function (id) {
-    return F.allComponents().filter(function (e) { return e.component.id === id; })[0] || null;
+  App.findComponent = function (id) { return App.Models.findComponent(id); };
+
+  App.pillarById = function (id, fw) {
+    fw = fw || App.fw();
+    return fw.PILLARS.filter(function (p) { return p.id === id; })[0] || fw.PILLARS[0];
   };
 
-  App.pillarById = function (id) {
-    return F.PILLARS.filter(function (p) { return p.id === id; })[0] || F.PILLARS[0];
+  /** Title of a component: its name, prefixed by the aspect in the barometer when they differ. */
+  App.componentTitle = function (fw, aspect, c) {
+    if (fw.flat || App.L(c.name) === App.L(aspect.name)) return App.L(c.name);
+    return App.L(aspect.name) + ' — ' + App.L(c.name);
+  };
+
+  /** "Pillar · aspect" context line (just the pillar for flat models). */
+  App.componentContext = function (fw, pillar, aspect) {
+    return fw.flat ? App.L(pillar.shortName) : App.L(pillar.shortName) + ' · ' + App.L(aspect.name);
   };
 
   App.dateStr = function (d) {
@@ -262,11 +284,12 @@
   App.setView = function (html) { view.innerHTML = html; };
   App.viewEl = view;
 
-  App.pillarTabs = function (routeName, activeId, scores) {
-    return '<div class="pillar-tabs" role="tablist">' + F.PILLARS.map(function (p, i) {
+  App.pillarTabs = function (routeName, activeId, scores, fw) {
+    fw = fw || App.fw();
+    return '<div class="pillar-tabs" role="tablist">' + fw.PILLARS.map(function (p, i) {
       var ps = scores.pillars[i];
       return '<a role="tab" href="#' + routeName + '/' + p.id + '" class="pillar-tab' + (p.id === activeId ? ' active' : '') +
-        '" style="--pillar:' + App.PILLAR_COLORS[p.id] + '"' + (p.id === activeId ? ' aria-selected="true"' : '') + '>' +
+        '" style="--pillar:' + p.color + '"' + (p.id === activeId ? ' aria-selected="true"' : '') + '>' +
         '<span>' + App.esc(App.L(p.shortName)) + '</span>' +
         '<small data-pillar-progress="' + p.id + '">' + ps.answered + '/' + ps.total + '</small></a>';
     }).join('') + '</div>';
@@ -323,7 +346,7 @@
     App.setView(
       '<h1>' + App.esc(App.t('profile.title')) + '</h1>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.org')) + '</h2><div class="form-grid">' +
-        field('name') + field('acronym') + field('type') + field('region') + field('address') +
+        field('name') + field('acronym') + field('type') + field('region') + field('founded', 'number') + field('address') +
         field('focalPoint') + field('phone', 'tel') + field('email', 'email') +
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
@@ -387,27 +410,31 @@
   // ------------------------------------------------------------------ assessment
 
   App.views.assessment = function (pillarId) {
-    var pillar = App.pillarById(pillarId);
     var a = App.assessment();
+    var F = App.fw(a);
+    var pillar = App.pillarById(pillarId, F);
     var r = App.scores(a);
     var idx = F.PILLARS.indexOf(pillar);
     var prev = F.PILLARS[idx - 1];
     var next = F.PILLARS[idx + 1];
 
     var html = '<h1>' + App.esc(App.t('diag.title')) + ' — ' + App.esc(App.L(pillar.name)) + '</h1>' +
-      App.pillarTabs('assessment', pillar.id, r) +
+      App.modelBanner(F) +
+      App.pillarTabs('assessment', pillar.id, r, F) +
       '<p class="muted">' + App.esc(App.t('diag.help')) + '</p>' +
       '<div class="level-header" aria-hidden="true">' +
         F.LEVELS.map(function (l) { return '<span><b>' + l.value + '</b> ' + App.esc(App.L(l.label)) + '</span>'; }).join('') +
       '</div>';
 
     pillar.aspects.forEach(function (aspect) {
-      html += '<section class="aspect card"><h2>' + App.esc(App.L(aspect.name)) + '</h2>';
-      aspect.components.forEach(function (c) {
+      if (!F.flat) html += '<section class="aspect card"><h2>' + App.esc(App.L(aspect.name)) + '</h2>';
+      aspect.components.forEach(function (c, ci) {
         var selected = a.answers[c.id];
         var title = App.L(c.name) === App.L(aspect.name) ? App.L(aspect.name) : App.L(c.name);
+        if (F.flat) html += '<section class="aspect card">';
         html += '<fieldset class="component" data-component="' + App.esc(c.id) + '">' +
-          '<legend>' + App.esc(title) + '<span class="component-score">' + componentScoreText(selected) + '</span></legend>' +
+          '<legend>' + (F.flat ? '<span class="item-n">' + (ci + 1) + '</span>' : '') + App.esc(title) + '<span class="component-score">' + componentScoreText(selected) + '</span></legend>' +
+          (c.statement ? '<p class="statement">' + App.esc(App.L(c.statement)) + '</p>' : '') +
           '<div class="levels">' +
           c.levels.map(function (text, i) {
             var v = i + 1;
@@ -416,11 +443,13 @@
               '<span class="level-n">' + v + '</span><span class="level-text">' + App.esc(App.L(text)) + '</span></label>';
           }).join('') +
           '</div>' +
+          evidenceBlock(F, a, c) +
           '<details class="comment"' + (a.comments[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('diag.comment')) + '</summary>' +
           '<textarea data-on="comment" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('diag.commentPh')) + '">' + App.esc(a.comments[c.id] || '') + '</textarea></details>' +
           '</fieldset>';
+        if (F.flat) html += '</section>';
       });
-      html += '</section>';
+      if (!F.flat) html += '</section>';
     });
 
     html += '<nav class="pager">' +
@@ -429,6 +458,32 @@
             : '<a class="btn primary" href="#results">' + App.esc(App.t('diag.next')) + ' →</a>') +
       '</nav>';
     App.setView(html);
+  };
+
+  /** Evidence (mandatory for OPI, optional otherwise) and facilitator verification. */
+  function evidenceBlock(F, a, c) {
+    var required = F.evidence === 'required';
+    var val = a.evidence[c.id] || '';
+    var missing = required && a.answers[c.id] && !val;
+    var inner = '<textarea data-on="evidence" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('evidence.ph')) + '">' + App.esc(val) + '</textarea>' +
+      '<label class="verified"><input type="checkbox" data-on="verified" data-id="' + App.esc(c.id) + '"' + (a.verified[c.id] ? ' checked' : '') + '> ' + App.esc(App.t('evidence.verified')) + '</label>';
+    if (required) {
+      return '<div class="evidence required' + (missing ? ' missing' : '') + '"><span class="evidence-label">' + App.esc(App.t('evidence.labelRequired')) + '</span>' + inner + '</div>';
+    }
+    return '<details class="evidence"' + (val || a.verified[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('evidence.label')) + '</summary>' + inner + '</details>';
+  }
+
+  /** Name and description of the model, plus the OPI relevance warning. */
+  App.modelBanner = function (F) {
+    var html = '<div class="model-banner kind-' + F.kind + '"><strong>' + App.esc(App.L(F.name)) + '</strong> — ' + App.esc(App.L(F.description)) + '</div>';
+    if (F.minYears) {
+      var founded = Number(App.org().organization.founded);
+      var age = founded ? new Date().getFullYear() - founded : null;
+      html += '<div class="notice">' + App.esc(App.t('opi.notice')) +
+        (age !== null && age < F.minYears ? ' <strong>' + App.esc(App.t('opi.tooYoung', { years: age })) + '</strong>' : '') +
+        (age === null ? ' ' + App.esc(App.t('opi.noFounded')) : '') + '</div>';
+    }
+    return html;
   };
 
   function componentScoreText(selected) {
@@ -442,7 +497,7 @@
     var org = App.org();
     var a = App.assessment();
     var r = App.scores(a);
-    var others = org.assessments.filter(function (x) { return x.id !== a.id; });
+    var others = org.assessments.filter(function (x) { return x.id !== a.id && x.model === a.model; });
     if (App.ui.compareWith === null) {
       var prev = App.previousAssessment(org, a);
       App.ui.compareWith = prev ? prev.id : '';
@@ -450,6 +505,7 @@
     if (App.ui.compareWith && !others.some(function (x) { return x.id === App.ui.compareWith; })) App.ui.compareWith = '';
     var baseline = others.filter(function (x) { return x.id === App.ui.compareWith; })[0];
     var cmp = baseline ? S.compareScores(r, App.scores(baseline)) : null;
+    var F = App.fw(a);
     var stage = S.stageFor(F, r.index);
     var groups = S.classify(F, a.answers);
 
@@ -473,7 +529,7 @@
       '<div class="kpi"><span class="kpi-label">' + App.esc(App.t('results.index')) + '</span><span class="kpi-value">' + App.fmt(r.index, 2) + '<small> / 4</small></span>' +
         (cmp && cmp.index !== null ? deltaTag(cmp.index) : '') +
         (stage ? '<span class="kpi-sub">' + App.esc(App.t('results.stage')) + ' : ' + App.esc(App.L(stage.label)) + '</span>' : '') +
-        '<span class="kpi-sub small">' + App.esc(App.t('results.method.' + r.indexMethod)) + '</span></div>' +
+        '<span class="kpi-sub small">' + App.esc(App.t(F.indexMethod === 'pillars' ? 'results.method.pillars' : 'results.method.' + r.indexMethod)) + '</span></div>' +
       '<div class="kpi"><span class="kpi-label">' + App.esc(App.t('results.total')) + '</span><span class="kpi-value">' + r.total + '<small> / ' + r.maxTotal + '</small></span>' +
         (cmp && cmp.total !== null ? deltaTag(cmp.total, 0) : '') +
         '<span class="kpi-sub">' + (r.total ? App.fmt((r.total / r.maxTotal) * 100, 0) + ' ' + App.esc(App.t('results.ofMax')) : '—') + '</span></div>' +
@@ -487,13 +543,13 @@
         '<p class="muted small">' + App.esc(App.t('catHelp.' + cat)) + '</p>' +
         (items.length ? '<ul class="swot-list">' + items.map(function (it) {
           return '<li>' + App.levelBadge(it.score) + '<span><strong>' + App.esc(App.L(it.component.name)) + '</strong><small>' +
-            App.esc(App.L(it.pillar.shortName)) + ' · ' + App.esc(App.L(it.aspect.name)) + '</small></span></li>';
+            App.esc(App.componentContext(F, it.pillar, it.aspect)) + '</small></span></li>';
         }).join('') + '</ul>' : '<p class="muted">' + App.esc(App.t('results.noItems')) + '</p>') +
         '</article>';
     }).join('') + '</section>';
 
     html += '<section class="pillar-grid">' + F.PILLARS.map(function (p) {
-      return '<article class="pillar-card card" style="--pillar:' + App.PILLAR_COLORS[p.id] + '">' +
+      return '<article class="pillar-card card" style="--pillar:' + p.color + '">' +
         '<h2>' + App.esc(App.L(p.name)) + '</h2>' +
         '<div class="pillar-body"><div class="donut-slot" data-donut="' + p.id + '"></div><div class="bars-slot" data-bars="' + p.id + '"></div></div>' +
         '<p class="muted small">' + App.esc(App.t('results.weightNote')) + '</p></article>';
@@ -503,15 +559,21 @@
     App.setView(html);
 
     document.getElementById('pillar-overview').appendChild(Charts.bars(r.pillars.map(function (p, i) {
-      return { label: App.L(p.shortName), value: p.score, delta: cmp ? cmp.pillars[i].delta : undefined, color: App.PILLAR_COLORS[p.id] };
+      return { label: App.L(p.shortName), value: p.score, delta: cmp ? cmp.pillars[i].delta : undefined, color: p.color };
     }), F.MAX_SCORE));
 
     r.pillars.forEach(function (p, i) {
-      var color = App.PILLAR_COLORS[p.id];
+      var color = p.color;
       view.querySelector('[data-donut="' + p.id + '"]').appendChild(Charts.donut(p.score, F.MAX_SCORE, { color: color, label: App.L(p.name) }));
-      view.querySelector('[data-bars="' + p.id + '"]').appendChild(Charts.bars(p.aspects.map(function (asp, j) {
-        return { label: App.L(asp.name), value: asp.score, delta: cmp ? cmp.pillars[i].aspects[j].delta : undefined };
-      }), F.MAX_SCORE, { color: color }));
+      var rows = F.flat
+        ? p.aspects[0].components.map(function (c) {
+          var b = baseline ? baseline.answers[c.id] : undefined;
+          return { label: App.L(c.name), value: c.score, delta: cmp && c.score && b ? c.score - b : undefined };
+        })
+        : p.aspects.map(function (asp, j) {
+          return { label: App.L(asp.name), value: asp.score, delta: cmp ? cmp.pillars[i].aspects[j].delta : undefined };
+        });
+      view.querySelector('[data-bars="' + p.id + '"]').appendChild(Charts.bars(rows, F.MAX_SCORE, { color: color }));
     });
   };
 
@@ -523,12 +585,13 @@
 
   function firstIncompletePillar(r) {
     var p = r.pillars.filter(function (x) { return x.answered < x.total; })[0];
-    return p ? p.id : F.PILLARS[0].id;
+    return p ? p.id : r.pillars[0].id;
   }
 
   // ------------------------------------------------------------------ help
 
   App.views.help = function () {
+    var F = App.Models.get('barometer');
     var w = S.effectiveWeights(F, { indexMethod: 'components' });
     var weights = F.PILLARS.map(function (p) {
       var n = p.aspects.reduce(function (s, a) { return s + a.components.length; }, 0);
@@ -539,11 +602,16 @@
   };
 
   function helpFr(weights) {
-    return '<section class="card"><h2>1. Déroulement</h2><ol>' +
+    return '<section class="card"><h2>Modèles d’évaluation</h2><ul>' +
+      '<li><strong>Baromètre de gouvernance</strong> : 4 piliers, 33 composantes (outil Excel d’origine). Indice global = moyenne des 33 composantes, ou moyenne pondérée des piliers (Espace facilitateur).</li>' +
+      '<li><strong>ITOCA</strong> (évaluation intégrée des capacités techniques et organisationnelles, dérivée de l’OCA/OCAT de USAID/Pact) : 10 domaines, 94 indicateurs. Indice global = moyenne des domaines.</li>' +
+      '<li><strong>OPI</strong> (indice de performance organisationnelle) : 5 domaines, 10 sous-domaines. Mesure les résultats déjà obtenus ; chaque niveau doit être justifié par des preuves vérifiées. Réservé aux organisations ayant au moins 2 ans d’activités.</li></ul>' +
+      '<p>Le bouton « Nouveau diagnostic » permet de choisir le modèle. Les comparaisons dans le temps se font entre diagnostics du même modèle. L’ITOCA mesure les capacités, l’OPI la performance : les deux se complètent.</p></section>' +
+      '<section class="card"><h2>1. Déroulement</h2><ol>' +
       '<li><strong>Fiche</strong> : identité de l’organisation, séquence et année du diagnostic. À remplir en premier.</li>' +
       '<li><strong>Diagnostic</strong> : pour chacune des 33 composantes, cliquez sur la description qui correspond le mieux à la situation actuelle (stades 1 à 4).</li>' +
       '<li><strong>Résultats</strong> : indice global, scores par pilier et par aspect, forces, opportunités et faiblesses.</li>' +
-      '<li><strong>Plan de travail</strong> : activités standard proposées automatiquement, à adapter, et vos propres activités, avec un chronogramme.</li>' +
+      '<li><strong>Plan d’action pour le changement (CAP)</strong> : pour chaque écart identifié, actions prioritaires pré-remplies (modifiables), rang, moyen de vérification, responsable, échéance, commentaires et suivi, avec un chronogramme.</li>' +
       '<li><strong>Rapport</strong> : rapport individuel de l’organisation, à exporter en PDF.</li></ol></section>' +
       '<section class="card"><h2>2. Forces, opportunités et faiblesses</h2><ul>' +
       '<li><strong>▲ Force à maintenir</strong> : composante notée 4.</li>' +
@@ -556,8 +624,8 @@
       '<h3>Le poids des piliers</h3>' +
       '<p>Dans le fichier Excel, aucun poids n’est saisi : l’indice global est la simple moyenne des 33 composantes. Mais comme les piliers n’ont pas le même nombre de composantes, ils ne pèsent pas autant dans l’indice :</p><ul>' + weights + '</ul>' +
       '<p>La gestion des ressources et l’évaluation compte donc presque deux fois plus que la gouvernance. Si vous souhaitez que chaque pilier compte autant (25 % chacun) ou fixer vos propres poids, choisissez « Moyenne pondérée des 4 piliers » dans l’Espace facilitateur → Paramètres de calcul. Les scores des composantes, aspects et piliers ne changent pas : seul l’indice global change.</p></section>' +
-      '<section class="card"><h2>4. Plan de travail</h2><ol>' +
-      '<li>Le plan est pré-rempli : 2 activités par faiblesse, 1 par opportunité, 1 activité de maintien par force.</li>' +
+      '<section class="card"><h2>4. Plan d’action pour le changement (CAP)</h2><ol>' +
+      '<li>Le plan est pré-rempli : Baromètre — 2 actions par faiblesse, 1 par opportunité, 1 action de maintien par force ; ITOCA et OPI — 1 action ciblée par écart (faiblesse ou opportunité). L’écart identifié reprend la situation actuelle et peut être reformulé.</li>' +
       '<li>Modifiez le texte, le responsable, la période (mois de début et de fin), la priorité et le statut. Les activités modifiées sont conservées lors des mises à jour.</li>' +
       '<li>Ajoutez vos propres activités sous chaque composante, ou des activités générales.</li>' +
       '<li>Formulez des indicateurs clairs, avec valeur de base, valeur cible et source de vérification.</li>' +
@@ -569,11 +637,16 @@
   }
 
   function helpEn(weights) {
-    return '<section class="card"><h2>1. Steps</h2><ol>' +
+    return '<section class="card"><h2>Assessment models</h2><ul>' +
+      '<li><strong>Governance barometer</strong>: 4 pillars, 33 components (the original Excel tool). Global index = mean of the 33 components, or weighted mean of pillars (Facilitator space).</li>' +
+      '<li><strong>ITOCA</strong> (integrated technical and organisational capacity assessment, derived from USAID/Pact OCA/OCAT): 10 domains, 94 indicators. Global index = mean of domains.</li>' +
+      '<li><strong>OPI</strong> (organisational performance index): 5 domains, 10 sub-domains. Measures results already achieved; every level must be backed by verified evidence. Only for organisations with at least 2 years of activity.</li></ul>' +
+      '<p>The “New assessment” button lets you choose the model. Comparisons over time are made between assessments of the same model. ITOCA measures capacity and OPI performance: they complement each other.</p></section>' +
+      '<section class="card"><h2>1. Steps</h2><ol>' +
       '<li><strong>Profile</strong>: organisation details, assessment sequence and year. Fill this in first.</li>' +
       '<li><strong>Assessment</strong>: for each of the 33 components, click the description that best matches the current situation (stages 1 to 4).</li>' +
       '<li><strong>Results</strong>: global index, scores by pillar and aspect, strengths, opportunities and weaknesses.</li>' +
-      '<li><strong>Workplan</strong>: standard activities proposed automatically, to be adapted, plus your own activities, with a timeline.</li>' +
+      '<li><strong>Change action plan (CAP)</strong>: for each gap identified, pre-filled prioritized actions (editable), rank, means of verification, person responsible, time frame, comments and follow-up, with a timeline.</li>' +
       '<li><strong>Report</strong>: the organisation’s individual report, to export to PDF.</li></ol></section>' +
       '<section class="card"><h2>2. Strengths, opportunities and weaknesses</h2><ul>' +
       '<li><strong>▲ Strength to maintain</strong>: component scored 4.</li>' +
@@ -586,8 +659,8 @@
       '<h3>Pillar weights</h3>' +
       '<p>The Excel file has no weights to enter: the global index is the simple mean of the 33 components. But because pillars have different numbers of components, they do not weigh the same in the index:</p><ul>' + weights + '</ul>' +
       '<p>Resource management and evaluation therefore counts almost twice as much as governance. If you want each pillar to count equally (25% each) or set your own weights, choose “Weighted mean of the 4 pillars” in Facilitator space → Calculation settings. Component, aspect and pillar scores do not change: only the global index does.</p></section>' +
-      '<section class="card"><h2>4. Workplan</h2><ol>' +
-      '<li>The plan is pre-filled: 2 activities per weakness, 1 per opportunity, 1 maintenance activity per strength.</li>' +
+      '<section class="card"><h2>4. Change action plan (CAP)</h2><ol>' +
+      '<li>The plan is pre-filled: Barometer — 2 actions per weakness, 1 per opportunity, 1 maintenance action per strength; ITOCA and OPI — 1 targeted action per gap (weakness or opportunity). The gap identified repeats the current situation and can be reworded.</li>' +
       '<li>Edit the text, lead, period (start and end month), priority and status. Edited activities are kept when the plan is updated.</li>' +
       '<li>Add your own activities under each component, or general activities.</li>' +
       '<li>Write clear indicators with a baseline, a target and a means of verification.</li>' +
@@ -650,6 +723,21 @@
     App.persist(true);
   };
 
+  A.evidence = function (el) {
+    App.assessment().evidence[el.dataset.id] = el.value;
+    var box = el.closest('.evidence');
+    if (box && box.classList.contains('required')) box.classList.toggle('missing', !el.value && !!App.assessment().answers[el.dataset.id]);
+    App.touch();
+    App.persist();
+  };
+
+  A.verified = function (el) {
+    var a = App.assessment();
+    if (el.checked) a.verified[el.dataset.id] = true; else delete a.verified[el.dataset.id];
+    App.touch();
+    App.persist(true);
+  };
+
   A.comment = function (el) {
     App.assessment().comments[el.dataset.id] = el.value;
     App.touch();
@@ -681,21 +769,46 @@
   };
 
   A['new-assessment'] = function () {
+    if (location.hash === '#new') App.render(); else location.hash = '#new';
+  };
+
+  /** Creates an assessment of the chosen model, optionally pre-filled from the latest one of that model. */
+  A['create-assessment'] = function (el) {
     var org = App.org();
-    var maxSeq = org.assessments.reduce(function (m, x) { return Math.max(m, x.sequence); }, 0);
-    var a = Store.newAssessment(maxSeq + 1, new Date().getFullYear());
+    var model = el.dataset.model;
+    var last = App.latestAssessment(org, model);
+    var seq = App.chronological(org, model).reduce(function (m, x) { return Math.max(m, x.sequence); }, 0) + 1;
+    var a = Store.newAssessment(seq, new Date().getFullYear(), model);
     var now = new Date();
     a.period = now.getFullYear() + '-' + (now.getMonth() < 9 ? '0' : '') + (now.getMonth() + 1);
-    var last = App.latestAssessment(org);
-    if (last && Object.keys(last.answers).length && confirm(App.t('confirm.prefill', { name: App.assessmentLabel(last) }))) {
+    var prefill = document.querySelector('[data-prefill="' + model + '"]');
+    if (last && prefill && prefill.checked) {
       Object.keys(last.answers).forEach(function (k) { a.answers[k] = last.answers[k]; });
+      Object.keys(last.evidence).forEach(function (k) { a.evidence[k] = last.evidence[k]; });
     }
     org.assessments.push(a);
     org.activeAssessmentId = a.id;
     App.ui.compareWith = null;
     App.touch();
     App.persist(true);
-    if (location.hash === '#profile') App.render(); else location.hash = '#profile';
+    location.hash = '#profile';
+  };
+
+  App.views['new'] = function () {
+    var org = App.org();
+    var founded = Number(org.organization.founded);
+    App.setView('<h1>' + App.esc(App.t('new.title')) + '</h1><p class="muted">' + App.esc(App.t('new.intro', { org: App.orgName(org) })) + '</p>' +
+      '<div class="model-cards">' + App.Models.list().map(function (m) {
+        var last = App.latestAssessment(org, m.id);
+        var young = m.minYears && founded && new Date().getFullYear() - founded < m.minYears;
+        return '<article class="card model-card kind-' + m.kind + '">' +
+          '<span class="tag">' + App.esc(App.t('kind.' + m.kind)) + '</span>' +
+          '<h2>' + App.esc(App.L(m.name)) + '</h2><p>' + App.esc(App.L(m.description)) + '</p>' +
+          (young ? '<p class="notice small">' + App.esc(App.t('opi.tooYoung', { years: new Date().getFullYear() - founded })) + '</p>' : '') +
+          (last ? '<label class="inline-field"><input type="checkbox" data-prefill="' + m.id + '" checked> ' + App.esc(App.t('new.prefill', { name: App.assessmentLabel(last) })) + '</label>' : '') +
+          '<div class="actions"><button class="btn primary" data-click="create-assessment" data-model="' + m.id + '">' + App.esc(App.t('new.start')) + '</button></div>' +
+          '</article>';
+      }).join('') + '</div>');
   };
 
   A['export-org'] = function () {
@@ -750,6 +863,7 @@
   A['export-results'] = function () {
     var a = App.assessment();
     var r = App.scores(a);
+    var F = App.fw(a);
     var rows = [[App.t('profile.name'), App.orgName()], [App.t('header.assessment'), App.assessmentLabel(a)], [],
       ['Pillar / Pilier', App.t('report.aspect'), App.t('report.component'), App.t('score'), App.t('report.currentLevel'), 'Category', App.t('diag.comment')]];
     F.allComponents().forEach(function (e) {

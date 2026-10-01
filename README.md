@@ -1,5 +1,44 @@
 # Governance Barometer — web app / Baromètre de gouvernance
 
+Organisational assessment tool with three models, all bilingual (FR/EN):
+
+| Model | Measures | Structure | Global index |
+|---|---|---|---|
+| **Governance barometer** | Capacity (governance) | 4 pillars, 33 components | Mean of the 33 components (Excel method) or weighted mean of pillars |
+| **ITOCA** (derived from USAID/Pact OCA/OCAT) | Technical and organisational capacity | 10 domains, 94 indicators | Mean of domains (equal weights) |
+| **OPI** (organisational performance index) | Performance (results achieved), evidence required | 5 domains, 10 sub-domains | Mean of domains (equal weights) |
+
+All models share the same engine: 1–4 levels, strengths/opportunities/weaknesses, a pre-filled **Change Action Plan (CAP)**, progress over time (within one model), individual and progress reports in PDF, and the facilitator portfolio. OPI is only relevant for organisations with at least 2 years of activity; its level descriptions are our own wording in the spirit of Pact's OPI and should be validated.
+
+### Change Action Plan (CAP)
+
+The CAP follows the CAP template:
+- gap identified;
+- prioritized actions;
+- rank;
+- means of verification;
+- person responsible;
+- time frame;
+- comments and follow-up.
+
+It is grouped by domain, with a Gantt timeline over 24 months.
+
+What is pre-filled:
+- the gap, from the current level description;
+- the target, from the next level;
+- one suggested action per gap, with a means of verification.
+
+Everything can be edited, and organisations add their own actions. For ITOCA and OPI only gaps (weaknesses and opportunities) get pre-filled actions.
+
+### ITOCA content
+
+The ITOCA grid was converted from the organisation-specific Excel version:
+- the organisation's name was replaced by "the organisation";
+- typos were corrected;
+- English translations, short titles and one suggested action per indicator were added.
+
+The source is `data/itoca/*.json`. Regenerate `js/models/itoca-data.js` with `npm run build:itoca`.
+
 Web version of the Excel/VBA tool **"17112016 OUTIL ACCOMPAGNEMENT TEFI v1.2.0.xlsm"**: a governance self-assessment for small organisations that computes development indices, identifies strengths, opportunities and weaknesses, generates a workplan, and produces an individual PDF report. A facilitator space gives an overview of all the organisations being supported.
 
 The interface is available in **French and English** (FR / EN switch in the header).
@@ -142,7 +181,10 @@ Only the global index changes. Component, aspect and pillar scores stay the same
 index.html               single page
 css/styles.css           layout (light/dark, mobile, A4 report, print)
 js/i18n.js               interface translations
-js/framework.js          assessment framework (bilingual)
+js/framework.js          Barometer framework (bilingual)
+js/models.js             model registry (Barometer, ITOCA, OPI)
+js/models/itoca-data.js  ITOCA content (generated from data/itoca)
+js/models/opi-data.js    OPI content
 js/activities.js         standard activity library (bilingual)
 js/scoring.js            scoring, categories, pillar weights (no browser dependency)
 js/storage.js            workspace model, migration, import/export

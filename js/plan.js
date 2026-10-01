@@ -26,6 +26,8 @@
       var score = assessment.answers[entry.component.id];
       var category = Scoring.categoryFor(score, framework.MAX_SCORE);
       if (!category) return;
+      // Gap-focused models (ITOCA, OPI) only pre-fill actions for gaps.
+      if (framework.autoCategories && framework.autoCategories.indexOf(category) < 0) return;
       Activities.get(entry.component.id, category).forEach(function (std) {
         wanted[std.key] = { std: std, componentId: entry.component.id, category: category };
       });
@@ -95,6 +97,7 @@
   function resolveTexts(activity, lang) {
     var title = activity.title;
     var indicator = activity.indicator;
+    var verification = activity.verification;
     if (activity.source === 'standard' && activity.standardKey) {
       var parts = activity.standardKey.split(':');
       var list = Activities.get(parts[0], parts[1]);
@@ -102,9 +105,10 @@
       if (std) {
         if (!title) title = std.title[lang] || std.title.fr;
         if (!indicator) indicator = std.indicator[lang] || std.indicator.fr;
+        if (!verification && std.verification) verification = std.verification[lang] || std.verification.fr;
       }
     }
-    return { title: title, indicator: indicator };
+    return { title: title, indicator: indicator, verification: verification };
   }
 
   function stats(plan) {

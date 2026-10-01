@@ -1,12 +1,16 @@
 /*
- * Workplan view: standard activities generated from the assessment, the
- * organisation's own proposals, and a Gantt timeline.
+ * Change Action Plan (CAP) view.
+ *
+ * For each indicator, the gap identified is pre-filled from the current
+ * level and the target from the next level; prioritized actions are
+ * pre-filled from the model's suggested actions and remain fully editable.
+ * CAP columns: gap identified, prioritized actions, rank, means of
+ * verification, person responsible, time frame, comments and follow-up.
  */
 (function () {
   'use strict';
 
   var App = window.App;
-  var F = App.F;
   var S = App.S;
   var Plan = App.Plan;
   var Store = App.Store;
@@ -16,6 +20,20 @@
   var A = App.actions;
 
   var CATS = ['address', 'opportunity', 'maintain', 'other'];
+
+  /** Gap identified: the organisation's own wording, or the current level description by default. */
+  App.gapText = function (a, c) {
+    if (typeof a.plan.challenges[c.id] === 'string') return a.plan.challenges[c.id];
+    var score = a.answers[c.id];
+    return score && score < 4 ? L(c.levels[score - 1]) : '';
+  };
+
+  /** Rank labels: 1 – Essential, 2 – Important, 3 – Neutral. */
+  App.rankLabel = function (value) {
+    var i = -1;
+    App.F.PRIORITIES.forEach(function (p, k) { if (p.value === value) i = k; });
+    return i < 0 ? '' : (i + 1) + ' – ' + L(App.F.PRIORITIES[i].label);
+  };
 
   function monthLabels(plan) {
     var out = [];
@@ -73,7 +91,7 @@
     var lang = App.I18n.getLang();
     var texts = Plan.resolveTexts(act, lang);
     var months = monthLabels(plan).map(function (m, i) { return { value: i + 1, label: m }; });
-    var priorities = [{ value: '', label: '—' }].concat(F.PRIORITIES.map(function (p) { return { value: p.value, label: L(p.label) }; }));
+    var ranks = [{ value: '', label: '—' }].concat(App.F.PRIORITIES.map(function (p) { return { value: p.value, label: App.rankLabel(p.value) }; }));
     var statuses = Store.STATUSES.map(function (s) { return { value: s, label: t('status.' + s) }; });
     function input(field, value, label) {
       return '<label class="field"><span>' + esc(t(label)) + '</span><input type="text" data-on="act-field" data-id="' + esc(act.id) + '" data-field="' + field + '" value="' + esc(value) + '"></label>';
@@ -84,21 +102,22 @@
         App.catTag(act.category) +
         '<button class="btn small ghost danger" data-click="act-remove" data-id="' + esc(act.id) + '" title="' + esc(t('plan.remove')) + '">✕ ' + esc(t('plan.remove')) + '</button>' +
       '</div>' +
-      '<label class="field wide"><span>' + esc(t('plan.activity')) + '</span><textarea rows="2" data-on="act-field" data-id="' + esc(act.id) + '" data-field="title" placeholder="' + esc(t('plan.activityPh')) + '">' + esc(texts.title) + '</textarea></label>' +
-      '<div class="activity-grid">' +
-        input('lead', act.lead, 'plan.lead') +
+      '<label class="field wide"><span>' + esc(t('cap.action')) + '</span><textarea rows="2" data-on="act-field" data-id="' + esc(act.id) + '" data-field="title" placeholder="' + esc(t('plan.activityPh')) + '">' + esc(texts.title) + '</textarea></label>' +
+      '<div class="activity-grid cap-grid">' +
+        '<label class="field"><span>' + esc(t('cap.rank')) + '</span>' + select('priority', act.id, ranks, act.priority) + '</label>' +
+        '<label class="field"><span>' + esc(t('cap.verification')) + '</span><input type="text" data-on="act-field" data-id="' + esc(act.id) + '" data-field="verification" value="' + esc(texts.verification) + '"></label>' +
+        input('lead', act.lead, 'cap.responsible') +
         '<label class="field"><span>' + esc(t('plan.from')) + '</span>' + select('start', act.id, months, act.start) + '</label>' +
         '<label class="field"><span>' + esc(t('plan.to')) + '</span>' + select('end', act.id, months, act.end) + '</label>' +
-        '<label class="field"><span>' + esc(t('plan.priority')) + '</span>' + select('priority', act.id, priorities, act.priority) + '</label>' +
         '<label class="field"><span>' + esc(t('plan.status')) + '</span>' + select('status', act.id, statuses, act.status) + '</label>' +
       '</div>' +
+      '<label class="field wide follow-up"><span>' + esc(t('cap.followUp')) + '</span><textarea rows="2" data-on="act-field" data-id="' + esc(act.id) + '" data-field="followUp" placeholder="' + esc(t('cap.followUpPh')) + '">' + esc(act.followUp) + '</textarea></label>' +
       '<details class="activity-more"><summary>' + esc(t('plan.more')) + '</summary><div class="activity-grid">' +
         '<label class="field wide"><span>' + esc(t('plan.indicator')) + '</span><input type="text" data-on="act-field" data-id="' + esc(act.id) + '" data-field="indicator" value="' + esc(texts.indicator) + '"></label>' +
         input('baseline', act.baseline, 'plan.baseline') +
         input('target', act.target, 'plan.target') +
         input('resourcesAvailable', act.resourcesAvailable, 'plan.resAvailable') +
         input('resourcesAnticipated', act.resourcesAnticipated, 'plan.resAnticipated') +
-        '<label class="field wide"><span>' + esc(t('plan.verification')) + '</span><input type="text" data-on="act-field" data-id="' + esc(act.id) + '" data-field="verification" value="' + esc(act.verification) + '"></label>' +
       '</div></details>' +
       '</div>';
   }
@@ -106,6 +125,7 @@
   App.views.plan = function () {
     var org = App.org();
     var a = App.assessment();
+    var F = App.fw(a);
     var plan = a.plan;
     var answered = Object.keys(a.answers).length;
 
@@ -151,20 +171,20 @@
           var acts = plan.activities.filter(function (x) { return x.componentId === c.id && ff(x); });
           if (!acts.length && (f !== 'all' && f !== cat)) return;
           if (!acts.length && !score) return;
-          var title = L(c.name) === L(aspect.name) ? L(aspect.name) : L(aspect.name) + ' — ' + L(c.name);
-          block += '<article class="plan-component card" style="--pillar:' + App.PILLAR_COLORS[pillar.id] + '">' +
+          var title = App.componentTitle(F, aspect, c);
+          block += '<article class="plan-component card" style="--pillar:' + pillar.color + '">' +
             '<header><h3>' + esc(title) + '</h3><div class="plan-component-tags">' + App.levelBadge(score) + App.catTag(cat) + '</div></header>' +
             (score ? '<p class="context"><strong>' + esc(t('plan.current')) + ' :</strong> ' + esc(L(c.levels[score - 1])) + '</p>' : '') +
             (score && score < 4 ? '<p class="context next"><strong>' + esc(t('plan.next')) + ' :</strong> ' + esc(L(c.levels[score])) + '</p>' : '') +
             (cat === 'address' || cat === 'opportunity'
-              ? '<label class="field wide challenge"><span>' + esc(t('plan.challenge')) + '</span><textarea rows="2" data-on="challenge" data-id="' + esc(c.id) + '" placeholder="' + esc(t('plan.challengePh')) + '">' + esc(plan.challenges[c.id] || '') + '</textarea></label>'
+              ? '<label class="field wide challenge"><span>' + esc(t('cap.gap')) + '</span><textarea rows="2" data-on="challenge" data-id="' + esc(c.id) + '" placeholder="' + esc(t('plan.challengePh')) + '">' + esc(App.gapText(a, c)) + '</textarea></label>'
               : '') +
             '<div class="activity-list">' + acts.map(function (x) { return activityCard(x, plan); }).join('') + '</div>' +
             '<button class="btn small" data-click="act-add" data-component="' + esc(c.id) + '">' + esc(t('plan.addOwn')) + '</button>' +
             '</article>';
         });
       });
-      if (block) html += '<h2 class="pillar-heading" style="--pillar:' + App.PILLAR_COLORS[pillar.id] + '">' + esc(L(pillar.name)) + '</h2>' + block;
+      if (block) html += '<h2 class="pillar-heading" style="--pillar:' + pillar.color + '">' + esc(L(pillar.name)) + '</h2>' + block;
     });
 
     var general = plan.activities.filter(function (x) { return !x.componentId && ff(x); });
@@ -174,7 +194,7 @@
         '<button class="btn small" data-click="act-add" data-component="">' + esc(t('plan.addGeneral')) + '</button></article>';
     }
 
-    if (!answered && !plan.activities.length) html += '<div class="notice">' + esc(t('plan.empty')) + ' <a href="#assessment/gov">' + esc(t('results.complete')) + '</a></div>';
+    if (!answered && !plan.activities.length) html += '<div class="notice">' + esc(t('plan.empty')) + ' <a href="#assessment/' + F.PILLARS[0].id + '">' + esc(t('results.complete')) + '</a></div>';
 
     App.setView(html);
     renderTimeline();
@@ -197,7 +217,7 @@
   };
 
   A['plan-sync'] = function () {
-    var res = Plan.syncStandardActivities(F, App.assessment());
+    var res = Plan.syncStandardActivities(App.fw(), App.assessment());
     App.touch();
     App.persist(true);
     App.flash(t('plan.syncDone', res));
@@ -236,7 +256,7 @@
   };
 
   A['act-add'] = function (el) {
-    var act = Plan.addCustomActivity(F, App.assessment(), el.dataset.component || null);
+    var act = Plan.addCustomActivity(App.fw(), App.assessment(), el.dataset.component || null);
     if (App.ui.planFilter !== 'all' && App.ui.planFilter !== act.category) App.ui.planFilter = 'all';
     App.touch();
     App.persist(true);
@@ -258,21 +278,22 @@
     var a = App.assessment();
     var lang = App.I18n.getLang();
     var labels = monthLabels(a.plan);
-    var header = ['Pillar / Pilier', t('report.component'), t('score'), 'Category', t('plan.challenge'), t('plan.activity'), 'Source',
-      t('plan.lead'), t('plan.from'), t('plan.to'), t('plan.priority'), t('plan.status'), t('plan.indicator'), t('plan.baseline'),
-      t('plan.target'), t('plan.resAvailable'), t('plan.resAnticipated'), t('plan.verification')].concat(labels);
+    var header = [t('cap.domain'), t('report.component'), t('score'), 'Category', t('cap.gap'), t('cap.target'), t('cap.action'), t('cap.rank'),
+      t('cap.verification'), t('cap.responsible'), t('plan.from'), t('plan.to'), t('plan.status'), t('cap.followUp'), 'Source',
+      t('plan.indicator'), t('plan.baseline'), t('plan.target'), t('plan.resAvailable'), t('plan.resAnticipated')].concat(labels);
     var rows = [header];
     a.plan.activities.forEach(function (act) {
       var e = act.componentId ? App.findComponent(act.componentId) : null;
       var texts = Plan.resolveTexts(act, lang);
-      var pr = F.PRIORITIES.filter(function (p) { return p.value === act.priority; })[0];
-      var row = [e ? L(e.pillar.name) : '', e ? L(e.component.name) : t('plan.general'), e ? (a.answers[act.componentId] || '') : '',
-        t('cat.' + act.category), e ? (a.plan.challenges[act.componentId] || '') : '', texts.title, t('source.' + act.source),
-        act.lead, labels[act.start - 1], labels[act.end - 1], pr ? L(pr.label) : '', t('status.' + act.status), texts.indicator,
-        act.baseline, act.target, act.resourcesAvailable, act.resourcesAnticipated, act.verification];
+      var score = e ? a.answers[act.componentId] : null;
+      var row = [e ? L(e.pillar.name) : '', e ? L(e.component.name) : t('plan.general'), score || '',
+        t('cat.' + act.category), e ? App.gapText(a, e.component) : '', e && score && score < 4 ? L(e.component.levels[score]) : '',
+        texts.title, App.rankLabel(act.priority), texts.verification, act.lead, labels[act.start - 1], labels[act.end - 1],
+        t('status.' + act.status), act.followUp, t('source.' + act.source),
+        texts.indicator, act.baseline, act.target, act.resourcesAvailable, act.resourcesAnticipated];
       for (var m = 1; m <= labels.length; m++) row.push(m >= act.start && m <= act.end ? 'x' : '');
       rows.push(row);
     });
-    App.download('workplan-' + App.slug(App.orgName()) + '-' + a.year + '.csv', App.csv(rows), 'text/csv;charset=utf-8');
+    App.download('CAP-' + App.slug(App.org().organization.acronym || App.orgName()) + '-' + a.year + '.csv', App.csv(rows), 'text/csv;charset=utf-8');
   };
 })();

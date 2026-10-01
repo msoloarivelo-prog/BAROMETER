@@ -112,6 +112,8 @@
         id: pillar.id,
         name: pillar.name,
         shortName: pillar.shortName,
+        color: pillar.color,
+        reportColor: pillar.reportColor,
         score: pillarScore,
         percent: pillarScore === null ? null : (pillarScore / max) * 100,
         answered: pillarAnswered,

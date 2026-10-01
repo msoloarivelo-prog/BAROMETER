@@ -1,0 +1,198 @@
+{
+  "id": "itoca-nrm",
+  "name": {
+    "fr": "Gestion des ressources naturelles et application de la loi",
+    "en": "Natural resource management and law enforcement"
+  },
+  "shortName": {
+    "fr": "GRN et loi",
+    "en": "NRM & law"
+  },
+  "items": [
+    {
+      "id": "itoca-nrm-technical-skills",
+      "name": {
+        "fr": "Compétences techniques en GRN",
+        "en": "NRM technical skills"
+      },
+      "statement": {
+        "fr": "L'organisation possède les compétences techniques nécessaires pour identifier les problèmes liés à la gestion des ressources naturelles (GRN) et au trafic des ressources naturelles.",
+        "en": "The organisation has the technical skills needed to identify issues related to natural resource management (NRM) and natural resource trafficking."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation aborde les questions de GRN et de trafic des ressources naturelles et met en œuvre des outils de collecte de données connexes.",
+          "en": "The organisation addresses NRM and natural resource trafficking issues and uses related data collection tools."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour collecter des informations et des données sur les problèmes de GRN et de trafic des ressources naturelles.",
+          "en": "The organisation has the skills needed to collect information and data on NRM and natural resource trafficking issues."
+        },
+        {
+          "fr": "L'organisation dispose d'une base de données actualisée sur les questions de GRN et sur le trafic des ressources naturelles.",
+          "en": "The organisation has an up-to-date database on NRM issues and natural resource trafficking."
+        },
+        {
+          "fr": "L'organisation dispose d'un mécanisme de collecte et de traitement des données sur les problèmes de GRN et le trafic des ressources naturelles.",
+          "en": "The organisation has a mechanism for collecting and processing data on NRM and natural resource trafficking issues."
+        }
+      ],
+      "action": {
+        "fr": "Créer et mettre à jour régulièrement une base de données sur les problèmes de GRN et les cas de trafic",
+        "en": "Create and regularly update a database of NRM issues and trafficking cases"
+      },
+      "verification": {
+        "fr": "Base de données à jour et procédure de collecte écrite",
+        "en": "Up-to-date database and written data collection procedure"
+      }
+    },
+    {
+      "id": "itoca-nrm-anti-trafficking-strategy",
+      "name": {
+        "fr": "Stratégie contre le trafic",
+        "en": "Anti-trafficking strategy"
+      },
+      "statement": {
+        "fr": "L'organisation dispose d'une stratégie et de plans d'action complets pour réduire le trafic des ressources naturelles.",
+        "en": "The organisation has a comprehensive strategy and action plans to reduce natural resource trafficking."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et documentée pour intervenir sur la réduction du trafic des ressources naturelles.",
+          "en": "The organisation has no clearly defined and documented strategy for working to reduce natural resource trafficking."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie clairement définie et documentée pour intervenir sur la réduction du trafic des ressources naturelles.",
+          "en": "The organisation has a clearly defined and documented strategy for working to reduce natural resource trafficking."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie et d'un plan d'action complets pour intervenir sur la réduction du trafic des ressources naturelles.",
+          "en": "The organisation has a comprehensive strategy and action plan for working to reduce natural resource trafficking."
+        },
+        {
+          "fr": "L'organisation met en œuvre sa stratégie et son plan d'action pour réduire le trafic des ressources naturelles en impliquant ses membres.",
+          "en": "The organisation implements its strategy and action plan to reduce natural resource trafficking, involving its members."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger et valider avec les membres une stratégie anti-trafic assortie d'un plan d'action budgétisé",
+        "en": "Draft and validate with members an anti-trafficking strategy with a budgeted action plan"
+      },
+      "verification": {
+        "fr": "Stratégie et plan d'action validés",
+        "en": "Validated strategy and action plan"
+      }
+    },
+    {
+      "id": "itoca-nrm-community-support",
+      "name": {
+        "fr": "Appui aux communautés et membres",
+        "en": "Support to communities and members"
+      },
+      "statement": {
+        "fr": "L'organisation a les compétences pour aider les communautés et ses membres à agir sur le trafic des ressources naturelles.",
+        "en": "The organisation has the skills to help communities and its members take action on natural resource trafficking."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation a identifié les membres et/ou les communautés intéressés par la ou les questions identifiées, mais ne les a pas aidés à prendre des mesures pour la réduction du trafic des ressources naturelles.",
+          "en": "The organisation has identified members and/or communities with an interest in the identified issue(s), but has not helped them take action to reduce natural resource trafficking."
+        },
+        {
+          "fr": "L'organisation a identifié les intérêts des membres et/ou des communautés sur la ou les questions identifiées et a fourni un certain soutien pour intervenir sur la réduction du trafic des ressources naturelles.",
+          "en": "The organisation has identified the interests of members and/or communities in the identified issue(s) and has provided some support for action to reduce natural resource trafficking."
+        },
+        {
+          "fr": "L'organisation a identifié les intérêts des membres et/ou des communautés concernant la question identifiée, a convenu avec eux d'un programme/intervention commun et a collaboré avec eux.",
+          "en": "The organisation has identified the interests of members and/or communities in the identified issue, has agreed a joint programme/intervention with them and has worked with them."
+        },
+        {
+          "fr": "L'organisation entretient une collaboration harmonieuse avec ses membres et/ou les communautés pour résoudre les problèmes identifiés de trafic des ressources naturelles.",
+          "en": "The organisation works harmoniously with its members and/or communities to resolve the identified natural resource trafficking problems."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer avec les communautés un plan d'intervention commun contre le trafic et en assurer le suivi conjoint",
+        "en": "Develop a joint anti-trafficking intervention plan with communities and monitor it together"
+      },
+      "verification": {
+        "fr": "Plan commun signé et rapports de suivi conjoints",
+        "en": "Signed joint plan and joint monitoring reports"
+      }
+    },
+    {
+      "id": "itoca-nrm-peer-learning",
+      "name": {
+        "fr": "Partage d'expériences entre membres",
+        "en": "Peer learning among members"
+      },
+      "statement": {
+        "fr": "L'organisation assure le partage d'expériences et le renforcement mutuel des capacités de ses membres sur la GRN et le plaidoyer.",
+        "en": "The organisation ensures experience sharing and mutual capacity building among its members on NRM and advocacy."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'effectue pas de partage d'expériences ni de renforcement mutuel des capacités de ses membres sur la GRN et le plaidoyer.",
+          "en": "The organisation does not carry out experience sharing or mutual capacity building among its members on NRM and advocacy."
+        },
+        {
+          "fr": "L'organisation effectue le partage d'expériences de ses membres sur la GRN et le plaidoyer.",
+          "en": "The organisation carries out experience sharing among its members on NRM and advocacy."
+        },
+        {
+          "fr": "L'organisation organise des partages d'expériences et le renforcement mutuel des capacités de ses membres sur la GRN et le plaidoyer.",
+          "en": "The organisation organises experience sharing and mutual capacity building among its members on NRM and advocacy."
+        },
+        {
+          "fr": "L'organisation encourage et facilite le partage d'expériences indépendant entre pairs et le renforcement mutuel des capacités de ses membres en matière de GRN et de plaidoyer.",
+          "en": "The organisation encourages and facilitates independent peer-to-peer experience sharing and mutual capacity building among its members on NRM and advocacy."
+        }
+      ],
+      "action": {
+        "fr": "Programmer des ateliers semestriels d'échange entre membres sur la GRN et le plaidoyer",
+        "en": "Schedule six-monthly peer exchange workshops among members on NRM and advocacy"
+      },
+      "verification": {
+        "fr": "Calendrier des échanges et rapports d'ateliers",
+        "en": "Exchange calendar and workshop reports"
+      }
+    },
+    {
+      "id": "itoca-nrm-environmental-justice",
+      "name": {
+        "fr": "Justice environnementale",
+        "en": "Environmental justice"
+      },
+      "statement": {
+        "fr": "L'organisation met en œuvre des projets/activités pour l'application de la législation sur le trafic des ressources naturelles.",
+        "en": "The organisation implements projects/activities to enforce legislation on natural resource trafficking."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation intègre la justice environnementale dans son plan stratégique.",
+          "en": "The organisation includes environmental justice in its strategic plan."
+        },
+        {
+          "fr": "L'organisation a un plan d'action pour la mise en œuvre des activités de justice environnementale.",
+          "en": "The organisation has an action plan for implementing environmental justice activities."
+        },
+        {
+          "fr": "Les activités de la composante justice environnementale de l'organisation sont mises en œuvre.",
+          "en": "The activities of the organisation's environmental justice component are being implemented."
+        },
+        {
+          "fr": "L'organisation a une réputation dans le renforcement de l'application de la loi sur la GRN et le trafic des ressources naturelles.",
+          "en": "The organisation has a reputation in strengthening law enforcement on NRM and natural resource trafficking."
+        }
+      ],
+      "action": {
+        "fr": "Mettre en œuvre et documenter des activités d'appui à l'application de la loi (signalements, suivi des dossiers judiciaires)",
+        "en": "Implement and document law enforcement support activities (case reporting, follow-up of court cases)"
+      },
+      "verification": {
+        "fr": "Rapports d'activités et registre des dossiers suivis",
+        "en": "Activity reports and log of cases followed"
+      }
+    }
+  ]
+}

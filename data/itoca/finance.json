@@ -1,0 +1,679 @@
+{
+  "id": "itoca-finance",
+  "name": {
+    "fr": "Comptabilité et finances",
+    "en": "Accounting and finance"
+  },
+  "shortName": {
+    "fr": "Finances",
+    "en": "Finance"
+  },
+  "items": [
+    {
+      "id": "itoca-finance-bank-accounts",
+      "name": {
+        "fr": "Comptes bancaires de l'organisation",
+        "en": "Bank accounts in the organisation's name"
+      },
+      "statement": {
+        "fr": "Tous les comptes bancaires utilisés sont au nom de l'organisation.",
+        "en": "All bank accounts used are in the organisation's name."
+      },
+      "levels": [
+        {
+          "fr": "Tous les comptes bancaires utilisés sont au nom d'individus et non pas au nom de l'organisation, et il n'y a pas de justification.",
+          "en": "All bank accounts used are in the names of individuals rather than in the organisation's name, and there is no justification."
+        },
+        {
+          "fr": "Certains comptes bancaires utilisés sont au nom d'individus et certains sont au nom de l'organisation, mais il n'y a pas de justification.",
+          "en": "Some bank accounts used are in the names of individuals and some are in the organisation's name, but there is no justification."
+        },
+        {
+          "fr": "Certains comptes bancaires utilisés sont au nom d'individus et certains sont au nom de l'organisation, mais il y a des justifications.",
+          "en": "Some bank accounts used are in the names of individuals and some are in the organisation's name, but there are justifications."
+        },
+        {
+          "fr": "Tous les comptes bancaires utilisés sont au nom de l'organisation.",
+          "en": "All bank accounts used are in the organisation's name."
+        }
+      ],
+      "action": {
+        "fr": "Transférer tous les fonds sur des comptes ouverts au nom de l'organisation et clôturer les comptes personnels utilisés",
+        "en": "Transfer all funds to accounts opened in the organisation's name and close any personal accounts used"
+      },
+      "verification": {
+        "fr": "Relevés bancaires et conventions de compte au nom de l'organisation",
+        "en": "Bank statements and account agreements in the organisation's name"
+      }
+    },
+    {
+      "id": "itoca-finance-bank-reconciliation",
+      "name": {
+        "fr": "Rapprochements bancaires",
+        "en": "Bank reconciliations"
+      },
+      "statement": {
+        "fr": "Les soldes des relevés bancaires et les soldes du grand livre font régulièrement l'objet de rapprochements dûment approuvés par une personne désignée.",
+        "en": "Bank statement balances and general ledger balances are regularly reconciled, and the reconciliations are duly approved by a designated person."
+      },
+      "levels": [
+        {
+          "fr": "Les soldes des relevés bancaires ne sont jamais rapprochés des soldes du grand livre.",
+          "en": "Bank statement balances are never reconciled with general ledger balances."
+        },
+        {
+          "fr": "Les soldes des relevés bancaires et les soldes du grand livre font l'objet de rapprochements dûment approuvés par une personne désignée, avec une fréquence moins que trimestrielle mais au moins une fois dans l'année.",
+          "en": "Bank statement balances and general ledger balances are reconciled, with approval by a designated person, less often than quarterly but at least once a year."
+        },
+        {
+          "fr": "Les soldes des relevés bancaires et les soldes du grand livre font l'objet de rapprochements dûment approuvés par une personne désignée, avec une fréquence trimestrielle.",
+          "en": "Bank statement balances and general ledger balances are reconciled quarterly, with approval by a designated person."
+        },
+        {
+          "fr": "Les soldes des relevés bancaires et les soldes du grand livre font l'objet de rapprochements dûment approuvés par une personne désignée, au moins une fois par mois.",
+          "en": "Bank statement balances and general ledger balances are reconciled at least once a month, with approval by a designated person."
+        }
+      ],
+      "action": {
+        "fr": "Établir chaque mois un rapprochement bancaire par compte, signé par une personne désignée",
+        "en": "Prepare a monthly reconciliation for each bank account, signed off by a designated person"
+      },
+      "verification": {
+        "fr": "États de rapprochement mensuels signés",
+        "en": "Signed monthly reconciliation statements"
+      }
+    },
+    {
+      "id": "itoca-finance-disbursement-approval",
+      "name": {
+        "fr": "Procédure d'approbation des décaissements",
+        "en": "Disbursement approval procedure"
+      },
+      "statement": {
+        "fr": "Les décaissements suivent une procédure écrite claire et sont matérialisés par des pièces justificatives.",
+        "en": "Disbursements follow a clear written procedure and are backed by supporting evidence."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de procédure écrite claire en termes d'approbation des décaissements et il n'y a pas d'évidence cohérente justifiant les pratiques suivies.",
+          "en": "The organisation has no clear written procedure for approving disbursements, and there is no consistent evidence supporting the practices followed."
+        },
+        {
+          "fr": "L'organisation n'a pas de procédure écrite claire en termes d'approbation des décaissements, mais il y a une évidence bien cohérente justifiant que les pratiques sont suivies dans 75 % des cas.",
+          "en": "The organisation has no clear written procedure for approving disbursements, but there is consistent evidence that practices are followed in 75% of cases."
+        },
+        {
+          "fr": "L'organisation a une procédure écrite claire en termes d'approbation des décaissements, mais celle-ci n'est pas suivie de manière cohérente et il n'y a pas de canevas.",
+          "en": "The organisation has a clear written procedure for approving disbursements, but it is not followed consistently and there are no standard forms."
+        },
+        {
+          "fr": "L'organisation a une procédure écrite claire en termes d'approbation des décaissements, incluant les canevas, et il y a des évidences justifiant que la procédure est suivie.",
+          "en": "The organisation has a clear written procedure for approving disbursements, including standard forms, and there is evidence that the procedure is followed."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger une procédure d'approbation des décaissements avec bons de paiement types et seuils de signature",
+        "en": "Write a disbursement approval procedure with standard payment vouchers and signing thresholds"
+      },
+      "verification": {
+        "fr": "Procédure approuvée et bons de paiement signés",
+        "en": "Approved procedure and signed payment vouchers"
+      }
+    },
+    {
+      "id": "itoca-finance-petty-cash",
+      "name": {
+        "fr": "Gestion de la petite caisse",
+        "en": "Petty cash management"
+      },
+      "statement": {
+        "fr": "Les dépenses par petite caisse sont constamment documentées avec des pièces justificatives adéquates, et les fonds et les chèques sont bien sécurisés au bureau.",
+        "en": "Petty cash expenses are consistently documented with adequate supporting documents, and cash and cheques are kept secure in the office."
+      },
+      "levels": [
+        {
+          "fr": "Les dépenses par petite caisse ne sont pas appuyées par une documentation adéquate (reçus ou autres preuves), et les fonds et les chèques ne sont pas sécurisés (tiroirs de bureau non verrouillés).",
+          "en": "Petty cash expenses are not supported by adequate documentation (receipts or other proof), and cash and cheques are not kept secure (unlocked desk drawers)."
+        },
+        {
+          "fr": "Les dépenses par petite caisse sont parfois appuyées par une documentation adéquate (reçus ou autres preuves), et les fonds et les chèques sont sécurisés dans un coffre-fort, mais pas de manière systématique.",
+          "en": "Petty cash expenses are sometimes supported by adequate documentation (receipts or other proof), and cash and cheques are kept in a safe, but not systematically."
+        },
+        {
+          "fr": "Les dépenses par petite caisse sont appuyées par une documentation adéquate (reçus ou autres preuves) dans plus de 75 % des cas, et les fonds et les chèques sont sécurisés dans un coffre-fort ou dans un endroit verrouillé au bureau.",
+          "en": "Petty cash expenses are supported by adequate documentation (receipts or other proof) in more than 75% of cases, and cash and cheques are kept in a safe or a locked place in the office."
+        },
+        {
+          "fr": "Les dépenses par petite caisse sont systématiquement appuyées par une documentation adéquate (reçus ou autres preuves), et les fonds et les chèques sont sécurisés dans un coffre-fort ou dans un endroit verrouillé au bureau.",
+          "en": "Petty cash expenses are always supported by adequate documentation (receipts or other proof), and cash and cheques are kept in a safe or a locked place in the office."
+        }
+      ],
+      "action": {
+        "fr": "Tenir un registre de petite caisse avec reçus, faire un comptage mensuel et conserver les fonds dans un coffre-fort",
+        "en": "Keep a petty cash book with receipts, count the cash monthly and store funds in a safe"
+      },
+      "verification": {
+        "fr": "Registre de petite caisse et procès-verbaux de comptage signés",
+        "en": "Petty cash book and signed cash count records"
+      }
+    },
+    {
+      "id": "itoca-finance-recording-new-funds",
+      "name": {
+        "fr": "Enregistrement des nouveaux financements",
+        "en": "Recording new funding"
+      },
+      "statement": {
+        "fr": "Les nouveaux financements et subventions sont effectivement comptabilisés électroniquement dans un logiciel (progiciel ou Excel).",
+        "en": "New grants and funding are effectively recorded electronically in software (an accounting package or Excel)."
+      },
+      "levels": [
+        {
+          "fr": "Les nouveaux financements et subventions ne sont pas systématiquement comptabilisés et il n'y a pas d'approche cohérente pour la conservation des enregistrements.",
+          "en": "New grants and funding are not systematically recorded, and there is no consistent approach to keeping records."
+        },
+        {
+          "fr": "Les nouveaux financements et subventions sont comptabilisés et sont conservés séparément en version papier avec les informations sur les fonds reçus.",
+          "en": "New grants and funding are recorded and kept separately in paper form, together with information on the funds received."
+        },
+        {
+          "fr": "Les nouveaux financements et subventions sont comptabilisés en partie double (débit/crédit), électroniquement ou manuellement, et appuyés par des modes opératoires.",
+          "en": "New grants and funding are recorded using double-entry bookkeeping (debit/credit), electronically or manually, supported by operating procedures."
+        },
+        {
+          "fr": "Les nouveaux financements et subventions sont comptabilisés dans un logiciel ou sur Excel.",
+          "en": "New grants and funding are recorded in accounting software or in Excel."
+        }
+      ],
+      "action": {
+        "fr": "Enregistrer chaque nouveau financement dès réception dans le logiciel comptable sous un code de fonds dédié",
+        "en": "Record each new grant in the accounting software under a dedicated fund code as soon as it is received"
+      },
+      "verification": {
+        "fr": "Écritures comptables et liste des codes de fonds",
+        "en": "Accounting entries and list of fund codes"
+      }
+    },
+    {
+      "id": "itoca-finance-budget-line-accounting",
+      "name": {
+        "fr": "Comptabilisation par ligne budgétaire",
+        "en": "Budget-line accounting"
+      },
+      "statement": {
+        "fr": "Le système comptable permet une comptabilisation qui distingue systématiquement les réalisations par rapport aux lignes budgétaires approuvées correspondantes.",
+        "en": "The accounting system records transactions in a way that systematically tracks actual expenditure against the corresponding approved budget lines."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de système comptable permettant une comptabilisation des coûts des projets suivant les catégories budgétaires approuvées.",
+          "en": "The organisation has no accounting system that allows project costs to be recorded according to the approved budget categories."
+        },
+        {
+          "fr": "L'organisation dispose d'un système comptable permettant une comptabilisation des coûts des projets suivant les catégories budgétaires approuvées, mais le système n'est jamais utilisé.",
+          "en": "The organisation has an accounting system that allows project costs to be recorded according to the approved budget categories, but the system is never used."
+        },
+        {
+          "fr": "L'organisation dispose d'un système comptable permettant une comptabilisation des coûts des projets suivant les catégories budgétaires approuvées, mais le système n'est pas utilisé systématiquement.",
+          "en": "The organisation has an accounting system that allows project costs to be recorded according to the approved budget categories, but the system is not used systematically."
+        },
+        {
+          "fr": "L'organisation dispose d'un système comptable permettant une comptabilisation des coûts des projets suivant les catégories budgétaires approuvées, et le système est utilisé systématiquement.",
+          "en": "The organisation has an accounting system that allows project costs to be recorded according to the approved budget categories, and the system is used systematically."
+        }
+      ],
+      "action": {
+        "fr": "Paramétrer des codes analytiques correspondant aux lignes budgétaires de chaque projet et les utiliser pour toutes les écritures",
+        "en": "Set up cost codes matching each project's budget lines and use them for every accounting entry"
+      },
+      "verification": {
+        "fr": "Rapports budget/réalisé produits par le système comptable",
+        "en": "Budget-versus-actual reports produced by the accounting system"
+      }
+    },
+    {
+      "id": "itoca-finance-fund-tracking",
+      "name": {
+        "fr": "Suivi séparé des fonds",
+        "en": "Separate tracking of funds"
+      },
+      "statement": {
+        "fr": "Les différents fonds sont gérés à travers des comptes bancaires séparés, et le système comptable permet un rapportage séparé des différents fonds.",
+        "en": "Different funds are managed through separate bank accounts, and the accounting system allows separate reporting on each fund."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne tient pas de comptes bancaires différents par projet afin de ne pas mélanger les fonds -ET- n'a pas de système de comptabilité séparée par fonds qui permet de suivre séparément les réalisations pour chaque projet.",
+          "en": "The organisation does not keep separate bank accounts for each project to avoid mixing funds -AND- has no fund accounting system that tracks actual expenditure separately for each project."
+        },
+        {
+          "fr": "L'organisation tient des comptes bancaires différents par projet afin de ne pas mélanger les fonds -OU- dispose d'un système de comptabilité séparée par fonds qui permet de suivre séparément les réalisations pour chaque projet, mais le système n'est pas utilisé systématiquement.",
+          "en": "The organisation keeps separate bank accounts for each project to avoid mixing funds -OR- has a fund accounting system that tracks actual expenditure separately for each project, but the system is not used systematically."
+        },
+        {
+          "fr": "L'organisation tient des comptes bancaires différents par projet afin de ne pas mélanger les fonds -OU- dispose d'un système de comptabilité séparée par fonds qui permet de suivre séparément les réalisations pour chaque projet, et le système est utilisé systématiquement.",
+          "en": "The organisation keeps separate bank accounts for each project to avoid mixing funds -OR- has a fund accounting system that tracks actual expenditure separately for each project, and the system is used systematically."
+        },
+        {
+          "fr": "L'organisation tient des comptes bancaires différents par projet afin de ne pas mélanger les fonds -ET- dispose d'un système de comptabilité séparée par fonds qui permet de suivre séparément les réalisations pour chaque projet.",
+          "en": "The organisation keeps separate bank accounts for each project to avoid mixing funds -AND- has a fund accounting system that tracks actual expenditure separately for each project."
+        }
+      ],
+      "action": {
+        "fr": "Ouvrir un compte bancaire ou un code analytique distinct par projet et produire un rapport financier par fonds",
+        "en": "Open a separate bank account or cost code for each project and produce a financial report for each fund"
+      },
+      "verification": {
+        "fr": "Relevés bancaires par projet et rapports financiers par fonds",
+        "en": "Per-project bank statements and fund-level financial reports"
+      }
+    },
+    {
+      "id": "itoca-finance-foreign-exchange",
+      "name": {
+        "fr": "Change des devises",
+        "en": "Foreign currency exchange"
+      },
+      "statement": {
+        "fr": "Les fonds en devises sont changés, avec pièces justificatives, à la banque (ou auprès d'une institution financière formelle) sur la base d'un taux de change officiel.",
+        "en": "Foreign currency funds are exchanged, with supporting documents, at a bank (or another formal financial institution) at an official exchange rate."
+      },
+      "levels": [
+        {
+          "fr": "Les fonds reçus en devises (US$, euro, UK£, etc.) ne sont jamais changés en monnaie locale auprès de la banque ou d'autres institutions officielles à un taux de change officiel assorti d'une pièce justificative formelle -OU- l'organisation n'a jamais reçu de fonds en devises.",
+          "en": "Funds received in foreign currency (US$, euro, UK£, etc.) are never exchanged into local currency at a bank or other official institution at an official rate with a formal supporting document -OR- the organisation has never received foreign currency funds."
+        },
+        {
+          "fr": "Les fonds reçus en devises (US$, euro, UK£, etc.) sont parfois changés en monnaie locale auprès de la banque ou d'autres institutions officielles à un taux de change officiel assorti d'une pièce justificative formelle.",
+          "en": "Funds received in foreign currency (US$, euro, UK£, etc.) are sometimes exchanged into local currency at a bank or other official institution at an official rate with a formal supporting document."
+        },
+        {
+          "fr": "Les fonds reçus en devises (US$, euro, UK£, etc.) sont d'habitude changés en monnaie locale auprès de la banque ou d'autres institutions officielles à un taux de change officiel assorti d'une pièce justificative formelle.",
+          "en": "Funds received in foreign currency (US$, euro, UK£, etc.) are usually exchanged into local currency at a bank or other official institution at an official rate with a formal supporting document."
+        },
+        {
+          "fr": "Les fonds reçus en devises (US$, euro, UK£, etc.) sont systématiquement changés en monnaie locale auprès de la banque ou d'autres institutions officielles à un taux de change officiel assorti d'une pièce justificative formelle.",
+          "en": "Funds received in foreign currency (US$, euro, UK£, etc.) are always exchanged into local currency at a bank or other official institution at an official rate with a formal supporting document."
+        }
+      ],
+      "action": {
+        "fr": "Changer les devises uniquement en banque ou bureau agréé et joindre chaque bordereau de change à l'écriture comptable",
+        "en": "Exchange foreign currency only at banks or licensed bureaux and attach each exchange slip to the accounting entry"
+      },
+      "verification": {
+        "fr": "Bordereaux de change joints aux écritures",
+        "en": "Exchange slips attached to accounting entries"
+      }
+    },
+    {
+      "id": "itoca-finance-document-retention",
+      "name": {
+        "fr": "Conservation des documents",
+        "en": "Document retention"
+      },
+      "statement": {
+        "fr": "Toute la documentation (documents importants, y compris les documents annulés) est sauvegardée physiquement et électroniquement suivant une procédure écrite approuvée.",
+        "en": "All documentation (important documents, including voided documents) is kept in paper and electronic form according to an approved written procedure."
+      },
+      "levels": [
+        {
+          "fr": "Il n'existe aucune politique écrite approuvée sur la conservation des documents annulés et les documents annulés sont déchiquetés ou détruits -ET- l'organisation ne conserve pas de copies (papier ou électroniques) des dossiers importants au cas où l'original serait perdu ou détruit.",
+          "en": "There is no approved written policy on keeping voided documents, and voided documents are shredded or destroyed -AND- the organisation does not keep copies (paper or electronic) of important records in case the original is lost or destroyed."
+        },
+        {
+          "fr": "Il n'existe aucune politique écrite approuvée sur la conservation des documents annulés et certains documents annulés sont déchiquetés ou détruits -ET- l'organisation conserve parfois des copies (papier ou électroniques) des dossiers importants au cas où l'original serait perdu ou détruit.",
+          "en": "There is no approved written policy on keeping voided documents, and some voided documents are shredded or destroyed -AND- the organisation sometimes keeps copies (paper or electronic) of important records in case the original is lost or destroyed."
+        },
+        {
+          "fr": "Il n'existe aucune politique écrite approuvée sur la conservation des documents annulés, mais les documents annulés sont conservés et non détruits -ET- l'organisation conserve des copies (papier ou électroniques) des dossiers spécifiquement qualifiés d'importants au cas où l'original serait perdu ou détruit.",
+          "en": "There is no approved written policy on keeping voided documents, but voided documents are kept rather than destroyed -AND- the organisation keeps copies (paper or electronic) of records specifically designated as important in case the original is lost or destroyed."
+        },
+        {
+          "fr": "Il existe une politique écrite approuvée sur la conservation des documents annulés et les documents annulés sont conservés et non détruits -ET- l'organisation conserve systématiquement des copies (papier ou électroniques) des dossiers importants au cas où l'original serait perdu ou détruit.",
+          "en": "There is an approved written policy on keeping voided documents, and voided documents are kept rather than destroyed -AND- the organisation systematically keeps copies (paper or electronic) of important records in case the original is lost or destroyed."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une politique d'archivage couvrant les documents annulés et effectuer des sauvegardes électroniques régulières",
+        "en": "Adopt a records retention policy covering voided documents and make regular electronic backups"
+      },
+      "verification": {
+        "fr": "Politique approuvée et journal des sauvegardes",
+        "en": "Approved policy and backup log"
+      }
+    },
+    {
+      "id": "itoca-finance-payroll-segregation",
+      "name": {
+        "fr": "Séparation des tâches de paie",
+        "en": "Payroll segregation of duties"
+      },
+      "statement": {
+        "fr": "Il y a une séparation distincte des tâches dans la préparation et l'approbation des paiements des salaires.",
+        "en": "There is a clear segregation of duties between preparing and approving salary payments."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de séparation des tâches lors de la préparation de la paie et la personne qui prépare la paie est toujours la personne qui approuve ou signe les paiements.",
+          "en": "There is no segregation of duties in payroll preparation, and the person who prepares the payroll is always the person who approves or signs the payments."
+        },
+        {
+          "fr": "L'effectif du personnel ne permet pas une séparation complète des tâches lors de la préparation de la paie et la personne qui prépare la paie est parfois la personne qui approuve ou signe les paiements, mais il n'y a aucun contrôle en place pour pallier cette situation.",
+          "en": "Staff numbers do not allow full segregation of duties in payroll preparation, and the person who prepares the payroll is sometimes the person who approves or signs the payments, but there are no controls in place to compensate for this."
+        },
+        {
+          "fr": "L'effectif du personnel ne permet pas une séparation complète des tâches lors de la préparation de la paie et la personne qui prépare la paie est parfois la personne qui approuve ou signe les paiements, mais il y a des contrôles pour pallier cette situation.",
+          "en": "Staff numbers do not allow full segregation of duties in payroll preparation, and the person who prepares the payroll is sometimes the person who approves or signs the payments, but there are controls to compensate for this."
+        },
+        {
+          "fr": "Il y a séparation des tâches lors de la préparation de la paie et la personne qui prépare la paie n'est pas celle qui approuve ou qui signe les paiements.",
+          "en": "Duties are segregated in payroll preparation, and the person who prepares the payroll is not the person who approves or signs the payments."
+        }
+      ],
+      "action": {
+        "fr": "Confier la préparation, l'approbation et la signature de la paie à des personnes différentes, ou instaurer une revue indépendante",
+        "en": "Assign payroll preparation, approval and signing to different people, or introduce an independent review"
+      },
+      "verification": {
+        "fr": "États de paie visés par un préparateur et un approbateur distincts",
+        "en": "Payroll sheets initialled by separate preparer and approver"
+      }
+    },
+    {
+      "id": "itoca-finance-time-leave-recording",
+      "name": {
+        "fr": "Enregistrement du temps et des congés",
+        "en": "Time and leave recording"
+      },
+      "statement": {
+        "fr": "Une procédure est appliquée systématiquement dans la gestion du personnel pour l'enregistrement du temps de travail, des congés et des absences rémunérées.",
+        "en": "A procedure is systematically applied in staff management to record working time, leave and paid absences."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique pour l'enregistrement des heures travaillées et des absences rémunérées et aucun registre n'est tenu pour chaque employé pour ses heures de travail et ses congés.",
+          "en": "There is no policy for recording hours worked and paid absences, and no record is kept of each employee's working hours and leave."
+        },
+        {
+          "fr": "Il n'y a pas de politique sur l'enregistrement des heures travaillées et des absences rémunérées, et les dossiers ne sont pas tenus de façon uniforme pour chaque employé afin de rendre compte de ses heures de travail et de ses congés.",
+          "en": "There is no policy on recording hours worked and paid absences, and records of each employee's working hours and leave are not kept in a uniform way."
+        },
+        {
+          "fr": "Il n'y a pas de politique sur l'enregistrement des heures travaillées et des absences rémunérées, mais des registres uniformes sont tenus pour chaque employé pour ses heures de travail et ses congés.",
+          "en": "There is no policy on recording hours worked and paid absences, but uniform records of each employee's working hours and leave are kept."
+        },
+        {
+          "fr": "Il existe une politique sur l'enregistrement des heures travaillées et des absences rémunérées. Des dossiers uniformes sont tenus pour chaque employé pour ses heures de travail et ses congés.",
+          "en": "There is a policy on recording hours worked and paid absences. Uniform records of each employee's working hours and leave are kept."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une politique de gestion du temps et des congés et tenir une fiche individuelle d'heures et de congés par employé",
+        "en": "Adopt a time and leave policy and keep an individual record of hours and leave for each employee"
+      },
+      "verification": {
+        "fr": "Politique adoptée et fiches de congés à jour",
+        "en": "Adopted policy and up-to-date leave records"
+      }
+    },
+    {
+      "id": "itoca-finance-timesheets",
+      "name": {
+        "fr": "Feuilles de temps",
+        "en": "Timesheets"
+      },
+      "statement": {
+        "fr": "Les salaires sont payés sur la base de feuilles de temps dûment approuvées par le superviseur immédiat et vérifiées par le responsable financier.",
+        "en": "Salaries are paid on the basis of timesheets duly approved by the line supervisor and checked by the finance officer."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de modèle officiel pour les feuilles de temps et le temps n'est jamais approuvé par un superviseur ni examiné par le département des finances pour en vérifier l'exactitude.",
+          "en": "There is no official timesheet template, and time is never approved by a supervisor or reviewed by the finance department for accuracy."
+        },
+        {
+          "fr": "Il n'y a pas de modèle officiel pour les feuilles de temps et le temps n'est pas toujours approuvé par un superviseur ou examiné par le département des finances pour en vérifier l'exactitude.",
+          "en": "There is no official timesheet template, and time is not always approved by a supervisor or reviewed by the finance department for accuracy."
+        },
+        {
+          "fr": "Il n'y a pas de modèle officiel pour les feuilles de temps, mais tous les employés sont rémunérés en fonction du temps consigné et leur temps est constamment approuvé par un superviseur et examiné par le département des finances pour en vérifier l'exactitude.",
+          "en": "There is no official timesheet template, but all employees are paid according to recorded time, and their time is consistently approved by a supervisor and reviewed by the finance department for accuracy."
+        },
+        {
+          "fr": "Tous les employés sont rémunérés sur la base de feuilles de temps standard. Les feuilles de temps sont régulièrement approuvées par un superviseur et leur exactitude est vérifiée par le département des finances.",
+          "en": "All employees are paid on the basis of standard timesheets. Timesheets are regularly approved by a supervisor and checked for accuracy by the finance department."
+        }
+      ],
+      "action": {
+        "fr": "Introduire un modèle standard de feuille de temps signé par le superviseur et contrôlé par la finance avant la paie",
+        "en": "Introduce a standard timesheet signed by the supervisor and checked by finance before payroll is run"
+      },
+      "verification": {
+        "fr": "Feuilles de temps signées jointes aux états de paie",
+        "en": "Signed timesheets attached to payroll records"
+      }
+    },
+    {
+      "id": "itoca-finance-org-chart-duties",
+      "name": {
+        "fr": "Organigramme et fiches de poste",
+        "en": "Organisation chart and job descriptions"
+      },
+      "statement": {
+        "fr": "Un organigramme, assorti d'une description des rôles et responsabilités, est mis à jour régulièrement.",
+        "en": "An organisation chart, together with a description of roles and responsibilities, is updated regularly."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas d'organigramme ni de descriptions de poste.",
+          "en": "The organisation has no organisation chart or job descriptions."
+        },
+        {
+          "fr": "L'organisation a un organigramme et des descriptions de poste avec une description claire des rôles et responsabilités, mais celles-ci ne sont ni correctes ni à jour.",
+          "en": "The organisation has an organisation chart and job descriptions that clearly describe roles and responsibilities, but they are neither accurate nor up to date."
+        },
+        {
+          "fr": "L'organisation a un organigramme et des descriptions claires des rôles et responsabilités à jour.",
+          "en": "The organisation has an up-to-date organisation chart and clear descriptions of roles and responsibilities."
+        },
+        {
+          "fr": "L'organisation a un organigramme et des descriptions claires des rôles et responsabilités à jour, révisés régulièrement.",
+          "en": "The organisation has an up-to-date organisation chart and clear descriptions of roles and responsibilities, which are reviewed regularly."
+        }
+      ],
+      "action": {
+        "fr": "Actualiser l'organigramme et les fiches de poste, puis programmer leur révision annuelle",
+        "en": "Update the organisation chart and job descriptions, then schedule an annual review"
+      },
+      "verification": {
+        "fr": "Organigramme daté et fiches de poste signées",
+        "en": "Dated organisation chart and signed job descriptions"
+      }
+    },
+    {
+      "id": "itoca-finance-payroll-taxes",
+      "name": {
+        "fr": "Impôts et charges sur salaires",
+        "en": "Payroll taxes and deductions"
+      },
+      "statement": {
+        "fr": "Les impôts, charges sociales et autres retenues sur salaire sont correctement calculés et régulièrement versés aux autorités concernées, avec pièces justificatives.",
+        "en": "Taxes, social security contributions and other payroll deductions are correctly calculated and regularly paid to the relevant authorities, with supporting documents."
+      },
+      "levels": [
+        {
+          "fr": "Les charges sociales et autres retenues à la source ne sont pas correctement calculées conformément aux réglementations ni payées aux autorités concernées. Aucune quittance n'est obtenue ni documentée.",
+          "en": "Social security contributions and other withholdings are not correctly calculated in line with regulations, nor paid to the relevant authorities. No receipts are obtained or filed."
+        },
+        {
+          "fr": "Les charges sociales et autres retenues à la source ne sont pas toujours correctement calculées conformément aux réglementations ni payées aux autorités concernées. Les quittances sont rarement obtenues et documentées.",
+          "en": "Social security contributions and other withholdings are not always correctly calculated in line with regulations, nor paid to the relevant authorities. Receipts are rarely obtained and filed."
+        },
+        {
+          "fr": "Les charges sociales et autres retenues à la source sont en général correctement calculées conformément aux réglementations et versées aux autorités concernées. Des quittances sont obtenues et documentées.",
+          "en": "Social security contributions and other withholdings are generally correctly calculated in line with regulations and paid to the relevant authorities. Receipts are obtained and filed."
+        },
+        {
+          "fr": "Toutes les charges sociales et autres retenues à la source sont correctement calculées conformément aux réglementations et versées aux autorités concernées. Des quittances sont obtenues et documentées.",
+          "en": "All social security contributions and other withholdings are correctly calculated in line with regulations and paid to the relevant authorities. Receipts are obtained and filed."
+        }
+      ],
+      "action": {
+        "fr": "Établir un calendrier des déclarations sociales et fiscales et classer chaque quittance de paiement",
+        "en": "Set up a calendar of payroll tax and social security filings and file every payment receipt"
+      },
+      "verification": {
+        "fr": "Déclarations et quittances de paiement classées",
+        "en": "Filed returns and payment receipts"
+      }
+    },
+    {
+      "id": "itoca-finance-equipment-inventory",
+      "name": {
+        "fr": "Inventaire des équipements",
+        "en": "Equipment inventory"
+      },
+      "statement": {
+        "fr": "Une procédure de gestion des équipements est utilisée pour assurer l'inventaire de tous les équipements financés par différents bailleurs de fonds.",
+        "en": "An equipment management procedure is used to keep an inventory of all equipment funded by different donors."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique de gestion du patrimoine et le personnel n'est pas formé sur la manière d'en assurer le suivi et l'inventaire (ex. véhicule, ordinateur, imprimante, etc.).",
+          "en": "There is no asset management policy, and staff are not trained in how to track and inventory assets (e.g. vehicles, computers, printers, etc.)."
+        },
+        {
+          "fr": "Il n'y a pas de politique de gestion du patrimoine et des équipements (ex. véhicule, ordinateur, imprimante, etc.) utilisés par le personnel pour différentes activités financées par différents bailleurs de fonds, et ni le suivi ni l'inventaire ne sont menés de manière appropriée.",
+          "en": "There is no policy for managing the assets and equipment (e.g. vehicles, computers, printers, etc.) used by staff for activities funded by different donors, and neither tracking nor inventory is carried out properly."
+        },
+        {
+          "fr": "Il n'y a pas de politique de gestion du patrimoine, mais les équipements (ex. véhicule, ordinateur, imprimante, etc.) utilisés pour différentes activités financées par différents bailleurs de fonds font l'objet d'un suivi cohérent et d'un inventaire approprié.",
+          "en": "There is no asset management policy, but the equipment (e.g. vehicles, computers, printers, etc.) used for activities funded by different donors is consistently tracked and properly inventoried."
+        },
+        {
+          "fr": "Il y a une politique de gestion du patrimoine et des équipements (ex. véhicule, ordinateur, imprimante, etc.), et les équipements utilisés pour différentes activités financées par différents bailleurs de fonds font l'objet d'un suivi cohérent et d'un inventaire approprié.",
+          "en": "There is an asset and equipment management policy (e.g. vehicles, computers, printers, etc.), and the equipment used for activities funded by different donors is consistently tracked and properly inventoried."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une politique de gestion des biens et tenir un registre d'inventaire indiquant le bailleur de chaque équipement",
+        "en": "Adopt an asset management policy and keep an inventory register showing the funder of each item"
+      },
+      "verification": {
+        "fr": "Registre d'inventaire à jour et biens étiquetés",
+        "en": "Up-to-date inventory register and tagged assets"
+      }
+    },
+    {
+      "id": "itoca-finance-audit-control",
+      "name": {
+        "fr": "Système d'audit et de contrôle",
+        "en": "Audit and control system"
+      },
+      "statement": {
+        "fr": "Existence d'un système d'audit et de contrôle (interne ou externe).",
+        "en": "An audit and control system (internal or external) is in place."
+      },
+      "levels": [
+        {
+          "fr": "Il n'existe aucun système d'audit et de contrôle.",
+          "en": "There is no audit and control system."
+        },
+        {
+          "fr": "Il existe un système formel d'audit et de contrôle, qui est adopté par l'ensemble du personnel.",
+          "en": "There is a formal audit and control system, adopted by all staff."
+        },
+        {
+          "fr": "Il existe un système formel d'audit et de contrôle, approuvé par l'ensemble du personnel, qui est régulièrement suivi et mis à jour.",
+          "en": "There is a formal audit and control system, endorsed by all staff, which is regularly monitored and updated."
+        },
+        {
+          "fr": "Il existe un système formel d'audit et de contrôle, approuvé par l'ensemble du personnel, qui est régulièrement suivi et mis à jour. Tous les résultats de la vérification et du contrôle et toutes les recommandations sont mis en œuvre.",
+          "en": "There is a formal audit and control system, endorsed by all staff, which is regularly monitored and updated. All audit and control findings and recommendations are implemented."
+        }
+      ],
+      "action": {
+        "fr": "Établir un plan d'audit annuel et un tableau de suivi de la mise en œuvre des recommandations",
+        "en": "Establish an annual audit plan and a tracker for implementing audit recommendations"
+      },
+      "verification": {
+        "fr": "Rapports d'audit et tableau de suivi des recommandations",
+        "en": "Audit reports and recommendation tracker"
+      }
+    },
+    {
+      "id": "itoca-finance-travel-policy",
+      "name": {
+        "fr": "Politique de voyage et per diem",
+        "en": "Travel and per diem policy"
+      },
+      "statement": {
+        "fr": "Une politique de voyage, incluant les per diem et le suivi de l'utilisation des véhicules, est adoptée par l'ensemble du personnel et fréquemment mise à jour.",
+        "en": "A travel policy, covering per diems and the monitoring of vehicle use, is adopted by all staff and updated frequently."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique de voyage incluant les per diem et le suivi de l'utilisation des véhicules dans les différents projets, et il n'y a pas de pratique suivie par le personnel.",
+          "en": "There is no travel policy covering per diems and the monitoring of vehicle use across projects, and staff follow no established practice."
+        },
+        {
+          "fr": "Il n'y a pas de politique de voyage incluant les per diem et le suivi de l'utilisation des véhicules dans les différents projets, et la pratique n'est pas suivie par le personnel de manière cohérente.",
+          "en": "There is no travel policy covering per diems and the monitoring of vehicle use across projects, and staff do not follow practice consistently."
+        },
+        {
+          "fr": "Il n'y a pas de politique de voyage incluant les per diem et le suivi de l'utilisation des véhicules dans les différents projets, mais il y a une pratique suivie par le personnel de manière cohérente.",
+          "en": "There is no travel policy covering per diems and the monitoring of vehicle use across projects, but there is a practice that staff follow consistently."
+        },
+        {
+          "fr": "Il y a une politique de voyage incluant les per diem et le suivi de l'utilisation des véhicules dans les différents projets, et celle-ci est suivie par le personnel de manière cohérente.",
+          "en": "There is a travel policy covering per diems and the monitoring of vehicle use across projects, and staff follow it consistently."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger une politique de voyage fixant les barèmes de per diem et imposer un carnet de bord par véhicule",
+        "en": "Write a travel policy setting per diem rates and require a logbook for each vehicle"
+      },
+      "verification": {
+        "fr": "Politique adoptée et carnets de bord des véhicules",
+        "en": "Adopted policy and vehicle logbooks"
+      }
+    },
+    {
+      "id": "itoca-finance-cost-share",
+      "name": {
+        "fr": "Partage des coûts",
+        "en": "Cost share"
+      },
+      "statement": {
+        "fr": "Les partages de coûts sont vérifiés, documentés et rapportés sur la base d'une politique de partage des coûts à jour.",
+        "en": "Cost share is verified, documented and reported on the basis of an up-to-date cost share policy."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique sur le rapportage du partage des coûts, et les enregistrements ne sont ni maintenus ni vérifiables.",
+          "en": "There is no policy on cost share reporting, and records are neither kept nor verifiable."
+        },
+        {
+          "fr": "Il n'y a pas de politique sur le rapportage du partage des coûts, et le partage des coûts n'a jamais été une obligation pour l'organisation dans le passé.",
+          "en": "There is no policy on cost share reporting, and cost share has never been a requirement for the organisation in the past."
+        },
+        {
+          "fr": "Il n'y a pas de politique sur le rapportage du partage des coûts, mais les enregistrements correspondants sont vérifiés et maintenus de manière régulière.",
+          "en": "There is no policy on cost share reporting, but the related records are regularly verified and kept."
+        },
+        {
+          "fr": "Il y a une politique sur le rapportage du partage des coûts, et tous les enregistrements correspondants sont vérifiés et maintenus de manière régulière.",
+          "en": "There is a policy on cost share reporting, and all related records are regularly verified and kept."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une politique de partage des coûts et tenir un registre des contributions avec pièces justificatives",
+        "en": "Adopt a cost share policy and keep a register of contributions with supporting documents"
+      },
+      "verification": {
+        "fr": "Registre des contributions au partage des coûts",
+        "en": "Cost share contribution register"
+      }
+    }
+  ]
+}

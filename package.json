@@ -2,10 +2,11 @@
   "name": "barometre-gouvernance",
   "version": "0.1.0",
   "private": true,
-  "description": "Baromètre de gouvernance organisationnelle - application web",
+  "description": "Barom\u00e8tre de gouvernance organisationnelle - application web",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "build": "node scripts/build-offline.js"
+    "build": "node scripts/build-offline.js",
+    "build:itoca": "node scripts/build-itoca.js"
   },
   "license": "UNLICENSED"
 }

@@ -18,9 +18,25 @@
   var L = App.L;
   var A = App.actions;
 
-  /** Selected periods, defaulting to the previous and the latest assessment. */
+  /** Model shown on the page: the chosen one if the organisation has it, else the active assessment's model. */
+  function currentModel(org) {
+    var models = App.Models.list().filter(function (m) { return org.assessments.some(function (a) { return a.model === m.id; }); });
+    var ids = models.map(function (m) { return m.id; });
+    var model = ids.indexOf(App.ui.evoModel) >= 0 ? App.ui.evoModel : App.assessment(org).model;
+    F = App.Models.get(model);
+    return { model: model, models: models };
+  }
+
+  function modelSwitch(cm) {
+    if (cm.models.length < 2) return '';
+    return '<div class="segmented no-print" role="group">' + cm.models.map(function (m) {
+      return '<button class="' + (m.id === cm.model ? 'active' : '') + '" data-click="evo-model" data-model="' + m.id + '">' + esc(L(m.shortName)) + '</button>';
+    }).join('') + '</div>';
+  }
+
+  /** Selected periods (same model), defaulting to the previous and the latest assessment. */
   function periods(org) {
-    var list = App.chronological(org);
+    var list = App.chronological(org, currentModel(org).model);
     var ids = list.map(function (a) { return a.id; });
     if (ids.indexOf(App.ui.evoTo) < 0) App.ui.evoTo = ids[ids.length - 1];
     if (ids.indexOf(App.ui.evoFrom) < 0 || App.ui.evoFrom === App.ui.evoTo) {
@@ -56,7 +72,7 @@
       '<th class="center">Δ</th></tr></thead><tbody>';
     html += row('<strong>' + esc(t('results.index')) + '</strong>', function (x) { return x.scores.index; }, 2, true);
     F.PILLARS.forEach(function (p, i) {
-      html += row('<span class="dot" style="background:' + App.PILLAR_COLORS[p.id] + '"></span>' + esc(L(p.name)), function (x) { return x.scores.pillars[i].score; }, 1);
+      html += row('<span class="dot" style="background:' + p.color + '"></span>' + esc(L(p.name)), function (x) { return x.scores.pillars[i].score; }, 1);
     });
     html += row(esc(t('results.total')), function (x) { return x.scores.answered ? x.scores.total : null; }, 0);
     ['maintain', 'opportunity', 'address'].forEach(function (c) {
@@ -72,17 +88,17 @@
   }
 
   function chart(tl, palette) {
-    palette = palette || App.PILLAR_COLORS;
+    var colorKey = palette === 'report' ? 'reportColor' : 'color';
     var labels = tl.map(function (x) { return App.periodShort(x.assessment); });
     var series = [{ label: t('results.index'), color: '#1d2733', width: 3.5, showValues: true, values: tl.map(function (x) { return x.scores.index; }) }];
     F.PILLARS.forEach(function (p, i) {
-      series.push({ label: L(p.shortName), color: palette[p.id], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
+      series.push({ label: L(p.shortName), color: p[colorKey], width: 2, values: tl.map(function (x) { return x.scores.pillars[i].score; }) });
     });
     return App.Charts.lines(series, labels, F.MAX_SCORE, { label: t('evo.chart') });
   }
 
   function itemRow(it) {
-    return '<tr><td>' + esc(L(it.component.name)) + '<br><span class="muted small">' + esc(L(it.pillar.shortName)) + ' · ' + esc(L(it.aspect.name)) + '</span></td>' +
+    return '<tr><td>' + esc(L(it.component.name)) + '<br><span class="muted small">' + esc(App.componentContext(F, it.pillar, it.aspect)) + '</span></td>' +
       '<td class="center nowrap">' + App.levelBadge(it.from) + ' → ' + App.levelBadge(it.to) + '</td>' +
       deltaCell(it.delta, 0) + '</tr>';
   }
@@ -145,9 +161,10 @@
   App.views.evolution = function () {
     var org = App.org();
     var p = periods(org);
+    var cm = currentModel(org);
     var html = '<div class="page-head"><div><h1>' + esc(t('evo.title')) + '</h1><p class="muted">' + esc(App.orgName(org)) + ' — ' +
-      esc(t('evo.count', { n: p.list.length })) + '</p></div>' +
-      '<div class="actions no-print"><button class="btn" data-click="new-assessment">' + esc(t('header.newAssessment')) + '</button>' +
+      esc(L(F.shortName)) + ' — ' + esc(t('evo.count', { n: p.list.length })) + '</p></div>' +
+      '<div class="actions no-print">' + modelSwitch(cm) + '<button class="btn" data-click="new-assessment">' + esc(t('header.newAssessment')) + '</button>' +
       (p.list.length > 1 ? '<button class="btn primary" data-click="report-mode" data-mode="evolution">' + esc(t('evo.toReport')) + '</button>' : '') +
       '</div></div><p class="muted">' + esc(t('evo.intro')) + '</p>';
 
@@ -156,7 +173,7 @@
       return;
     }
 
-    var tl = Evo.timeline(F, p.list, App.settings());
+    var tl = Evo.timeline(F, p.list, App.Models.scoringSettings(F, App.settings()));
     var first = tl[0].scores.index;
     var last = tl[tl.length - 1].scores.index;
     html += '<section class="summary evo-summary">' +
@@ -191,7 +208,7 @@
       App.setView(headHtml + '<div class="notice">' + esc(t('evo.needTwo')) + '</div>');
       return;
     }
-    var tl = Evo.timeline(F, p.list, App.settings());
+    var tl = Evo.timeline(F, p.list, App.Models.scoringSettings(F, App.settings()));
     var first = tl[0].scores.index;
     var last = tl[tl.length - 1].scores.index;
     var ch = Evo.componentChanges(F, p.from.answers, p.to.answers);
@@ -202,7 +219,7 @@
         '<div class="report-meta">' + esc(App.orgName(org)) + (o.acronym ? ' (' + esc(o.acronym) + ')' : '') + '<br>' + esc(range) + '</div></header>';
     }
 
-    var html = headHtml + '<div class="no-print">' + selectors(p) + '</div><div class="report">';
+    var html = headHtml + '<div class="no-print evo-report-controls">' + modelSwitch(currentModel(org)) + selectors(p) + '</div><div class="report">';
 
     html += '<section class="report-page">' +
       '<div class="report-cover"><div class="report-kicker">' + esc(t('app.title')) + '</div>' +
@@ -255,7 +272,14 @@
 
     html += '</div>';
     App.setView(html);
-    document.getElementById('evo-report-chart').appendChild(chart(tl, App.REPORT_COLORS));
+    document.getElementById('evo-report-chart').appendChild(chart(tl, 'report'));
+  };
+
+  A['evo-model'] = function (el) {
+    App.ui.evoModel = el.dataset.model;
+    App.ui.evoFrom = null;
+    App.ui.evoTo = null;
+    App.render();
   };
 
   A['evo-from'] = function (el) { App.ui.evoFrom = el.value; App.render(); };

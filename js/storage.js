@@ -22,7 +22,8 @@
   var MONTHS = 24;
   var STATUSES = ['planned', 'ongoing', 'done'];
   var PLAN_CATEGORIES = ['address', 'opportunity', 'maintain', 'other'];
-  var PROFILE_FIELDS = ['name', 'acronym', 'type', 'region', 'address', 'focalPoint', 'phone', 'email'];
+  var PROFILE_FIELDS = ['name', 'acronym', 'type', 'region', 'founded', 'address', 'focalPoint', 'phone', 'email'];
+  var MODEL_IDS = ['barometer', 'itoca', 'opi'];
   var PRIORITY_VALUES = ['essential', 'important', 'neutral'];
 
   function uid(prefix) {
@@ -64,20 +65,24 @@
       target: str(fields.target),
       priority: PRIORITY_VALUES.indexOf(fields.priority) >= 0 ? fields.priority : '',
       verification: str(fields.verification),
+      followUp: str(fields.followUp),
       status: STATUSES.indexOf(fields.status) >= 0 ? fields.status : 'planned',
       edited: !!fields.edited
     };
   }
 
-  function newAssessment(sequence, year) {
+  function newAssessment(sequence, year, model) {
     return {
       id: uid('a'),
+      model: MODEL_IDS.indexOf(model) >= 0 ? model : 'barometer',
       sequence: sequence || 1,
       year: year || new Date().getFullYear(),
       period: '',
       createdAt: new Date().toISOString(),
       answers: {},
       comments: {},
+      evidence: {},
+      verified: {},
       conclusionNote: '',
       plan: emptyPlan()
     };
@@ -169,7 +174,7 @@
   }
 
   function normalizeAssessment(a) {
-    var base = newAssessment(Number(a.sequence) || 1, Number(a.year) || new Date().getFullYear());
+    var base = newAssessment(Number(a.sequence) || 1, Number(a.year) || new Date().getFullYear(), a.model);
     if (typeof a.id === 'string' && a.id) base.id = a.id;
     base.createdAt = a.createdAt || base.createdAt;
     base.period = /^\d{4}-(0[1-9]|1[0-2])$/.test(a.period || '') ? a.period : '';
@@ -182,6 +187,12 @@
       if (typeof a.comments[k] === 'string') base.comments[k] = a.comments[k];
     });
     base.conclusionNote = str(a.conclusionNote);
+    Object.keys(a.evidence || {}).forEach(function (k) {
+      if (typeof a.evidence[k] === 'string') base.evidence[k] = a.evidence[k];
+    });
+    Object.keys(a.verified || {}).forEach(function (k) {
+      if (a.verified[k] === true) base.verified[k] = true;
+    });
     base.plan = normalizePlan(a.plan);
     return base;
   }
@@ -299,6 +310,7 @@
     STATUSES: STATUSES,
     PLAN_CATEGORIES: PLAN_CATEGORIES,
     PROFILE_FIELDS: PROFILE_FIELDS,
+    MODEL_IDS: MODEL_IDS,
     uid: uid,
     defaultSettings: defaultSettings,
     newWorkspace: newWorkspace,

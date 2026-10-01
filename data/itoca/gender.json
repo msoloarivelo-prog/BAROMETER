@@ -1,0 +1,383 @@
+{
+  "id": "itoca-gender",
+  "name": {
+    "fr": "Genre, inclusion sociale et jeunes",
+    "en": "Gender, social inclusion and youth"
+  },
+  "shortName": {
+    "fr": "Genre et jeunes",
+    "en": "Gender & youth"
+  },
+  "items": [
+    {
+      "id": "itoca-gender-women-youth-cso-advocacy",
+      "name": {
+        "fr": "Plaidoyer des OSC de femmes/jeunes",
+        "en": "Women and youth CSO advocacy"
+      },
+      "statement": {
+        "fr": "L'organisation a formulé une politique d'influence formelle en lien avec l'intervention foncière (activités sur le terrain).",
+        "en": "The organisation has formulated a formal influencing policy related to its land interventions (field activities)."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et écrite pour renforcer les OSC de femmes et de jeunes afin de plaider en faveur de l'application des lois liées au trafic illégal et à la spoliation dans le secteur minier et les autres secteurs.",
+          "en": "The organisation has no clearly defined, written strategy to strengthen women's and youth CSOs to advocate for the enforcement of laws on illegal trafficking and spoliation in the mining sector and other sectors."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie clairement définie et écrite pour renforcer les OSC de femmes et de jeunes afin de plaider en faveur de l'application de la loi dans les domaines du trafic illégal et de la spoliation des ressources naturelles, de l'exploitation minière, etc.",
+          "en": "The organisation has a clearly defined, written strategy to strengthen women's and youth CSOs to advocate for law enforcement on illegal trafficking and spoliation of natural resources, mining, etc."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie et de plans d'action complets pour renforcer les OSC de femmes et de jeunes afin de plaider en faveur de l'application de la loi dans les domaines du trafic illégal et de la spoliation des ressources naturelles, etc.",
+          "en": "The organisation has a comprehensive strategy and action plans to strengthen women's and youth CSOs to advocate for law enforcement on illegal trafficking and spoliation of natural resources, etc."
+        },
+        {
+          "fr": "Des activités de plaidoyer sont menées pour s'assurer que les OSC de femmes et de jeunes plaident en faveur de l'application des lois liées au trafic illégal et à la spoliation des ressources naturelles, à l'exploitation minière, etc.",
+          "en": "Advocacy activities are carried out to ensure that women's and youth CSOs advocate for the enforcement of laws on illegal trafficking and spoliation of natural resources, mining, etc."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer une stratégie écrite de renforcement des OSC de femmes et de jeunes pour le plaidoyer sur l'application de la loi",
+        "en": "Develop a written strategy to strengthen women's and youth CSOs to advocate for law enforcement"
+      },
+      "verification": {
+        "fr": "Stratégie adoptée et liste des OSC appuyées",
+        "en": "Adopted strategy and list of CSOs supported"
+      }
+    },
+    {
+      "id": "itoca-gender-organisational-policies",
+      "name": {
+        "fr": "Genre dans les politiques internes",
+        "en": "Gender in organisational policies"
+      },
+      "statement": {
+        "fr": "L'organisation prend en compte l'intégration du genre dans ses politiques.",
+        "en": "The organisation considers gender mainstreaming in its policies."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et écrite pour les considérations de genre dans les politiques organisationnelles (par exemple, recrutement, promotion professionnelle, etc.).",
+          "en": "The organisation has no clearly defined, written strategy for gender considerations in organisational policies (e.g. recruitment, career advancement, etc.)."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie clairement définie et écrite pour les considérations de genre dans les politiques organisationnelles.",
+          "en": "The organisation has a clearly defined, written strategy for gender considerations in organisational policies."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie et de plans d'action complets pour la prise en compte des questions de genre dans ses politiques.",
+          "en": "The organisation has a comprehensive strategy and action plans for addressing gender issues in its policies."
+        },
+        {
+          "fr": "L'organisation met en œuvre des politiques organisationnelles cohérentes et les actualise en tenant compte de la dimension de genre.",
+          "en": "The organisation implements consistent organisational policies and updates them taking the gender dimension into account."
+        }
+      ],
+      "action": {
+        "fr": "Réviser les politiques de recrutement et de promotion pour y intégrer des critères explicites d'égalité de genre",
+        "en": "Revise recruitment and promotion policies to include explicit gender equality criteria"
+      },
+      "verification": {
+        "fr": "Politiques révisées et approuvées",
+        "en": "Revised and approved policies"
+      }
+    },
+    {
+      "id": "itoca-gender-administration",
+      "name": {
+        "fr": "Genre dans l'administration",
+        "en": "Gender in administrative functions"
+      },
+      "statement": {
+        "fr": "L'organisation prend en compte l'intégration de la dimension de genre dans les fonctions administratives.",
+        "en": "The organisation considers gender mainstreaming in its administrative functions."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et écrite en ce qui concerne les considérations de genre dans les fonctions administratives (par exemple, le même grade et le même salaire pour les hommes et les femmes pour le même travail).",
+          "en": "The organisation has no clearly defined, written strategy on gender considerations in administrative functions (e.g. the same grade and the same pay for men and women for the same work)."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie clairement définie et écrite pour les considérations de genre dans les fonctions administratives.",
+          "en": "The organisation has a clearly defined, written strategy for gender considerations in administrative functions."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie globale et de plans d'action pour la prise en compte des questions de genre dans les fonctions administratives.",
+          "en": "The organisation has an overall strategy and action plans for addressing gender issues in administrative functions."
+        },
+        {
+          "fr": "L'organisation dispose de l'infrastructure organisationnelle nécessaire pour actualiser en permanence sa stratégie et ses plans d'action en matière de considérations de genre.",
+          "en": "The organisation has the organisational infrastructure needed to continuously update its strategy and action plans on gender considerations."
+        }
+      ],
+      "action": {
+        "fr": "Réaliser un audit d'équité des grades et salaires entre femmes et hommes et corriger les écarts constatés",
+        "en": "Conduct a gender equity audit of grades and pay and correct any gaps found"
+      },
+      "verification": {
+        "fr": "Rapport d'audit et grille salariale révisée",
+        "en": "Audit report and revised salary scale"
+      }
+    },
+    {
+      "id": "itoca-gender-institutional-culture",
+      "name": {
+        "fr": "Genre et culture institutionnelle",
+        "en": "Gender in institutional culture"
+      },
+      "statement": {
+        "fr": "L'organisation envisage l'intégration de la dimension de genre dans sa culture institutionnelle.",
+        "en": "The organisation considers gender mainstreaming in its institutional culture."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et écrite pour les considérations de genre dans sa culture institutionnelle (par exemple, la non-discrimination).",
+          "en": "The organisation has no clearly defined, written strategy for gender considerations in its institutional culture (e.g. non-discrimination)."
+        },
+        {
+          "fr": "L'organisation a une stratégie clairement définie et écrite pour les considérations de genre dans sa culture institutionnelle.",
+          "en": "The organisation has a clearly defined, written strategy for gender considerations in its institutional culture."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie et de plans d'action complets pour la prise en compte des sexospécificités dans sa culture institutionnelle.",
+          "en": "The organisation has a comprehensive strategy and action plans for addressing gender-specific issues in its institutional culture."
+        },
+        {
+          "fr": "L'organisation a la culture institutionnelle nécessaire pour actualiser continuellement sa stratégie et ses plans d'action en matière d'égalité des sexes.",
+          "en": "The organisation has the institutional culture needed to continuously update its strategy and action plans on gender equality."
+        }
+      ],
+      "action": {
+        "fr": "Adopter une charte de non-discrimination et former l'ensemble du personnel à l'égalité de genre",
+        "en": "Adopt a non-discrimination charter and train all staff on gender equality"
+      },
+      "verification": {
+        "fr": "Charte signée et listes de présence aux formations",
+        "en": "Signed charter and training attendance lists"
+      }
+    },
+    {
+      "id": "itoca-gender-intervention-design",
+      "name": {
+        "fr": "Genre dans la conception des interventions",
+        "en": "Gender in intervention design"
+      },
+      "statement": {
+        "fr": "L'organisation prend en compte l'intégration du genre dans la conception des interventions.",
+        "en": "The organisation considers gender mainstreaming in the design of its interventions."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et écrite pour faire participer les femmes et les jeunes à la conception des interventions et pour tenir compte des besoins des femmes et des jeunes dès le début des interventions.",
+          "en": "The organisation has no clearly defined, written strategy to involve women and youth in intervention design and to take their needs into account from the start of interventions."
+        },
+        {
+          "fr": "L'organisation a une stratégie clairement définie et écrite pour faire participer les femmes et les jeunes à la conception des interventions.",
+          "en": "The organisation has a clearly defined, written strategy to involve women and youth in intervention design."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie et de plans d'action complets pour impliquer les femmes et les jeunes lors de la conception des interventions.",
+          "en": "The organisation has a comprehensive strategy and action plans to involve women and youth in intervention design."
+        },
+        {
+          "fr": "L'organisation met en œuvre sa stratégie et ses plans d'action pour impliquer les femmes et les jeunes lors de la conception des interventions.",
+          "en": "The organisation implements its strategy and action plans to involve women and youth in intervention design."
+        }
+      ],
+      "action": {
+        "fr": "Consulter systématiquement les femmes et les jeunes lors de l'analyse des besoins et de la conception des projets",
+        "en": "Systematically consult women and youth during needs assessment and project design"
+      },
+      "verification": {
+        "fr": "Comptes rendus de consultation et documents de projet",
+        "en": "Consultation reports and project documents"
+      }
+    },
+    {
+      "id": "itoca-gender-implementation",
+      "name": {
+        "fr": "Genre dans la mise en œuvre",
+        "en": "Gender in implementation"
+      },
+      "statement": {
+        "fr": "L'organisation met en œuvre des stratégies d'intégration du genre pour prendre en compte les besoins des femmes et des jeunes au cours de ses interventions.",
+        "en": "The organisation implements gender mainstreaming strategies to address the needs of women and youth during its interventions."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de stratégie clairement définie et écrite pour faire participer les femmes et les jeunes à la mise en œuvre des interventions.",
+          "en": "The organisation has no clearly defined, written strategy to involve women and youth in implementing interventions."
+        },
+        {
+          "fr": "L'organisation a une stratégie clairement définie et écrite pour impliquer les femmes et les jeunes dans la mise en œuvre des interventions.",
+          "en": "The organisation has a clearly defined, written strategy to involve women and youth in implementing interventions."
+        },
+        {
+          "fr": "L'organisation dispose d'une stratégie et de plans d'action complets pour faire participer les femmes et les jeunes à la mise en œuvre des interventions.",
+          "en": "The organisation has a comprehensive strategy and action plans to involve women and youth in implementing interventions."
+        },
+        {
+          "fr": "L'organisation met en œuvre et actualise continuellement sa stratégie et ses plans d'action pour impliquer les femmes et les jeunes dans la mise en œuvre des interventions.",
+          "en": "The organisation implements and continuously updates its strategy and action plans to involve women and youth in implementing interventions."
+        }
+      ],
+      "action": {
+        "fr": "Fixer des cibles de participation des femmes et des jeunes dans les activités et comités de projet",
+        "en": "Set participation targets for women and youth in project activities and committees"
+      },
+      "verification": {
+        "fr": "Données de participation ventilées par sexe et âge",
+        "en": "Participation data disaggregated by sex and age"
+      }
+    },
+    {
+      "id": "itoca-gender-indicators",
+      "name": {
+        "fr": "Indicateurs de genre",
+        "en": "Gender indicators"
+      },
+      "statement": {
+        "fr": "L'organisation élabore et suit des indicateurs de genre.",
+        "en": "The organisation develops and monitors gender indicators."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas d'indicateurs de genre à suivre et à évaluer pendant les interventions.",
+          "en": "The organisation has no gender indicators to monitor and evaluate during interventions."
+        },
+        {
+          "fr": "L'organisation a identifié des indicateurs de genre à suivre et à évaluer pendant les interventions.",
+          "en": "The organisation has identified gender indicators to monitor and evaluate during interventions."
+        },
+        {
+          "fr": "L'organisation développe un plan de suivi-évaluation, de rapportage et d'apprentissage pour suivre et évaluer les indicateurs clés de genre.",
+          "en": "The organisation develops a monitoring, evaluation, reporting and learning plan to track and evaluate key gender indicators."
+        },
+        {
+          "fr": "L'organisation met en œuvre et met à jour continuellement le plan de suivi-évaluation, de rapportage et d'apprentissage pour suivre et évaluer les indicateurs clés de genre.",
+          "en": "The organisation implements and continuously updates the monitoring, evaluation, reporting and learning plan to track and evaluate key gender indicators."
+        }
+      ],
+      "action": {
+        "fr": "Intégrer des indicateurs sensibles au genre et des données ventilées par sexe et âge dans le plan de suivi-évaluation",
+        "en": "Integrate gender-sensitive indicators and sex- and age-disaggregated data into the M&E plan"
+      },
+      "verification": {
+        "fr": "Plan de suivi-évaluation révisé",
+        "en": "Revised M&E plan"
+      }
+    },
+    {
+      "id": "itoca-gender-capacity-bailiffs",
+      "name": {
+        "fr": "Capacités : appui aux huissiers",
+        "en": "Capacity: support to bailiffs"
+      },
+      "statement": {
+        "fr": "L'organisation a les compétences pour former et accompagner les huissiers de justice dans l'application de la loi visant à protéger les paysages terrestres et marins.",
+        "en": "The organisation has the skills to train and support bailiffs (court officers) in enforcing the law to protect land and seascapes."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas les compétences nécessaires pour former les huissiers de justice à faire appliquer la loi pour protéger les paysages terrestres et marins.",
+          "en": "The organisation does not have the skills needed to train bailiffs to enforce the law to protect land and seascapes."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour former les huissiers de justice à l'application de la loi en matière de protection des paysages terrestres et marins.",
+          "en": "The organisation has the skills needed to train bailiffs in enforcing the law on the protection of land and seascapes."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour aider les huissiers de justice à faire respecter la loi afin de protéger les paysages terrestres et marins.",
+          "en": "The organisation has the skills needed to help bailiffs enforce the law to protect land and seascapes."
+        },
+        {
+          "fr": "L'organisation accompagne et conseille les huissiers de justice dans l'application de la loi afin de protéger les paysages terrestres et marins et de signaler les cas.",
+          "en": "The organisation supports and advises bailiffs in enforcing the law to protect land and seascapes and to report cases."
+        }
+      ],
+      "action": {
+        "fr": "Concevoir un module de formation en droit environnemental et former un premier groupe d'huissiers de justice",
+        "en": "Design an environmental law training module and train a first cohort of bailiffs"
+      },
+      "verification": {
+        "fr": "Module de formation et listes de participants",
+        "en": "Training module and participant lists"
+      }
+    },
+    {
+      "id": "itoca-gender-capacity-community-reporting",
+      "name": {
+        "fr": "Capacités : signalement communautaire",
+        "en": "Capacity: community crime reporting"
+      },
+      "statement": {
+        "fr": "L'organisation a les compétences pour renforcer la capacité des communautés à signaler les crimes liés aux ressources naturelles.",
+        "en": "The organisation has the skills to strengthen communities' capacity to report natural resource crimes."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas les compétences nécessaires pour renforcer la capacité de la communauté à signaler les crimes liés aux ressources naturelles.",
+          "en": "The organisation does not have the skills needed to strengthen the community's capacity to report natural resource crimes."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour renforcer la capacité de la communauté à signaler les crimes liés aux ressources naturelles.",
+          "en": "The organisation has the skills needed to strengthen the community's capacity to report natural resource crimes."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour aider la communauté à signaler les crimes liés aux ressources naturelles.",
+          "en": "The organisation has the skills needed to help the community report natural resource crimes."
+        },
+        {
+          "fr": "L'organisation accompagne la communauté pour rapporter les crimes liés aux ressources naturelles.",
+          "en": "The organisation supports the community in reporting natural resource crimes."
+        }
+      ],
+      "action": {
+        "fr": "Mettre en place avec les communautés un mécanisme simple et sécurisé de signalement des crimes liés aux ressources naturelles",
+        "en": "Set up with communities a simple, safe mechanism for reporting natural resource crimes"
+      },
+      "verification": {
+        "fr": "Mécanisme opérationnel et registre des signalements",
+        "en": "Operational mechanism and log of reports"
+      }
+    },
+    {
+      "id": "itoca-gender-capacity-women-youth-associations",
+      "name": {
+        "fr": "Capacités : associations de femmes et jeunes",
+        "en": "Capacity: women's and youth associations"
+      },
+      "statement": {
+        "fr": "L'organisation a les compétences pour former et accompagner les associations de femmes et de jeunes dans le plaidoyer pour la gestion des ressources naturelles.",
+        "en": "The organisation has the skills to train and support women's and youth associations in advocating for natural resource management."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas les compétences nécessaires pour former les associations de femmes et de jeunes à défendre la gestion des ressources naturelles.",
+          "en": "The organisation does not have the skills needed to train women's and youth associations to advocate for natural resource management."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour former les associations de femmes et de jeunes qui participent à la défense de la gestion des ressources naturelles.",
+          "en": "The organisation has the skills needed to train women's and youth associations involved in advocating for natural resource management."
+        },
+        {
+          "fr": "L'organisation possède les compétences nécessaires pour soutenir les associations de femmes et de jeunes qui participent à la défense de la gestion des ressources naturelles.",
+          "en": "The organisation has the skills needed to support women's and youth associations involved in advocating for natural resource management."
+        },
+        {
+          "fr": "L'organisation accompagne et conseille les associations de femmes et de jeunes qui participent et promeuvent le plaidoyer pour défendre la gestion des ressources naturelles.",
+          "en": "The organisation supports and advises women's and youth associations that take part in and promote advocacy for natural resource management."
+        }
+      ],
+      "action": {
+        "fr": "Former les associations de femmes et de jeunes au plaidoyer sur la gestion des ressources naturelles, puis assurer un coaching",
+        "en": "Train women's and youth associations in natural resource management advocacy, followed by coaching"
+      },
+      "verification": {
+        "fr": "Rapports de formation et plans de plaidoyer des associations",
+        "en": "Training reports and associations' advocacy plans"
+      }
+    }
+  ]
+}

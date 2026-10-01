@@ -1,0 +1,235 @@
+{
+  "id": "itoca-advocacy",
+  "name": {
+    "fr": "Plaidoyer",
+    "en": "Advocacy"
+  },
+  "shortName": {
+    "fr": "Plaidoyer",
+    "en": "Advocacy"
+  },
+  "items": [
+    {
+      "id": "itoca-advocacy-leadership",
+      "name": {
+        "fr": "Leadership en plaidoyer",
+        "en": "Advocacy leadership"
+      },
+      "statement": {
+        "fr": "Le leadership de l'organisation en matière de plaidoyer est reconnu par les communautés et accepté par certains décideurs.",
+        "en": "The organisation's advocacy leadership is recognised by communities and accepted by some decision-makers."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a pas de problème identifié ou ne peut plaider que pour un seul groupe.",
+          "en": "The organisation has no identified issue or can advocate for only one group."
+        },
+        {
+          "fr": "L'organisation a identifié un problème et plaide auprès d'une variété de partenaires possibles en utilisant un seul mécanisme.",
+          "en": "The organisation has identified an issue and advocates to a variety of potential partners using a single mechanism."
+        },
+        {
+          "fr": "L'organisation plaide en faveur d'une question d'une importance vitale, de manière cohérente avec les différents partenaires possibles, par le biais de multiples mécanismes (visites sur site, communication régulière, collecte de données, etc.) illustrant le besoin réel.",
+          "en": "The organisation advocates on an issue of vital importance, consistently with the various potential partners, through multiple mechanisms (site visits, regular communication, data collection, etc.) that illustrate the real need."
+        },
+        {
+          "fr": "L'organisation a le mandat des bénéficiaires et plaide auprès des donateurs, du gouvernement et des autorités traditionnelles au nom des communautés qu'elle dessert. Il existe des possibilités d'action efficace et au moins quelques décideurs sont réceptifs.",
+          "en": "The organisation holds a mandate from its beneficiaries and advocates with donors, government and traditional authorities on behalf of the communities it serves. There are opportunities for effective action and at least some decision-makers are receptive."
+        }
+      ],
+      "action": {
+        "fr": "Cartographier les décideurs clés et tenir des rencontres de plaidoyer régulières, appuyées par un mandat écrit des communautés",
+        "en": "Map key decision-makers and hold regular advocacy meetings backed by a written mandate from communities"
+      },
+      "verification": {
+        "fr": "Cartographie des acteurs, mandat écrit et comptes rendus de rencontres",
+        "en": "Stakeholder map, written mandate and meeting minutes"
+      }
+    },
+    {
+      "id": "itoca-advocacy-evidence-based-policy",
+      "name": {
+        "fr": "Plaidoyer fondé sur les données",
+        "en": "Evidence-based policy influence"
+      },
+      "statement": {
+        "fr": "L'organisation applique une approche axée sur l'information et les données pour influencer l'élaboration des politiques.",
+        "en": "The organisation applies an information- and data-driven approach to influence policy-making."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne formule pas ou n'influence pas la politique.",
+          "en": "The organisation does not formulate or influence policy."
+        },
+        {
+          "fr": "L'organisation formule la politique, mais la politique préconisée n'existe pas par écrit.",
+          "en": "The organisation formulates policy, but the policy it advocates does not exist in writing."
+        },
+        {
+          "fr": "L'organisation influence la politique et a une position politique claire, présentée de manière convaincante, articulée et documentée.",
+          "en": "The organisation influences policy and has a clear policy position that is presented convincingly, well articulated and documented."
+        },
+        {
+          "fr": "L'organisation influe sur les politiques et sa justification de la politique est cohérente, convaincante et utilise des informations collectées ; la présentation de la position politique utilise des formats attractifs et efficaces, tels que des graphiques.",
+          "en": "The organisation influences policies and its policy rationale is coherent, convincing and uses collected information; the policy position is presented in attractive and effective formats, such as graphics."
+        }
+      ],
+      "action": {
+        "fr": "Produire pour chaque thème de plaidoyer une note de position appuyée sur des données collectées et des graphiques",
+        "en": "Produce a policy brief for each advocacy issue, backed by collected data and graphics"
+      },
+      "verification": {
+        "fr": "Notes de position publiées et diffusées",
+        "en": "Published and circulated policy briefs"
+      }
+    },
+    {
+      "id": "itoca-advocacy-strategy-resources",
+      "name": {
+        "fr": "Stratégie et ressources de plaidoyer",
+        "en": "Advocacy strategy and resources"
+      },
+      "statement": {
+        "fr": "L'organisation a une stratégie de plaidoyer appliquée et conforme à des normes communes.",
+        "en": "The organisation has an advocacy strategy that is applied and follows common standards."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne recueille pas ou n'alloue pas de contributions des membres, des citoyens intéressés et/ou d'autres organisations à la question.",
+          "en": "The organisation does not collect or allocate contributions from members, interested citizens and/or other organisations to the issue."
+        },
+        {
+          "fr": "L'organisation collecte les contributions de ses membres, des citoyens intéressés et/ou d'autres organisations, mais ne les affecte pas à la question du plaidoyer.",
+          "en": "The organisation collects contributions from its members, interested citizens and/or other organisations, but does not allocate them to the advocacy issue."
+        },
+        {
+          "fr": "L'organisation collecte et alloue des ressources financières ou autres à la question, mais uniquement au sein de l'organisation.",
+          "en": "The organisation collects and allocates financial or other resources to the issue, but only within the organisation."
+        },
+        {
+          "fr": "L'organisation a identifié des bénévoles et des organismes internationaux ayant des intérêts dans la question et utilise leurs procédures de demande et de réception de soutien financier.",
+          "en": "The organisation has identified volunteers and international bodies with an interest in the issue and is using their procedures to apply for and receive financial support."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer un plan de mobilisation de ressources dédié au plaidoyer, ciblant membres, bénévoles et partenaires internationaux",
+        "en": "Develop an advocacy resource mobilisation plan targeting members, volunteers and international partners"
+      },
+      "verification": {
+        "fr": "Plan de mobilisation et ligne budgétaire de plaidoyer",
+        "en": "Mobilisation plan and advocacy budget line"
+      }
+    },
+    {
+      "id": "itoca-advocacy-strategic-alliances",
+      "name": {
+        "fr": "Alliances stratégiques",
+        "en": "Strategic alliances"
+      },
+      "statement": {
+        "fr": "L'organisation construit des alliances stratégiques pour travailler ensemble sur des plans ou des questions conjoints ou coordonnés.",
+        "en": "The organisation builds strategic alliances to work together on joint or coordinated plans or issues."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation a identifié d'autres groupes et personnes ayant des intérêts sur la ou les questions identifiées, mais ne les a pas persuadés de s'y intéresser ou d'agir (peut inclure les organismes gouvernementaux qui partagent ces préoccupations).",
+          "en": "The organisation has identified other groups and individuals with an interest in the identified issue(s), but has not persuaded them to take an interest or act (may include government bodies that share these concerns)."
+        },
+        {
+          "fr": "L'organisation a identifié d'autres groupes et personnes ayant des intérêts sur la ou les questions identifiées et a persuadé certains de s'y intéresser (au moins cinq membres de l'organisation).",
+          "en": "The organisation has identified other groups and individuals with an interest in the identified issue(s) and has persuaded some of them to take an interest (at least five members of the organisation)."
+        },
+        {
+          "fr": "L'organisation a identifié d'autres groupes et personnes ayant des intérêts concernant la question identifiée, a convenu avec eux d'un ordre du jour commun et a formé une coalition ou un groupe de travail (plus de 10 membres de l'organisation).",
+          "en": "The organisation has identified other groups and individuals with an interest in the identified issue, has agreed a common agenda with them and has formed a coalition or working group (more than 10 members of the organisation)."
+        },
+        {
+          "fr": "L'organisation a activé ou formé une coalition, tient des réunions, identifie des intérêts communs, partage des ressources et met en œuvre des plans d'action conjoints ou coordonnés élaborés ensemble.",
+          "en": "The organisation has activated or formed a coalition, holds meetings, identifies common interests, shares resources and implements joint or coordinated action plans developed together."
+        }
+      ],
+      "action": {
+        "fr": "Formaliser une coalition par un protocole d'accord et un plan d'action conjoint, avec des réunions régulières",
+        "en": "Formalise a coalition through a memorandum of understanding and a joint action plan, with regular meetings"
+      },
+      "verification": {
+        "fr": "Protocole d'accord signé et comptes rendus de réunions",
+        "en": "Signed MoU and meeting minutes"
+      }
+    },
+    {
+      "id": "itoca-advocacy-information-outreach",
+      "name": {
+        "fr": "Information et communication",
+        "en": "Information management and outreach"
+      },
+      "statement": {
+        "fr": "L'organisation dispose d'une stratégie claire de gestion de l'information et des connaissances pour partager ses positions stratégiques avec des partenaires clés.",
+        "en": "The organisation has a clear information and knowledge management strategy (IKMS) in place to share strategic positions with key partners."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne génère pas de communiqués de presse et ne tient pas de réunions publiques.",
+          "en": "The organisation does not issue press releases or hold public meetings."
+        },
+        {
+          "fr": "L'organisation génère des communiqués de presse et organise uniquement des réunions publiques.",
+          "en": "The organisation issues press releases and only organises public meetings."
+        },
+        {
+          "fr": "L'organisation génère des communiqués de presse, organise des réunions publiques et encourage les membres/citoyens à prendre les mesures appropriées, comme écrire des lettres aux législateurs.",
+          "en": "The organisation issues press releases, organises public meetings and encourages members/citizens to take appropriate action, such as writing letters to legislators."
+        },
+        {
+          "fr": "L'organisation milite activement pour la position politique, rédige et fait circuler une législation modèle auprès des législateurs et utilise les médias (radio, TV, Twitter, Facebook, blogs, etc.) pour promouvoir des campagnes de plaidoyer basées sur les intérêts communs des coalitions.",
+          "en": "The organisation actively campaigns for the policy position, drafts and circulates model legislation to legislators and uses the media (radio, TV, Twitter, Facebook, blogs, etc.) to promote advocacy campaigns based on the common interests of coalitions."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer un plan de communication de plaidoyer définissant messages clés, publics cibles et canaux médias",
+        "en": "Develop an advocacy communication plan defining key messages, target audiences and media channels"
+      },
+      "verification": {
+        "fr": "Plan de communication et supports diffusés",
+        "en": "Communication plan and disseminated materials"
+      }
+    },
+    {
+      "id": "itoca-advocacy-policy-monitoring",
+      "name": {
+        "fr": "Suivi des décisions adoptées",
+        "en": "Monitoring of adopted decisions"
+      },
+      "statement": {
+        "fr": "L'organisation dispose d'un mécanisme clair pour examiner et surveiller régulièrement les résultats de toutes les décisions légales au niveau public.",
+        "en": "The organisation has a clear mechanism to regularly review and monitor the outcomes of all legal decisions at public level."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'envisage pas de surveiller la mise en œuvre d'une loi, d'une politique ou d'une décision de justice nouvellement adoptée.",
+          "en": "The organisation does not plan to monitor the implementation of a newly adopted law, policy or court decision."
+        },
+        {
+          "fr": "L'organisation a un plan pour surveiller la mise en œuvre d'une loi, d'une politique ou d'une décision de justice nouvellement adoptée, mais la surveille de manière ad hoc.",
+          "en": "The organisation has a plan to monitor the implementation of a newly adopted law, policy or court decision, but monitors it on an ad hoc basis."
+        },
+        {
+          "fr": "L'organisation surveille la mise en œuvre d'une loi, d'une politique ou d'une décision judiciaire récemment adoptée ; du temps du personnel et des ressources sont alloués pour s'assurer que cela est fait, et l'organisation peut partager au moins deux exemples de ses efforts de surveillance.",
+          "en": "The organisation monitors the implementation of a recently adopted law, policy or court decision; staff time and resources are allocated to ensure this is done, and the organisation can share at least two examples of its monitoring efforts."
+        },
+        {
+          "fr": "L'organisation maintient un niveau minimal de méthodes de plaidoyer pour profiter de la prochaine occasion de faire pression sur la question avec une approche reformulée si elle est adoptée et, si elle n'est pas adoptée, continue à sensibiliser et à intéresser le public à la question surveillée, afin de rechercher les occasions de créer ou de renouveler un sentiment d'urgence sur cette question.",
+          "en": "The organisation maintains a minimum level of advocacy activity to seize the next opportunity to press the issue with a reformulated approach if it is adopted and, if it is not adopted, continues to raise public awareness of and interest in the monitored issue, seeking opportunities to create or renew a sense of urgency around it."
+        }
+      ],
+      "action": {
+        "fr": "Tenir un tableau de suivi de la mise en œuvre des lois et décisions ciblées, avec un responsable et des ressources dédiés",
+        "en": "Set up a tracker for the implementation of targeted laws and decisions, with a designated focal person and resources"
+      },
+      "verification": {
+        "fr": "Tableau de suivi à jour et rapports de suivi",
+        "en": "Up-to-date tracker and monitoring reports"
+      }
+    }
+  ]
+}

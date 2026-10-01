@@ -1,0 +1,457 @@
+{
+  "id": "itoca-award",
+  "name": {
+    "fr": "Gestion financière des subventions et des programmes",
+    "en": "Award and programme financial management"
+  },
+  "shortName": {
+    "fr": "Gestion des subventions",
+    "en": "Award management"
+  },
+  "items": [
+    {
+      "id": "itoca-award-donor-rules-knowledge",
+      "name": {
+        "fr": "Maîtrise des règles des bailleurs",
+        "en": "Knowledge of donor rules"
+      },
+      "statement": {
+        "fr": "Tout le personnel du projet a une bonne compréhension de la gestion des subventions ainsi que les compétences nécessaires pour respecter les règles de financement.",
+        "en": "All project staff have a good understanding of grant management and the skills needed to comply with funding rules."
+      },
+      "levels": [
+        {
+          "fr": "En général, les employés qui travaillent sur des projets financés par des donateurs ne connaissent pas ou ne sont pas bien informés des modalités, conditions et politiques de financement particulières.",
+          "en": "In general, employees working on donor-funded projects do not know, or are not well informed about, the specific funding terms, conditions and policies."
+        },
+        {
+          "fr": "Les documents de cadrage sont disponibles pour examen par le personnel travaillant sur des projets financés par des donateurs afin que ce dernier puisse se familiariser avec les modalités de subvention/contrat spécifiques, les conditions et les politiques des bailleurs de fonds. Toutefois, aucune formation n'a été conduite.",
+          "en": "Framework documents are available for review by staff working on donor-funded projects so that they can become familiar with the specific grant/contract terms, conditions and donor policies. However, no training has been conducted."
+        },
+        {
+          "fr": "Seul le personnel impliqué dans les budgets, les subventions et la conformité des projets financés par les donateurs est familiarisé avec les modalités, conditions et politiques de financement spécifiques des subventions/financements, ou bien informé de celles-ci.",
+          "en": "Only staff involved in the budgets, grants and compliance of donor-funded projects are familiar with, or well informed about, the specific terms, conditions and policies of the grants/funding."
+        },
+        {
+          "fr": "Tous les membres du personnel qui travaillent sur des projets financés par des donateurs sont familiarisés avec les modalités, les conditions et les politiques des bailleurs de fonds et des programmes de financement, et il y a des formations régulières (recyclage, mise à jour).",
+          "en": "All staff working on donor-funded projects are familiar with the terms, conditions and policies of the donors and funding programmes, and there is regular training (refreshers, updates)."
+        }
+      ],
+      "action": {
+        "fr": "Organiser au démarrage de chaque subvention une séance d'orientation sur les règles du bailleur pour tout le personnel du projet",
+        "en": "Hold a briefing on the donor's rules for all project staff at the start of each award"
+      },
+      "verification": {
+        "fr": "Listes de présence et supports de la séance",
+        "en": "Attendance lists and briefing materials"
+      }
+    },
+    {
+      "id": "itoca-award-project-cost-allocation",
+      "name": {
+        "fr": "Imputation des dépenses par projet",
+        "en": "Project cost allocation"
+      },
+      "statement": {
+        "fr": "Le système de gestion financière utilisé permet une imputation spécifique des dépenses à chaque projet concerné.",
+        "en": "The financial management system in use allows expenses to be charged specifically to each relevant project."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a aucun contrôle sur les fonds reçus pour des projets et/ou activités spécifiques, et les fonds d'un projet sont utilisés pour couvrir le manque à gagner d'un autre projet.",
+          "en": "There is no control over funds received for specific projects and/or activities, and funds from one project are used to cover shortfalls in another."
+        },
+        {
+          "fr": "Il n'y a aucun contrôle sur les fonds reçus pour des projets spécifiques au niveau des activités au sein d'un projet.",
+          "en": "There is no control over funds received for specific projects at the level of activities within a project."
+        },
+        {
+          "fr": "En général, les fonds reçus pour des projets et/ou activités spécifiques ne sont dépensés que pour ce à quoi ils sont affectés ou dédiés, bien que parfois les fonds soient « empruntés » pour une autre activité. Ces emprunts ont été demandés et approuvés.",
+          "en": "In general, funds received for specific projects and/or activities are spent only on what they are allocated or earmarked for, although funds are sometimes \"borrowed\" for another activity. Such borrowing has been requested and approved."
+        },
+        {
+          "fr": "Les fonds reçus pour des projets et/ou des activités spécifiques ne sont dépensés que pour ce à quoi ils sont affectés, sur la base des règles du donateur : par exemple, l'argent budgétisé pour un atelier est dépensé uniquement pour un atelier lié à l'activité et n'est pas utilisé pour d'autres objectifs tels que le carburant pour un déplacement.",
+          "en": "Funds received for specific projects and/or activities are spent only on what they are allocated for, in line with the donor's rules: for example, money budgeted for a workshop is spent only on a workshop related to that activity and is not used for other purposes such as fuel for travel."
+        }
+      ],
+      "action": {
+        "fr": "Attribuer un code projet et activité à chaque dépense et interdire tout emprunt entre projets sans approbation écrite",
+        "en": "Assign project and activity codes to every expense and prohibit inter-project borrowing without written approval"
+      },
+      "verification": {
+        "fr": "Pièces de dépense codées et rapports par projet",
+        "en": "Coded expense vouchers and per-project reports"
+      }
+    },
+    {
+      "id": "itoca-award-budget-cash-flow",
+      "name": {
+        "fr": "Suivi budgétaire et trésorerie",
+        "en": "Budget monitoring and cash flow"
+      },
+      "statement": {
+        "fr": "Tous les responsables sont régulièrement informés de la situation budgétaire et planifient leurs activités sur la base d'un plan de travail approuvé tenant compte de la situation de trésorerie.",
+        "en": "All managers are regularly informed of the budget situation and plan their activities on the basis of an approved work plan that takes the cash position into account."
+      },
+      "levels": [
+        {
+          "fr": "Les situations budgétaires du projet ne sont pas accessibles aux autres départements/gestionnaires concernés et il n'y a aucune capacité ni aucun intérêt à rendre ces renseignements disponibles, notamment concernant les dépenses du projet ; et les prévisions de trésorerie basées sur des plans de fonctionnement approuvés ne sont pas préparées pour indiquer en temps opportun le besoin de financement en termes de montant et de calendrier.",
+          "en": "Project budget reports are not accessible to other relevant departments/managers, and there is no capacity or interest in making this information available, particularly on project expenditure; and cash flow forecasts based on approved operating plans are not prepared to indicate funding needs, in terms of amount and timing, in good time."
+        },
+        {
+          "fr": "Les situations budgétaires du projet ne sont pas accessibles aux autres départements/gestionnaires concernés, mais peuvent être rendues accessibles au besoin, notamment au sujet des dépenses du projet ; et les prévisions de trésorerie sont basées sur des plans de fonctionnement approuvés et sont préparées chaque année pour indiquer en temps opportun le montant nécessaire, suivant un calendrier bien défini.",
+          "en": "Project budget reports are not accessible to other relevant departments/managers but can be made available when needed, particularly on project expenditure; and cash flow forecasts are based on approved operating plans and prepared annually to indicate in good time the amount of money needed, according to a well-defined schedule."
+        },
+        {
+          "fr": "Les situations budgétaires du projet sont accessibles aux autres départements/gestionnaires concernés, mais elles ne sont pas facilement diffusées, de sorte que ceux-ci ne sont pas toujours informés des dépenses du projet ; et les prévisions de trésorerie sont basées sur des plans de fonctionnement approuvés et sont préparées chaque trimestre ou sur demande pour indiquer en temps opportun le montant nécessaire, suivant un calendrier défini.",
+          "en": "Project budget reports are accessible to other relevant departments/managers but are not readily circulated, so they are not always informed of project expenditure; and cash flow forecasts are based on approved operating plans and prepared quarterly or on request to indicate in good time the amount of money needed, according to a defined schedule."
+        },
+        {
+          "fr": "Les situations budgétaires du projet sont accessibles et diffusées systématiquement aux autres départements/gestionnaires concernés afin qu'ils soient informés des dépenses du projet ; et les prévisions de trésorerie sont basées sur des plans de fonctionnement approuvés et sont préparées chaque mois pour indiquer en temps opportun le montant nécessaire, suivant un calendrier défini.",
+          "en": "Project budget reports are accessible and systematically circulated to other relevant departments/managers so that they are informed of project expenditure; and cash flow forecasts are based on approved operating plans and prepared monthly to indicate in good time the amount of money needed, according to a defined schedule."
+        }
+      ],
+      "action": {
+        "fr": "Diffuser chaque mois aux responsables un état budget/réalisé et une prévision de trésorerie fondée sur le plan de travail",
+        "en": "Circulate a monthly budget-versus-actual report and a work-plan-based cash flow forecast to managers"
+      },
+      "verification": {
+        "fr": "États mensuels diffusés et prévisions de trésorerie",
+        "en": "Circulated monthly reports and cash flow forecasts"
+      }
+    },
+    {
+      "id": "itoca-award-budget-variance",
+      "name": {
+        "fr": "Analyse des écarts budgétaires",
+        "en": "Budget variance analysis"
+      },
+      "statement": {
+        "fr": "Les dépenses sont régulièrement comparées aux budgets, et les écarts importants sont analysés et expliqués pour éviter que les mêmes situations se reproduisent.",
+        "en": "Expenditure is regularly compared with budgets, and significant variances are analysed and explained to prevent the same situations from recurring."
+      },
+      "levels": [
+        {
+          "fr": "Les réalisations du programme/projet ne sont jamais comparées aux budgets approuvés. Si le budget est dépassé ou sous-consommé, la direction n'enquête pas, n'explique pas et ne documente ni la raison ni les mesures pouvant être prises pour éviter le même problème.",
+          "en": "Programme/project actuals are never compared with approved budgets. If the budget is overspent or underspent, management does not investigate, explain or document the reason or the measures that could be taken to avoid the same problem."
+        },
+        {
+          "fr": "Les réalisations du programme et du projet sont comparées aux budgets approuvés de manière ponctuelle. Si le budget est dépassé ou sous-consommé, la direction enquête parfois, explique et documente la raison. Des mesures sont prises pour éviter le même problème.",
+          "en": "Programme and project actuals are compared with approved budgets on an ad hoc basis. If the budget is overspent or underspent, management sometimes investigates, explains and documents the reason. Measures are taken to avoid the same problem."
+        },
+        {
+          "fr": "Les réalisations des programmes/projets sont comparées aux budgets approuvés selon les exigences des bailleurs de fonds. Si le budget est dépassé ou sous-consommé, la direction enquête, explique et documente la raison et les mesures prises pour éviter le même problème.",
+          "en": "Programme/project actuals are compared with approved budgets as required by donors. If the budget is overspent or underspent, management investigates, explains and documents the reason and the measures taken to avoid the same problem."
+        },
+        {
+          "fr": "Les réalisations des programmes/projets sont régulièrement comparées aux budgets approuvés. Si le budget est dépassé ou sous-consommé, la direction examine régulièrement, explique et documente la raison et les mesures prises pour éviter le même problème. Un système de suivi budgétaire est en place et est utilisé.",
+          "en": "Programme/project actuals are regularly compared with approved budgets. If the budget is overspent or underspent, management regularly reviews, explains and documents the reason and the measures taken to avoid the same problem. A budget monitoring system is in place and in use."
+        }
+      ],
+      "action": {
+        "fr": "Produire une analyse mensuelle des écarts budgétaires, justifier tout écart supérieur à 10 % et consigner les mesures correctives",
+        "en": "Produce a monthly budget variance analysis, explain any variance above 10% and record corrective measures"
+      },
+      "verification": {
+        "fr": "Rapports d'écarts commentés et validés par la direction",
+        "en": "Annotated variance reports approved by management"
+      }
+    },
+    {
+      "id": "itoca-award-procurement-authorisation",
+      "name": {
+        "fr": "Autorisations d'achat",
+        "en": "Procurement authorisations"
+      },
+      "statement": {
+        "fr": "Les procédures de passation des marchés, qui indiquent clairement les responsabilités en matière d'autorisation, sont suivies par l'ensemble du personnel.",
+        "en": "Procurement procedures that clearly set out authorisation responsibilities are followed by all staff."
+      },
+      "levels": [
+        {
+          "fr": "Nous n'avons pas de procédures de passation des marchés qui énoncent clairement qui a le pouvoir d'autoriser les achats suivant le budget du projet. Aussi, le processus d'approbation est suivi de façon incohérente par le personnel.",
+          "en": "We have no procurement procedures that clearly state who has authority to approve purchases against the project budget. As a result, staff follow the approval process inconsistently."
+        },
+        {
+          "fr": "Nous n'avons pas de procédures de passation des marchés qui énoncent clairement qui a le pouvoir d'autoriser les achats suivant le budget du projet, mais le personnel sait qui a l'autorité pour les approbations et ceci est suivi uniformément.",
+          "en": "We have no procurement procedures that clearly state who has authority to approve purchases against the project budget, but staff understand who holds approval authority and this is followed consistently."
+        },
+        {
+          "fr": "Nous avons une procédure de passation des marchés qui énonce clairement qui a le pouvoir d'autoriser les achats suivant le budget du projet, mais elle n'est pas systématiquement suivie.",
+          "en": "We have a procurement procedure that clearly states who has authority to approve purchases against the project budget, but it is not systematically followed."
+        },
+        {
+          "fr": "Nous avons une procédure de passation des marchés qui énonce clairement qui a le pouvoir d'autoriser les achats suivant le budget du projet, et elle est systématiquement suivie.",
+          "en": "We have a procurement procedure that clearly states who has authority to approve purchases against the project budget, and it is systematically followed."
+        }
+      ],
+      "action": {
+        "fr": "Rédiger une procédure d'achat avec une matrice des seuils et des signataires autorisés, puis former le personnel",
+        "en": "Write a procurement procedure with a matrix of thresholds and authorised signatories, then train staff on it"
+      },
+      "verification": {
+        "fr": "Procédure approuvée et dossiers d'achat signés",
+        "en": "Approved procedure and signed procurement files"
+      }
+    },
+    {
+      "id": "itoca-award-financial-records-archiving",
+      "name": {
+        "fr": "Archivage des documents financiers",
+        "en": "Financial records archiving"
+      },
+      "statement": {
+        "fr": "Les informations financières sont bien documentées et bien archivées, et sont disponibles à long terme pour répondre aux besoins d'audit.",
+        "en": "Financial information is well documented and properly archived, and remains available over the long term to meet audit needs."
+      },
+      "levels": [
+        {
+          "fr": "Les informations financières ne sont pas documentées et aucun système d'archivage n'existe.",
+          "en": "Financial information is not documented and there is no archiving system."
+        },
+        {
+          "fr": "Les informations financières sont documentées, mais il n'y a aucun système d'archivage.",
+          "en": "Financial information is documented, but there is no archiving system."
+        },
+        {
+          "fr": "Les informations financières sont bien documentées et bien archivées, et sont disponibles à long terme pour répondre aux besoins d'audit.",
+          "en": "Financial information is well documented and properly archived, and remains available over the long term to meet audit needs."
+        },
+        {
+          "fr": "La documentation et l'archivage des informations financières suivent des standards communs.",
+          "en": "The documentation and archiving of financial information follow common standards."
+        }
+      ],
+      "action": {
+        "fr": "Mettre en place un plan de classement par exercice et par projet avec des durées de conservation définies",
+        "en": "Set up a filing system by financial year and project with defined retention periods"
+      },
+      "verification": {
+        "fr": "Plan de classement et archives consultables",
+        "en": "Filing plan and accessible archives"
+      }
+    },
+    {
+      "id": "itoca-award-financial-audit",
+      "name": {
+        "fr": "Audit financier",
+        "en": "Financial audit"
+      },
+      "statement": {
+        "fr": "Notre organisation est régulièrement auditée.",
+        "en": "Our organisation is audited regularly."
+      },
+      "levels": [
+        {
+          "fr": "Notre organisation n'est pas auditée.",
+          "en": "Our organisation is not audited."
+        },
+        {
+          "fr": "Un rapport financier annuel est présenté au conseil d'administration ou à la direction.",
+          "en": "An annual financial report is presented to the board of directors or to management."
+        },
+        {
+          "fr": "Des audits réguliers par financement/contrat sont menés.",
+          "en": "Regular audits are carried out for each grant/contract."
+        },
+        {
+          "fr": "Un audit externe des états financiers de l'ensemble de l'organisation a lieu régulièrement.",
+          "en": "An external audit of the financial statements of the whole organisation takes place regularly."
+        }
+      ],
+      "action": {
+        "fr": "Faire réaliser un audit externe annuel des états financiers de l'ensemble de l'organisation",
+        "en": "Commission an annual external audit of the financial statements of the whole organisation"
+      },
+      "verification": {
+        "fr": "Rapport d'audit externe et lettre de recommandations",
+        "en": "External audit report and management letter"
+      }
+    },
+    {
+      "id": "itoca-award-org-chart-duties",
+      "name": {
+        "fr": "Organigramme et fiches de poste",
+        "en": "Organisation chart and job descriptions"
+      },
+      "statement": {
+        "fr": "Un organigramme, assorti d'une description des rôles et responsabilités, est mis à jour régulièrement.",
+        "en": "An organisation chart, together with a description of roles and responsibilities, is updated regularly."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne dispose pas d'organigramme ni de descriptions de poste.",
+          "en": "The organisation has no organisation chart or job descriptions."
+        },
+        {
+          "fr": "L'organisation a un organigramme et des descriptions de poste avec des tâches et des responsabilités claires, mais ils ne sont pas exacts ou à jour.",
+          "en": "The organisation has an organisation chart and job descriptions with clear duties and responsibilities, but they are not accurate or up to date."
+        },
+        {
+          "fr": "L'organisation tient un organigramme actualisé avec des liens hiérarchiques clairs OU une description de poste actualisée avec des tâches et des responsabilités claires.",
+          "en": "The organisation maintains an updated organisation chart with clear reporting lines OR an updated job description with clear duties and responsibilities."
+        },
+        {
+          "fr": "L'organisation tient un organigramme actualisé avec des liens hiérarchiques clairs ET une description de poste actualisée avec des tâches et des responsabilités claires.",
+          "en": "The organisation maintains an updated organisation chart with clear reporting lines AND an updated job description with clear duties and responsibilities."
+        }
+      ],
+      "action": {
+        "fr": "Formaliser les liens hiérarchiques dans l'organigramme et actualiser chaque fiche de poste",
+        "en": "Formalise reporting lines in the organisation chart and update every job description"
+      },
+      "verification": {
+        "fr": "Organigramme validé et fiches de poste datées",
+        "en": "Approved organisation chart and dated job descriptions"
+      }
+    },
+    {
+      "id": "itoca-award-equipment-inventory",
+      "name": {
+        "fr": "Inventaire des équipements",
+        "en": "Equipment inventory"
+      },
+      "statement": {
+        "fr": "Une procédure de gestion des équipements est utilisée pour assurer l'inventaire de tous les équipements financés par différents bailleurs de fonds.",
+        "en": "An equipment management procedure is used to keep an inventory of all equipment funded by different donors."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique de gestion des biens et équipements, et le personnel n'a pas été formé sur la façon de suivre et d'inventorier l'équipement (p. ex. voiture, ordinateur, imprimante, etc.).",
+          "en": "There is no property and equipment management policy, and staff have not been trained in how to track and inventory equipment (e.g. vehicles, computers, printers, etc.)."
+        },
+        {
+          "fr": "Il n'existe pas de politique de gestion des biens et de l'équipement (p. ex. voiture, ordinateur, imprimante, etc.) ; ainsi, l'utilisation de l'équipement financé par différents bailleurs n'est pas suivie de la bonne manière.",
+          "en": "There is no property and equipment management policy (e.g. vehicles, computers, printers, etc.); as a result, the use of equipment funded by different donors is not properly tracked."
+        },
+        {
+          "fr": "Il existe une politique de gestion des biens et de l'équipement (p. ex. voiture, ordinateur, imprimante, etc.) ; ainsi, le suivi de l'utilisation de l'équipement financé par différents bailleurs est effectué et disponible.",
+          "en": "There is a property and equipment management policy (e.g. vehicles, computers, printers, etc.); as a result, the use of equipment funded by different donors is tracked and the records are available."
+        },
+        {
+          "fr": "Il y a une politique de gestion des biens et équipements suivant des standards communs, et les règles sont mises en œuvre uniformément (suivi des équipements, inventaire).",
+          "en": "There is a property and equipment management policy following common standards, and the rules are applied consistently (equipment tracking, inventory)."
+        }
+      ],
+      "action": {
+        "fr": "Réaliser un inventaire physique annuel et le rapprocher du registre des biens, bailleur par bailleur",
+        "en": "Carry out an annual physical inventory and reconcile it with the asset register, donor by donor"
+      },
+      "verification": {
+        "fr": "Rapport d'inventaire physique signé",
+        "en": "Signed physical inventory report"
+      }
+    },
+    {
+      "id": "itoca-award-ethics-fraud-reporting",
+      "name": {
+        "fr": "Code d'éthique et signalement des fraudes",
+        "en": "Code of ethics and fraud reporting"
+      },
+      "statement": {
+        "fr": "Un code d'éthique est adopté par l'ensemble du personnel, qui sait comment signaler les fraudes, vols et abus de manière sûre et confidentielle.",
+        "en": "A code of ethics is adopted by all staff, who know how to report fraud, theft and abuse safely and confidentially."
+      },
+      "levels": [
+        {
+          "fr": "Il n'existe pas de politique sur le code de conduite en matière d'éthique qui traite des conflits d'intérêts et du signalement des fraudes, des gaspillages et des abus et qui soit mise à la disposition de tout le personnel, et aucune formation n'est disponible.",
+          "en": "There is no ethical code of conduct policy addressing conflicts of interest and the reporting of fraud, waste and abuse that is made available to all staff, and no training is available."
+        },
+        {
+          "fr": "Il existe un code de déontologie incomplet qui traite des conflits d'intérêts et du signalement des fraudes, des gaspillages et des abus, qui est mis à la disposition de tout le personnel, et aucune formation n'est fournie.",
+          "en": "There is an incomplete code of ethics addressing conflicts of interest and the reporting of fraud, waste and abuse, which is made available to all staff, and no training is provided."
+        },
+        {
+          "fr": "Il existe un code de déontologie exhaustif qui traite des conflits d'intérêts et du signalement des fraudes, des gaspillages et des abus, qui est mis à la disposition de tout le personnel, mais aucune formation n'est fournie.",
+          "en": "There is a comprehensive code of ethics addressing conflicts of interest and the reporting of fraud, waste and abuse, which is made available to all staff, but no training is provided."
+        },
+        {
+          "fr": "Il existe un code de déontologie exhaustif qui traite des conflits d'intérêts et du signalement des fraudes, des gaspillages et des abus, qui est mis à la disposition de tout le personnel, et des formations périodiques sont fournies.",
+          "en": "There is a comprehensive code of ethics addressing conflicts of interest and the reporting of fraud, waste and abuse, which is made available to all staff, and periodic training is provided."
+        }
+      ],
+      "action": {
+        "fr": "Adopter un code de déontologie doté d'un canal de signalement confidentiel et former tout le personnel chaque année",
+        "en": "Adopt a code of ethics with a confidential reporting channel and train all staff every year"
+      },
+      "verification": {
+        "fr": "Code signé par le personnel et registre des formations",
+        "en": "Code signed by staff and training records"
+      }
+    },
+    {
+      "id": "itoca-award-travel-policy",
+      "name": {
+        "fr": "Politique de voyage et per diem",
+        "en": "Travel and per diem policy"
+      },
+      "statement": {
+        "fr": "Une politique de voyage, incluant les per diem et le suivi de l'utilisation des véhicules, est adoptée par l'ensemble du personnel et fréquemment mise à jour.",
+        "en": "A travel policy, covering per diems and the monitoring of vehicle use, is adopted by all staff and updated frequently."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique de voyage et/ou de transport qui comprend un carnet de bord pour les véhicules et les indemnités journalières de base dans les projets. Aucune pratique cohérente n'est suivie par le personnel.",
+          "en": "There is no travel and/or transport policy that includes vehicle logbooks and basic per diems for projects. Staff follow no consistent practice."
+        },
+        {
+          "fr": "Il n'y a pas de politique de voyage et/ou de transport qui comprend un carnet de bord pour les véhicules et des indemnités journalières de mission pour tous les projets, et la pratique est suivie de façon incohérente par le personnel.",
+          "en": "There is no travel and/or transport policy that includes vehicle logbooks and per diems for all projects, and staff follow practice inconsistently."
+        },
+        {
+          "fr": "Il n'y a pas de politique globale de voyage et/ou de transport qui comprend un carnet de bord pour les véhicules et des indemnités journalières de mission pour tous les projets, mais il existe une pratique constante suivie par le personnel.",
+          "en": "There is no overall travel and/or transport policy that includes vehicle logbooks and per diems for all projects, but staff follow a consistent practice."
+        },
+        {
+          "fr": "Il y a une politique globale de voyage et/ou de transport qui comprend un carnet de bord pour les véhicules et des indemnités journalières pour tous les projets, et elle est constamment suivie par tout le personnel.",
+          "en": "There is an overall travel and/or transport policy that includes vehicle logbooks and per diems for all projects, and all staff follow it consistently."
+        }
+      ],
+      "action": {
+        "fr": "Diffuser la politique de voyage à tout le personnel et contrôler per diem et carnets de bord à chaque mission",
+        "en": "Share the travel policy with all staff and check per diems and vehicle logbooks for every trip"
+      },
+      "verification": {
+        "fr": "Ordres de mission et carnets de bord vérifiés",
+        "en": "Checked travel authorisations and vehicle logbooks"
+      }
+    },
+    {
+      "id": "itoca-award-cost-share-reporting",
+      "name": {
+        "fr": "Déclaration du partage des coûts",
+        "en": "Cost share reporting"
+      },
+      "statement": {
+        "fr": "Les partages de coûts sont vérifiés, documentés et rapportés sur la base d'une politique de partage des coûts à jour.",
+        "en": "Cost share is verified, documented and reported on the basis of an up-to-date cost share policy."
+      },
+      "levels": [
+        {
+          "fr": "Il n'y a pas de politique pour déclarer le partage des coûts et, bien que le rapport sur le partage des coûts soit demandé, les enregistrements ne sont pas conservés ou pas vérifiables.",
+          "en": "There is no policy for reporting cost share and, although cost share reporting is required, records are not kept or cannot be verified."
+        },
+        {
+          "fr": "Il n'y a pas de politique de déclaration du partage des coûts et le partage des coûts n'a jamais été une exigence pour l'organisation auparavant.",
+          "en": "There is no cost share reporting policy, and cost share has never previously been a requirement for the organisation."
+        },
+        {
+          "fr": "Il n'y a pas de politique de déclaration du partage des coûts, mais tous les enregistrements relatifs au partage des coûts sont vérifiés et conservés de façon régulière.",
+          "en": "There is no cost share reporting policy, but all cost share reporting records are regularly verified and kept."
+        },
+        {
+          "fr": "Une politique de déclaration et des règles sont mises en œuvre pour le partage des coûts, et tous les enregistrements relatifs au partage des coûts sont vérifiés et conservés.",
+          "en": "A reporting policy and rules for cost share are in place and applied, and all cost share reporting records are verified and kept."
+        }
+      ],
+      "action": {
+        "fr": "Intégrer le partage des coûts, avec pièces justificatives vérifiées, dans chaque rapport financier au bailleur",
+        "en": "Include cost share, backed by verified supporting documents, in every financial report to the donor"
+      },
+      "verification": {
+        "fr": "Rapports financiers au bailleur incluant le partage des coûts",
+        "en": "Donor financial reports showing cost share"
+      }
+    }
+  ]
+}

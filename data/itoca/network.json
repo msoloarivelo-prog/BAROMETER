@@ -1,0 +1,245 @@
+{
+  "id": "itoca-network",
+  "name": { "fr": "Réseautage et relations externes", "en": "Networking and external relations" },
+  "shortName": { "fr": "Réseautage", "en": "Networking" },
+  "items": [
+    {
+      "id": "itoca-network-stakeholder-relations",
+      "name": { "fr": "Relations avec les parties prenantes", "en": "Stakeholder relationships" },
+      "statement": {
+        "fr": "L'organisation établit des relations formelles avec les parties prenantes pertinentes (secteur privé, OSC, groupes communautaires) de manière continue et systématique.",
+        "en": "The organisation builds formal relationships with relevant stakeholders (private sector, CSOs, community groups) on a continuous and systematic basis."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation établit des relations formelles et informelles et s'engage dans une action commune qui fait progresser sa mission avec d'autres organisations de la société civile nationale. L'action commune se réfère à la collaboration avec d'autres parties prenantes du secteur pour faire avancer un objectif commun.",
+          "en": "The organisation builds formal and informal relationships and engages in joint action that advances its mission with other national civil society organisations. Joint action refers to collaboration with other stakeholders in the sector to advance a common goal."
+        },
+        {
+          "fr": "L'organisation établit des relations formelles et informelles et s'engage dans une action commune qui fait progresser sa mission auprès des organismes gouvernementaux et des organisations de la société civile. L'action commune se réfère à la collaboration avec d'autres parties prenantes du secteur pour faire avancer un objectif commun.",
+          "en": "The organisation builds formal and informal relationships and engages in joint action that advances its mission with government agencies and civil society organisations. Joint action refers to collaboration with other stakeholders in the sector to advance a common goal."
+        },
+        {
+          "fr": "L'organisation établit des relations formelles et informelles et s'engage dans une action commune qui fait progresser sa mission auprès des organismes gouvernementaux et des organisations de la société civile. Les relations formelles sont régies par un accord signé ou un protocole d'entente. L'action commune se réfère à la collaboration avec d'autres parties prenantes du secteur pour faire avancer un objectif commun.",
+          "en": "The organisation builds formal and informal relationships and engages in joint action that advances its mission with government agencies and civil society organisations. Formal relationships are governed by a signed agreement or memorandum of understanding. Joint action refers to collaboration with other stakeholders in the sector to advance a common goal."
+        },
+        {
+          "fr": "L'organisation établit des relations formelles et informelles et s'engage dans une action commune qui fait progresser sa mission auprès des organismes gouvernementaux, des organisations de la société civile et des entreprises privées. Les relations formelles sont régies par un accord signé ou un protocole d'entente. L'action commune se réfère à la collaboration avec d'autres parties prenantes du secteur pour faire avancer un objectif commun.",
+          "en": "The organisation builds formal and informal relationships and engages in joint action that advances its mission with government agencies, civil society organisations and private companies. Formal relationships are governed by a signed agreement or memorandum of understanding. Joint action refers to collaboration with other stakeholders in the sector to advance a common goal."
+        }
+      ],
+      "action": {
+        "fr": "Cartographier les parties prenantes clés et formaliser les partenariats prioritaires par des protocoles d'entente signés.",
+        "en": "Map key stakeholders and formalise priority partnerships through signed memoranda of understanding."
+      },
+      "verification": {
+        "fr": "Cartographie et protocoles d'entente signés",
+        "en": "Stakeholder map and signed MoUs"
+      }
+    },
+    {
+      "id": "itoca-network-government-collaboration",
+      "name": { "fr": "Collaboration avec le gouvernement", "en": "Collaboration with government" },
+      "statement": {
+        "fr": "L'organisation collabore de manière inclusive avec les organismes gouvernementaux compétents et sert de chef de file dans son domaine (gouvernance, plaidoyer, etc.).",
+        "en": "The organisation collaborates inclusively with the relevant government agencies and serves as a leader in its field (governance, advocacy, etc.)."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation travaille de manière indépendante et collabore rarement, avec un seul organisme gouvernemental.",
+          "en": "The organisation works independently and rarely collaborates, and then with only one government agency."
+        },
+        {
+          "fr": "L'organisation collabore fréquemment avec un ou plusieurs organismes gouvernementaux.",
+          "en": "The organisation frequently collaborates with one or more government agencies."
+        },
+        {
+          "fr": "L'organisation cherche des occasions de collaborer et de s'engager fréquemment avec une variété d'organismes gouvernementaux pertinents pour sa mission.",
+          "en": "The organisation seeks opportunities to collaborate and engage frequently with a variety of government agencies relevant to its mission."
+        },
+        {
+          "fr": "L'organisation travaille en collaboration avec tous les organismes gouvernementaux compétents chargés de servir ses collectivités. L'organisation est crédible auprès de ses organismes gouvernementaux partenaires et est considérée comme un chef de file dans sa région.",
+          "en": "The organisation works in collaboration with all the relevant government agencies responsible for serving its communities. The organisation is credible with its partner government agencies and is regarded as a leader in its region."
+        }
+      ],
+      "action": {
+        "fr": "Identifier les services gouvernementaux pertinents et instaurer des rencontres de coordination régulières avec chacun.",
+        "en": "Identify the relevant government services and set up regular coordination meetings with each of them."
+      },
+      "verification": {
+        "fr": "Comptes rendus des rencontres de coordination",
+        "en": "Coordination meeting reports"
+      }
+    },
+    {
+      "id": "itoca-network-government-forums",
+      "name": { "fr": "Leadership dans les forums gouvernementaux", "en": "Leadership in government forums" },
+      "statement": {
+        "fr": "L'organisation joue un rôle de leader pour engager le dialogue entre les personnes clés du gouvernement à tous les niveaux (national et régional) et les plus petites organisations de la société civile.",
+        "en": "The organisation takes a leading role in fostering dialogue between key government officials at all levels (national and regional) and smaller civil society organisations."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation est au courant des forums régionaux dirigés par les gouvernements et pertinents pour son travail, mais n'y participe pas.",
+          "en": "The organisation is aware of government-led regional forums relevant to its work but does not take part in them."
+        },
+        {
+          "fr": "L'organisation participe activement aux forums nationaux et régionaux dirigés par les gouvernements en rapport avec ses travaux. La participation active se réfère à la participation aux comités directeurs, aux groupes de travail, etc. au sein de ces forums.",
+          "en": "The organisation actively participates in government-led national and regional forums related to its work. Active participation refers to taking part in steering committees, working groups, etc. within these forums."
+        },
+        {
+          "fr": "L'organisation joue un rôle de leader dans les forums nationaux et régionaux dirigés par les gouvernements concernés par ses travaux. Le leadership se réfère à la présidence des comités directeurs, des groupes de travail, etc. au sein de ces forums.",
+          "en": "The organisation plays a leading role in government-led national and regional forums concerned with its work. Leadership refers to chairing steering committees, working groups, etc. within these forums."
+        },
+        {
+          "fr": "L'organisation joue un rôle de leader dans les forums nationaux et régionaux dirigés par des gouvernements et pertinents pour son travail. Le leadership se réfère à la présidence des comités directeurs, des groupes de travail, etc. au sein de ces forums. L'organisation facilite l'engagement de petites organisations de la société civile avec les entités gouvernementales pertinentes.",
+          "en": "The organisation plays a leading role in government-led national and regional forums relevant to its work. Leadership refers to chairing steering committees, working groups, etc. within these forums. The organisation facilitates the engagement of small civil society organisations with relevant government bodies."
+        }
+      ],
+      "action": {
+        "fr": "Siéger dans au moins un comité directeur ou groupe de travail gouvernemental et y associer de petites OSC.",
+        "en": "Sit on at least one government steering committee or working group and involve smaller CSOs in it."
+      },
+      "verification": {
+        "fr": "Lettre de nomination et comptes rendus de réunions",
+        "en": "Appointment letter and meeting minutes"
+      }
+    },
+    {
+      "id": "itoca-network-learning-agenda",
+      "name": { "fr": "Partage des leçons apprises", "en": "Sharing lessons learned" },
+      "statement": {
+        "fr": "L'organisation met en œuvre un programme d'apprentissage qui rassemble et partage les leçons apprises avec les intervenants concernés, tant au niveau national qu'international.",
+        "en": "The organisation implements a learning agenda that gathers and shares lessons learned with relevant stakeholders, both nationally and internationally."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation rassemble et partage parfois des leçons apprises et des pratiques prometteuses avec des intervenants externes. « Toujours » signifie que l'organisation a un programme d'apprentissage en place et réfléchit continuellement sur les questions clés d'apprentissage.",
+          "en": "The organisation sometimes gathers and shares lessons learned and promising practices with external stakeholders. \"Always\" means that the organisation has a learning agenda in place and continually reflects on key learning questions."
+        },
+        {
+          "fr": "L'organisation rassemble et partage toujours les leçons apprises et les pratiques prometteuses avec les intervenants externes. « Toujours » signifie que l'organisation a un programme d'apprentissage en place et réfléchit continuellement sur les questions clés d'apprentissage.",
+          "en": "The organisation always gathers and shares lessons learned and promising practices with external stakeholders. \"Always\" means that the organisation has a learning agenda in place and continually reflects on key learning questions."
+        },
+        {
+          "fr": "L'organisation rassemble et partage les leçons apprises et les pratiques prometteuses avec les intervenants externes. « Toujours » signifie que l'organisation a un programme d'apprentissage en place et réfléchit continuellement sur les questions clés d'apprentissage. Les enseignements tirés et les meilleures pratiques sont consolidés à intervalles réguliers et partagés avec les parties prenantes. Le partage se fait dans le pays.",
+          "en": "The organisation gathers and shares lessons learned and promising practices with external stakeholders. \"Always\" means that the organisation has a learning agenda in place and continually reflects on key learning questions. Lessons learned and best practices are consolidated at regular intervals and shared with stakeholders. Sharing takes place within the country."
+        },
+        {
+          "fr": "L'organisation rassemble et partage toujours les leçons apprises et les pratiques prometteuses avec les intervenants externes. « Toujours » signifie que l'organisation a un programme d'apprentissage en place et réfléchit continuellement sur les questions clés d'apprentissage. Le partage se fait tant au niveau national qu'international.",
+          "en": "The organisation always gathers and shares lessons learned and promising practices with external stakeholders. \"Always\" means that the organisation has a learning agenda in place and continually reflects on key learning questions. Sharing takes place both nationally and internationally."
+        }
+      ],
+      "action": {
+        "fr": "Adopter un programme d'apprentissage et publier chaque semestre une note de leçons apprises diffusée aux partenaires.",
+        "en": "Adopt a learning agenda and publish a six-monthly lessons-learned brief circulated to partners."
+      },
+      "verification": {
+        "fr": "Notes de leçons apprises et liste de diffusion",
+        "en": "Lessons-learned briefs and distribution list"
+      }
+    },
+    {
+      "id": "itoca-network-donor-communication",
+      "name": { "fr": "Communication avec les donateurs", "en": "Donor communication" },
+      "statement": {
+        "fr": "L'organisation a une solide réputation en matière de communication et de rapportage transparents auprès des donateurs, ce qui favorise leur engagement.",
+        "en": "The organisation has a strong reputation for transparent communication and reporting to donors, which fosters their engagement."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation communique rarement avec les donateurs par le biais de canaux réguliers tels que des rapports périodiques, et n'est pas à l'aise pour partager les succès et les défis.",
+          "en": "The organisation rarely communicates with donors through regular channels such as periodic reports, and is not comfortable sharing successes and challenges."
+        },
+        {
+          "fr": "L'organisation communique régulièrement avec les donateurs et partage des informations sur les réussites et les défis à la demande.",
+          "en": "The organisation communicates regularly with donors and shares information on successes and challenges on request."
+        },
+        {
+          "fr": "L'organisation communique ouvertement avec les donateurs, partage les informations clés à des moments appropriés et cherche d'autres moyens de partager l'information avec les donateurs.",
+          "en": "The organisation communicates openly with donors, shares key information at appropriate times and looks for other ways of sharing information with donors."
+        },
+        {
+          "fr": "L'organisation est en mesure de mener un dialogue libre et ouvert avec ses donateurs, le cas échéant. Les donateurs recherchent des occasions de travailler avec l'organisation en raison de sa réputation, de sa communication solide, de sa capacité de négociation et de son leadership fort.",
+          "en": "The organisation is able to hold a free and open dialogue with its donors where appropriate. Donors seek opportunities to work with the organisation because of its reputation, strong communication, negotiating ability and strong leadership."
+        }
+      ],
+      "action": {
+        "fr": "Établir un calendrier de communication avec les donateurs incluant rapports, réussites et défis, et le respecter.",
+        "en": "Set and keep to a donor communication calendar covering reports, successes and challenges."
+      },
+      "verification": {
+        "fr": "Calendrier et rapports envoyés aux donateurs",
+        "en": "Calendar and reports sent to donors"
+      }
+    },
+    {
+      "id": "itoca-network-community-communication",
+      "name": { "fr": "Communication avec les bénéficiaires", "en": "Beneficiary and community communication" },
+      "statement": {
+        "fr": "L'organisation a une stratégie de communication efficace (y compris le plan de communication, les bénéficiaires ciblés, les canaux et moyens, les rapports aux bénéficiaires/communautés, etc.).",
+        "en": "The organisation has an effective communication strategy (including the communication plan, targeted beneficiaries, channels and means, reporting back to beneficiaries/communities, etc.)."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne travaille pas bien avec les bénéficiaires et peut ne pas être fiable ; la communication est peu fréquente.",
+          "en": "The organisation does not work well with beneficiaries and may be unreliable; communication is infrequent."
+        },
+        {
+          "fr": "L'organisation travaille avec les bénéficiaires et se réunit régulièrement avec eux, mais ne cherche pas à associer les dirigeants traditionnels ou les femmes.",
+          "en": "The organisation works with beneficiaries and meets with them regularly, but does not seek to involve traditional leaders or women."
+        },
+        {
+          "fr": "Les bénéficiaires font confiance à l'organisation pour représenter leurs intérêts ; elle est en communication régulière et partage l'information avec les dirigeants traditionnels ou les femmes, mais pas nécessairement avec les deux groupes.",
+          "en": "Beneficiaries trust the organisation to represent their interests; it is in regular communication and shares information with traditional leaders or women, but not necessarily with both groups."
+        },
+        {
+          "fr": "L'organisation est en communication régulière, est considérée comme un « leader » de la communauté et cherche des occasions de nouer des relations avec toutes les parties prenantes. L'organisation communique régulièrement avec elles et celles-ci lui font part de leurs retours.",
+          "en": "The organisation is in regular communication, is regarded as a community \"leader\" and looks for opportunities to build relationships with all stakeholders. The organisation communicates regularly with them and they provide feedback."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer un plan de communication communautaire incluant dirigeants traditionnels et femmes, avec un mécanisme de retour.",
+        "en": "Develop a community communication plan that includes traditional leaders and women, with a feedback mechanism."
+      },
+      "verification": {
+        "fr": "Plan de communication et registre des retours",
+        "en": "Communication plan and feedback log"
+      }
+    },
+    {
+      "id": "itoca-network-cso-collaboration",
+      "name": { "fr": "Collaboration avec les OSC", "en": "Collaboration with CSOs" },
+      "statement": {
+        "fr": "L'organisation collabore efficacement avec les OSC de son secteur d'intervention et joue un rôle de leader parmi elles.",
+        "en": "The organisation collaborates effectively with CSOs in its sector of intervention and plays a leading role among them."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne collabore pas avec d'autres OSC.",
+          "en": "The organisation does not collaborate with other CSOs."
+        },
+        {
+          "fr": "L'organisation collabore rarement avec un nombre limité d'OSC.",
+          "en": "The organisation rarely collaborates with a limited number of CSOs."
+        },
+        {
+          "fr": "L'organisation est respectée et collabore régulièrement avec les OSC, en partageant des apprentissages et en participant à des groupes de travail ou à d'autres activités.",
+          "en": "The organisation is respected and collaborates regularly with CSOs, sharing learning and taking part in working groups or other activities."
+        },
+        {
+          "fr": "L'organisation est un leader parmi les OSC, participe activement aux groupes de travail et partage ouvertement les enseignements et rapports par le biais d'une liste de diffusion ou d'un autre système.",
+          "en": "The organisation is a leader among CSOs, takes an active part in working groups and openly shares lessons and reports through a mailing list or another system."
+        }
+      ],
+      "action": {
+        "fr": "Rejoindre ou animer un réseau d'OSC du secteur et partager régulièrement les enseignements via une liste de diffusion.",
+        "en": "Join or lead a sector CSO network and regularly share lessons through a mailing list."
+      },
+      "verification": {
+        "fr": "Adhésion au réseau et messages diffusés",
+        "en": "Network membership and messages circulated"
+      }
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "id": "itoca-purpose",
+  "name": { "fr": "Objectif, planification et mobilisation des ressources", "en": "Purpose, planning and fundraising" },
+  "shortName": { "fr": "Planification", "en": "Planning" },
+  "items": [
+    {
+      "id": "itoca-purpose-mission-vision",
+      "name": { "fr": "Mission et vision", "en": "Mission and vision" },
+      "statement": {
+        "fr": "La mission et la vision de notre organisation sont bien comprises et guident nos activités.",
+        "en": "Our organisation's mission and vision are well understood and guide our activities."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation a un énoncé écrit et à jour de la mission et de la vision (ou similaire) reflétant les activités actuelles de l'organisation.",
+          "en": "The organisation has a written, up-to-date mission and vision statement (or similar) reflecting its current activities."
+        },
+        {
+          "fr": "L'objectif de l'organisation est clairement défini par un énoncé écrit de mission et de vision. Les déclarations se reflètent dans le plan stratégique et dans le plan de travail.",
+          "en": "The organisation's purpose is clearly defined by a written mission and vision statement. The statements are reflected in the strategic plan and the work plan."
+        },
+        {
+          "fr": "L'organisation a un objectif bien précis, défini par une déclaration écrite et à jour de la mission et de la vision. Les déclarations se reflètent dans le plan stratégique et dans le plan de travail. L'objectif est bien compris par la direction et est communiqué aux parties prenantes.",
+          "en": "The organisation has a well-defined purpose, set out in a written, up-to-date mission and vision statement. The statements are reflected in the strategic plan and the work plan. The purpose is well understood by management and communicated to stakeholders."
+        },
+        {
+          "fr": "L'organisation a un objectif bien précis, défini par une déclaration écrite et à jour de la mission et de la vision. Les déclarations se reflètent dans le plan stratégique et dans le plan de travail. L'objectif est bien compris par tout le personnel et est communiqué aux parties prenantes.",
+          "en": "The organisation has a well-defined purpose, set out in a written, up-to-date mission and vision statement. The statements are reflected in the strategic plan and the work plan. The purpose is well understood by all staff and communicated to stakeholders."
+        }
+      ],
+      "action": {
+        "fr": "Revoir la mission et la vision avec le personnel, puis les afficher et les intégrer à l'orientation des nouveaux employés.",
+        "en": "Review the mission and vision with staff, then display them and include them in new staff induction."
+      },
+      "verification": {
+        "fr": "Énoncé mis à jour et support d'orientation",
+        "en": "Updated statement and induction materials"
+      }
+    },
+    {
+      "id": "itoca-purpose-strategic-plan",
+      "name": { "fr": "Plan stratégique", "en": "Strategic plan" },
+      "statement": {
+        "fr": "L'organisation dispose d'un plan stratégique effectif.",
+        "en": "The organisation has an effective strategic plan."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation dispose d'un plan stratégique documenté et connu par le personnel (élaboré avec le personnel) définissant l'orientation et les objectifs à moyen et à long terme, mais l'organisation doit encore commencer sa mise en œuvre.",
+          "en": "The organisation has a documented strategic plan, known by staff (developed with staff), that sets out medium- and long-term direction and objectives, but the organisation has yet to start implementing it."
+        },
+        {
+          "fr": "L'organisation dispose d'un plan stratégique documenté (élaboré avec les parties prenantes) définissant l'orientation et les objectifs à moyen et à long terme. L'organisation a commencé sa mise en œuvre en l'utilisant pour élaborer les plans de travail et les plans opérationnels.",
+          "en": "The organisation has a documented strategic plan (developed with stakeholders) that sets out medium- and long-term direction and objectives. The organisation has started implementing it by using it to develop work plans and operational plans."
+        },
+        {
+          "fr": "L'organisation dispose d'un plan stratégique documenté (élaboré avec les parties prenantes) définissant l'orientation et les objectifs à moyen et à long terme. L'organisation le met en œuvre depuis au moins un an pour préparer les plans de travail, les plans opérationnels et la mobilisation des ressources.",
+          "en": "The organisation has a documented strategic plan (developed with stakeholders) that sets out medium- and long-term direction and objectives. The organisation has been implementing it for at least one year to prepare work plans, operational plans and resource mobilisation."
+        },
+        {
+          "fr": "L'organisation dispose d'un plan stratégique documenté (élaboré avec les parties prenantes) définissant l'orientation et les objectifs à moyen et à long terme. L'organisation le met en œuvre depuis au moins deux ans pour préparer les plans de travail, les plans opérationnels, la mobilisation des ressources et pour guider la prise de décisions au niveau exécutif et au niveau du conseil d'administration.",
+          "en": "The organisation has a documented strategic plan (developed with stakeholders) that sets out medium- and long-term direction and objectives. The organisation has been implementing it for at least two years to prepare work plans, operational plans and resource mobilisation, and to guide decision-making at executive and board level."
+        }
+      ],
+      "action": {
+        "fr": "Décliner le plan stratégique en plans de travail annuels et le revoir chaque année en réunion du CA.",
+        "en": "Translate the strategic plan into annual work plans and review it each year at a board meeting."
+      },
+      "verification": {
+        "fr": "Plans annuels liés au plan et PV du CA",
+        "en": "Annual plans linked to the strategy and board minutes"
+      }
+    },
+    {
+      "id": "itoca-purpose-resource-mobilisation-plan",
+      "name": { "fr": "Plan de mobilisation des ressources", "en": "Resource mobilisation plan" },
+      "statement": {
+        "fr": "Notre organisation dispose d'un plan de mobilisation des ressources opérationnel et à jour.",
+        "en": "Our organisation has an operational, up-to-date resource mobilisation plan."
+      },
+      "levels": [
+        {
+          "fr": "Aucun plan de mobilisation des ressources n'est en place.",
+          "en": "No resource mobilisation plan is in place."
+        },
+        {
+          "fr": "Le plan de mobilisation des ressources existant est incomplet.",
+          "en": "The existing resource mobilisation plan is incomplete."
+        },
+        {
+          "fr": "Il y a un plan écrit qui guide le processus de mobilisation des ressources et qui est appliqué en partie.",
+          "en": "There is a written plan that guides the resource mobilisation process and is partly applied."
+        },
+        {
+          "fr": "Il existe un plan de mobilisation des ressources bien documenté précisant les bailleurs potentiels et les méthodes de levée de fonds, et il existe un plan d'action pour la mobilisation des ressources qui est appliqué, compris par le personnel, suivi et documenté.",
+          "en": "There is a well-documented resource mobilisation plan specifying potential donors and fundraising methods, and there is a resource mobilisation action plan that is applied, understood by staff, monitored and documented."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer un plan de mobilisation des ressources listant bailleurs cibles, méthodes et échéances, suivi trimestriellement.",
+        "en": "Develop a resource mobilisation plan listing target donors, methods and deadlines, monitored quarterly."
+      },
+      "verification": {
+        "fr": "Plan approuvé et rapports de suivi trimestriels",
+        "en": "Approved plan and quarterly monitoring reports"
+      }
+    },
+    {
+      "id": "itoca-purpose-fundraising-team",
+      "name": { "fr": "Équipe de mobilisation des ressources", "en": "Fundraising team" },
+      "statement": {
+        "fr": "Notre organisation dispose d'une équipe ou d'une personne ayant les compétences requises, spécifiquement mandatée pour mener à bien la mobilisation des ressources.",
+        "en": "Our organisation has a team or a person with the required skills, specifically mandated to carry out resource mobilisation."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation n'a ni équipe ni personnel dédiés à la mobilisation des ressources.",
+          "en": "The organisation has neither a team nor staff dedicated to resource mobilisation."
+        },
+        {
+          "fr": "La mobilisation des ressources se fait de façon arbitraire par le directeur exécutif et quelques membres du personnel, de manière ponctuelle.",
+          "en": "Resource mobilisation is carried out arbitrarily by the executive director and a few staff members, on an ad hoc basis."
+        },
+        {
+          "fr": "L'organisation dispose d'une équipe de membres du conseil d'administration et de personnel compétent qui sont clairement mandatés pour aider à la mobilisation des ressources.",
+          "en": "The organisation has a team of board members and competent staff who are clearly mandated to help with resource mobilisation."
+        },
+        {
+          "fr": "L'organisation a des membres du conseil d'administration qualifiés et un personnel compétent qui aident à la mobilisation des ressources et sont bien formés à ce sujet. Leurs termes de référence (TDR) et leurs fiches de poste stipulent clairement leurs rôles et responsabilités dans la mobilisation des ressources pour l'organisation, et leur performance est mesurée sur cet aspect.",
+          "en": "The organisation has qualified board members and competent staff who help with resource mobilisation and are well trained in it. Their terms of reference (ToR) and job descriptions clearly set out their roles and responsibilities in mobilising resources for the organisation, and their performance is measured on this aspect."
+        }
+      ],
+      "action": {
+        "fr": "Désigner un point focal mobilisation des ressources et inscrire cette responsabilité dans sa fiche de poste et ses objectifs.",
+        "en": "Appoint a resource mobilisation focal point and write this responsibility into their job description and objectives."
+      },
+      "verification": {
+        "fr": "Fiche de poste ou TDR mis à jour",
+        "en": "Updated job description or ToR"
+      }
+    },
+    {
+      "id": "itoca-purpose-multiple-funding-sources",
+      "name": { "fr": "Sources de financement multiples", "en": "Multiple funding sources" },
+      "statement": {
+        "fr": "L'organisation mobilise des ressources à partir de plusieurs sources.",
+        "en": "The organisation mobilises resources from multiple sources."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation ne mobilise pas de ressources provenant de sources diverses.",
+          "en": "The organisation does not mobilise resources from diverse sources."
+        },
+        {
+          "fr": "La mobilisation des ressources se fait soit au niveau local, soit au niveau international.",
+          "en": "Resources are mobilised either locally or internationally."
+        },
+        {
+          "fr": "La mobilisation des ressources se fait tant au niveau local qu'au niveau international.",
+          "en": "Resources are mobilised both locally and internationally."
+        },
+        {
+          "fr": "L'organisation mobilise des ressources aux niveaux local et international, génère des fonds en interne et met en œuvre un plan de mobilisation des ressources. L'organisation dispose d'une équipe, de plusieurs sources et de fonds sécurisés à moyen et long terme.",
+          "en": "The organisation mobilises resources locally and internationally, generates funds internally and implements a resource mobilisation plan. The organisation has a team, multiple sources and funding secured for the medium and long term."
+        }
+      ],
+      "action": {
+        "fr": "Cartographier les bailleurs locaux et internationaux et lancer au moins une activité génératrice de revenus propres.",
+        "en": "Map local and international donors and launch at least one income-generating activity of its own."
+      },
+      "verification": {
+        "fr": "Cartographie des bailleurs et répartition des revenus par source",
+        "en": "Donor map and breakdown of income by source"
+      }
+    },
+    {
+      "id": "itoca-purpose-work-plan",
+      "name": { "fr": "Plan de travail", "en": "Work plan" },
+      "statement": {
+        "fr": "Notre plan de travail mène clairement à la réalisation de notre mission.",
+        "en": "Our work plan clearly leads to the achievement of our mission."
+      },
+      "levels": [
+        {
+          "fr": "Un plan de travail existe pour le projet ; il montre les activités à mener par l'organisation, les responsables, le calendrier mensuel et le budget par activité.",
+          "en": "A work plan exists for the project; it shows the activities to be carried out by the organisation, the people responsible, the monthly schedule and the budget per activity."
+        },
+        {
+          "fr": "Un plan de travail existe pour le projet ; il est organisé par objectif et montre les activités à mener par l'organisation, les responsables, le calendrier mensuel et le budget par activité.",
+          "en": "A work plan exists for the project; it is organised by objective and shows the activities to be carried out by the organisation, the people responsible, the monthly schedule and the budget per activity."
+        },
+        {
+          "fr": "Un plan de travail existe à la fois pour le projet et pour l'organisation. Ils sont organisés par objectif et montrent les activités à mener, les responsables et le calendrier mensuel. Le plan de travail comporte un budget opérationnel par activité.",
+          "en": "A work plan exists both for the project and for the organisation. They are organised by objective and show the activities to be carried out, the people responsible and the monthly schedule. The work plan includes an operating budget per activity."
+        },
+        {
+          "fr": "Un plan de travail regroupant tous les projets existe pour l'organisation ; il montre les activités à mener, les responsables, le calendrier mensuel et les indicateurs. Le plan de travail est accompagné d'un budget global (budget opérationnel et budget d'activités).",
+          "en": "An organisation-wide work plan covering all projects exists; it shows the activities to be carried out, the people responsible, the monthly schedule and the indicators. The work plan is accompanied by an overall budget (operating budget and activity budget)."
+        }
+      ],
+      "action": {
+        "fr": "Consolider tous les projets dans un plan de travail annuel organisé par objectif, avec indicateurs et budget global.",
+        "en": "Consolidate all projects into one annual work plan organised by objective, with indicators and an overall budget."
+      },
+      "verification": {
+        "fr": "Plan de travail consolidé et budget global",
+        "en": "Consolidated work plan and overall budget"
+      }
+    },
+    {
+      "id": "itoca-purpose-progress-review",
+      "name": { "fr": "Revue participative des progrès", "en": "Participatory progress review" },
+      "statement": {
+        "fr": "Notre organisation organise régulièrement une séance de travail participative sur le suivi des progrès accomplis dans la réalisation des objectifs organisationnels.",
+        "en": "Our organisation regularly holds a participatory working session to review progress towards organisational objectives."
+      },
+      "levels": [
+        {
+          "fr": "L'organisation fait le suivi de la mise en œuvre du plan de travail au moins une fois par an en utilisant des indicateurs pertinents pour évaluer l'avancement dans la réalisation des objectifs organisationnels.",
+          "en": "The organisation monitors work plan implementation at least once a year, using relevant indicators to assess progress towards organisational objectives."
+        },
+        {
+          "fr": "L'organisation fait le suivi de la mise en œuvre du plan de travail au moins deux fois par an en utilisant des indicateurs pertinents pour évaluer l'avancement dans la réalisation des objectifs organisationnels.",
+          "en": "The organisation monitors work plan implementation at least twice a year, using relevant indicators to assess progress towards organisational objectives."
+        },
+        {
+          "fr": "L'organisation fait le suivi trimestriel de la mise en œuvre du plan de travail en utilisant des indicateurs pertinents pour évaluer l'avancement dans la réalisation des objectifs organisationnels, et s'en sert pour éclairer la programmation.",
+          "en": "The organisation monitors work plan implementation quarterly, using relevant indicators to assess progress towards organisational objectives, and uses the findings to inform programming."
+        },
+        {
+          "fr": "L'organisation fait le suivi trimestriel de la mise en œuvre du plan de travail en utilisant des indicateurs pertinents pour évaluer l'avancement dans la réalisation des objectifs organisationnels, et s'en sert pour éclairer la programmation. Le processus suit un cycle de réflexion et de rétroaction pour un apprentissage continu et une amélioration interne.",
+          "en": "The organisation monitors work plan implementation quarterly, using relevant indicators to assess progress towards organisational objectives, and uses the findings to inform programming. The process follows a cycle of reflection and feedback for continuous learning and internal improvement."
+        }
+      ],
+      "action": {
+        "fr": "Tenir une revue trimestrielle participative du plan de travail sur la base des indicateurs, avec décisions consignées.",
+        "en": "Hold a quarterly participatory work plan review based on indicators, with decisions recorded."
+      },
+      "verification": {
+        "fr": "Comptes rendus des revues trimestrielles",
+        "en": "Quarterly review reports"
+      }
+    },
+    {
+      "id": "itoca-purpose-smart-objectives",
+      "name": { "fr": "Objectifs SMART des programmes", "en": "SMART programme objectives" },
+      "statement": {
+        "fr": "Nos descriptions de programmes comportent des objectifs de résultats SMART liés à un cadre conceptuel à l'échelle de l'organisation.",
+        "en": "Our programme descriptions include SMART outcome objectives linked to an organisation-wide conceptual framework."
+      },
+      "levels": [
+        {
+          "fr": "Les descriptions de programmes de l'organisation ont des objectifs clairs.",
+          "en": "The organisation's programme descriptions have clear objectives."
+        },
+        {
+          "fr": "Les descriptions de programmes de l'organisation comportent des objectifs de résultats (outcomes) SMART liés à un cadre conceptuel à l'échelle de l'organisation.",
+          "en": "The organisation's programme descriptions include SMART outcome objectives linked to an organisation-wide conceptual framework."
+        },
+        {
+          "fr": "Les descriptions de programmes de l'organisation comportent des objectifs de résultats (outcomes) SMART liés à un cadre conceptuel à l'échelle de l'organisation, avec des indicateurs pour mesurer les résultats.",
+          "en": "The organisation's programme descriptions include SMART outcome objectives linked to an organisation-wide conceptual framework, with indicators to measure results."
+        },
+        {
+          "fr": "Les descriptions de programmes de l'organisation comportent des objectifs de résultats (outcomes) SMART, revus annuellement, liés à un cadre conceptuel à l'échelle de l'organisation, avec des indicateurs pour mesurer les résultats.",
+          "en": "The organisation's programme descriptions include SMART outcome objectives, reviewed annually, linked to an organisation-wide conceptual framework, with indicators to measure results."
+        }
+      ],
+      "action": {
+        "fr": "Élaborer un cadre de résultats organisationnel et y rattacher les objectifs SMART et indicateurs de chaque programme.",
+        "en": "Develop an organisational results framework and link each programme's SMART objectives and indicators to it."
+      },
+      "verification": {
+        "fr": "Cadre de résultats et descriptions de programmes alignées",
+        "en": "Results framework and aligned programme descriptions"
+      }
+    }
+  ]
+}

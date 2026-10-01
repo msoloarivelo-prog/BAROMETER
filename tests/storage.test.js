@@ -96,8 +96,10 @@ test('demo data builds three valid organisations in both languages', () => {
     const ws = Storage.newWorkspace();
     Storage.mergeOrgs(ws, orgs.map((o) => Storage.normalizeOrg(JSON.parse(JSON.stringify(o)))));
     assert.equal(ws.orgs.length, 3);
-    assert.equal(ws.orgs[0].assessments.length, 3);
-    assert.ok(ws.orgs[0].assessments[2].plan.activities.some((a) => a.source === 'custom'));
+    assert.equal(ws.orgs[0].assessments.length, 6);
+    assert.deepEqual(ws.orgs[0].assessments.map((a) => a.model), ['barometer', 'barometer', 'itoca', 'itoca', 'opi', 'barometer']);
+    assert.ok(ws.orgs[0].assessments[5].plan.activities.some((a) => a.source === 'custom'));
+    assert.equal(ws.orgs[0].activeAssessmentId, ws.orgs[0].assessments[5].id);
     // Reloading the demo replaces the demo organisations instead of duplicating them
     Storage.mergeOrgs(ws, Demo.build(lang));
     assert.equal(ws.orgs.length, 3);
@@ -108,4 +110,18 @@ test('facilitator conclusion note is kept', () => {
   const ws = Storage.normalizeWorkspace({ orgs: [{ id: 'o', organization: {}, assessments: [{ id: 'a', conclusionNote: 'Restitution du 12 mars' }, { id: 'b', conclusionNote: 5 }] }] });
   assert.equal(ws.orgs[0].assessments[0].conclusionNote, 'Restitution du 12 mars');
   assert.equal(ws.orgs[0].assessments[1].conclusionNote, '');
+});
+
+test('assessment model, evidence, verification and follow-up are kept', () => {
+  const ws = Storage.normalizeWorkspace({ orgs: [{ id: 'o', organization: { founded: '2015' }, assessments: [
+    { id: 'a', model: 'itoca', evidence: { x: 'PV du CA', y: 3 }, verified: { x: true, y: 'yes' }, plan: { activities: [{ followUp: 'Revu le 3 mars' }] } },
+    { id: 'b', model: 'unknown' }
+  ] }] });
+  const [a, b] = ws.orgs[0].assessments;
+  assert.equal(a.model, 'itoca');
+  assert.deepEqual(a.evidence, { x: 'PV du CA' });
+  assert.deepEqual(a.verified, { x: true });
+  assert.equal(a.plan.activities[0].followUp, 'Revu le 3 mars');
+  assert.equal(b.model, 'barometer');
+  assert.equal(ws.orgs[0].organization.founded, '2015');
 });

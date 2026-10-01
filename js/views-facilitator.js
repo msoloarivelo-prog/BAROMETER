@@ -16,9 +16,21 @@
   var L = App.L;
   var A = App.actions;
 
-  function portfolio() {
+  /** Model shown in the portfolio (comparisons only make sense within one model). */
+  function facModel() {
+    var used = App.Models.list().filter(function (m) {
+      return App.ws.orgs.some(function (o) { return o.assessments.some(function (a) { return a.model === m.id; }); });
+    });
+    var ids = used.map(function (m) { return m.id; });
+    var id = ids.indexOf(App.ui.facModel) >= 0 ? App.ui.facModel : (ids[0] || 'barometer');
+    F = App.Models.get(id);
+    return { id: id, used: used };
+  }
+
+  function portfolio(model) {
     return App.ws.orgs.map(function (org) {
-      var a = App.latestAssessment(org);
+      var a = App.latestAssessment(org, model);
+      if (!a) return { org: org, assessment: null, scores: null, delta: null, plan: { total: 0, done: 0, progress: 0 } };
       var r = App.scores(a);
       var prev = App.previousAssessment(org, a);
       return {
@@ -40,10 +52,12 @@
   }
 
   function settingsCard() {
+    var F = App.Models.get('barometer');
     var s = App.settings();
     var eff = S.effectiveWeights(F, s);
     var sum = F.PILLARS.reduce(function (n, p) { return n + (Number(s.weights[p.id]) || 0); }, 0);
-    return '<section class="card no-print" id="settings"><h2>' + esc(t('fac.settings')) + '</h2>' +
+    return '<section class="card no-print" id="settings"><h2>' + esc(t('fac.settings')) + ' — ' + esc(L(F.shortName)) + '</h2>' +
+      '<p class="muted small">' + esc(t('fac.otherModels')) + '</p>' +
       '<p class="muted">' + esc(t('fac.weightsExplain')) + '</p>' +
       '<fieldset class="method"><legend>' + esc(t('fac.method')) + '</legend>' +
         '<label><input type="radio" name="index-method" value="components" data-on="index-method"' + (s.indexMethod !== 'weighted' ? ' checked' : '') + '> ' + esc(t('fac.methodComponents')) + '</label>' +
@@ -51,7 +65,7 @@
       '</fieldset>' +
       '<div class="table-wrap"><table class="table weights"><thead><tr><th></th><th>' + esc(t('fac.weight')) + '</th><th>' + esc(t('fac.effective')) + '</th></tr></thead><tbody>' +
       F.PILLARS.map(function (p) {
-        return '<tr><td><span class="dot" style="background:' + App.PILLAR_COLORS[p.id] + '"></span>' + esc(L(p.name)) + '</td>' +
+        return '<tr><td><span class="dot" style="background:' + p.color + '"></span>' + esc(L(p.name)) + '</td>' +
           '<td><input type="number" min="0" max="100" step="1" data-on="weight" data-id="' + p.id + '" value="' + esc(s.weights[p.id]) + '"' +
           (s.indexMethod !== 'weighted' ? ' disabled' : '') + '> %</td>' +
           '<td>' + App.fmt(eff[p.id], 1) + ' %</td></tr>';
@@ -61,9 +75,11 @@
   }
 
   App.views.facilitator = function () {
-    var rows = portfolio();
-    var withScores = rows.filter(function (x) { return x.scores.index !== null; });
-    var complete = rows.filter(function (x) { return x.scores.complete; }).length;
+    var fm = facModel();
+    var rows = portfolio(fm.id);
+    var assessed = rows.filter(function (x) { return x.assessment; });
+    var withScores = assessed.filter(function (x) { return x.scores.index !== null; });
+    var complete = assessed.filter(function (x) { return x.scores.complete; }).length;
     var avgIndex = S.average(withScores.map(function (x) { return x.scores.index; }));
     var actTotal = rows.reduce(function (n, x) { return n + x.plan.total; }, 0);
     var actDone = rows.reduce(function (n, x) { return n + x.plan.done; }, 0);
@@ -77,9 +93,14 @@
         '<button class="btn" data-click="fac-print">' + esc(t('print')) + '</button>' +
       '</div></div>';
 
+    html += '<div class="fac-model-bar"><span>' + esc(t('fac.modelShown')) + '</span><div class="segmented" role="group">' +
+      App.Models.list().map(function (m) {
+        return '<button class="' + (m.id === fm.id ? 'active' : '') + '" data-click="fac-model" data-model="' + m.id + '">' + esc(L(m.shortName)) + '</button>';
+      }).join('') + '</div><span class="muted small">' + esc(L(F.description)) + '</span></div>';
+
     html += '<section class="summary fac-summary">' +
       kpi(t('fac.orgs'), rows.length) +
-      kpi(t('fac.assessed'), complete + '<small> / ' + rows.length + '</small>') +
+      kpi(t('fac.assessed'), complete + '<small> / ' + assessed.length + '</small>') +
       kpi(t('fac.avgIndex'), App.fmt(avgIndex, 2) + '<small> / 4</small>') +
       kpi(t('fac.activities'), actDone + '<small> / ' + actTotal + '</small>') +
       '</section>';
@@ -92,6 +113,11 @@
       '<th class="center">▼ ' + esc(t('fac.weak')) + '</th><th>' + esc(t('fac.planProgress')) + '</th><th class="no-print"></th></tr></thead><tbody>' +
       rows.map(function (x) {
         var o = x.org.organization;
+        if (!x.assessment) {
+          return '<tr class="no-assessment"><td><strong>' + esc(App.orgName(x.org)) + '</strong></td><td colspan="' + (F.PILLARS.length + 5) + '" class="muted">' +
+            esc(t('fac.noneOfModel', { model: L(F.shortName) })) + '</td><td class="row-actions no-print">' +
+            '<button class="btn small" data-click="fac-open" data-id="' + esc(x.org.id) + '" data-route="new">' + esc(t('new.start')) + '</button></td></tr>';
+        }
         return '<tr' + (x.org.id === App.ws.activeOrgId ? ' class="current"' : '') + '>' +
           '<td><strong>' + esc(App.orgName(x.org)) + '</strong>' + (o.acronym ? ' <span class="muted">(' + esc(o.acronym) + ')</span>' : '') +
             (o.region || o.type ? '<br><span class="muted small">' + esc([o.type, o.region].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
@@ -112,10 +138,10 @@
 
     // Pillar averages + common weaknesses
     var pillarAvg = F.PILLARS.map(function (p, i) {
-      return { label: L(p.name), value: S.average(withScores.map(function (x) { return x.scores.pillars[i].score; })), color: App.PILLAR_COLORS[p.id] };
+      return { label: L(p.name), value: S.average(withScores.map(function (x) { return x.scores.pillars[i].score; })), color: p.color };
     });
     var weakCount = {};
-    rows.forEach(function (x) {
+    assessed.forEach(function (x) {
       Object.keys(x.assessment.answers).forEach(function (cid) {
         if (S.categoryFor(x.assessment.answers[cid]) === 'address') weakCount[cid] = (weakCount[cid] || 0) + 1;
       });
@@ -153,10 +179,16 @@
     return '<div class="kpi"><span class="kpi-label">' + esc(label) + '</span><span class="kpi-value">' + value + '</span></div>';
   }
 
+  A['fac-model'] = function (el) {
+    App.ui.facModel = el.dataset.model;
+    App.render();
+  };
+
   A['fac-open'] = function (el) {
     App.ws.activeOrgId = el.dataset.id;
     var org = App.org();
-    org.activeAssessmentId = App.latestAssessment(org).id;
+    var latest = App.latestAssessment(org, F.id);
+    if (latest) org.activeAssessmentId = latest.id;
     App.ui.compareWith = null;
     App.persist(true);
     location.hash = '#' + el.dataset.route;
@@ -185,18 +217,20 @@
   };
 
   A['fac-export-csv'] = function () {
+    var fm = facModel();
     var header = [t('profile.name'), t('profile.acronym'), t('profile.type'), t('profile.region'), t('fac.latest'),
       t('profile.progress'), t('profile.index')].concat(F.PILLARS.map(function (p) { return L(p.name); }))
       .concat([t('cats.maintain'), t('cats.opportunity'), t('cats.address'), t('plan.activities'), t('status.done')]);
     var rows = [header];
-    portfolio().forEach(function (x) {
+    portfolio(fm.id).forEach(function (x) {
+      if (!x.assessment) return;
       var o = x.org.organization;
       rows.push([App.orgName(x.org), o.acronym, o.type, o.region, App.assessmentLabel(x.assessment),
         x.scores.answered + '/' + x.scores.totalComponents, App.num(x.scores.index)]
         .concat(x.scores.pillars.map(function (p) { return App.num(p.score); }))
         .concat([x.scores.counts.maintain, x.scores.counts.opportunity, x.scores.counts.address, x.plan.total, x.plan.done]));
     });
-    App.download('portfolio-' + new Date().toISOString().slice(0, 10) + '.csv', App.csv(rows), 'text/csv;charset=utf-8');
+    App.download('portfolio-' + fm.id + '-' + new Date().toISOString().slice(0, 10) + '.csv', App.csv(rows), 'text/csv;charset=utf-8');
   };
 
   A['fac-print'] = function () { window.print(); };
