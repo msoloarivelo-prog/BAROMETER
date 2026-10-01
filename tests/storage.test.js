@@ -125,3 +125,15 @@ test('assessment model, evidence, verification and follow-up are kept', () => {
   assert.equal(b.model, 'barometer');
   assert.equal(ws.orgs[0].organization.founded, '2015');
 });
+
+test('profile country / focal title and evidence file metadata are kept; files travel with imports', () => {
+  const ws = Storage.normalizeWorkspace({ orgs: [{ id: 'o', organization: { country: 'Madagascar', region: 'Analamanga', focalPoint: 'Hanta R.', focalTitle: 'Directrice' }, assessments: [
+    { id: 'a', evidenceFiles: { x: [{ id: 'f1', name: 'pv.pdf', size: 1200 }, { name: 'no-id.pdf' }], y: 'bad' } }
+  ] }] });
+  const o = ws.orgs[0];
+  assert.equal(o.organization.country, 'Madagascar');
+  assert.equal(o.organization.focalTitle, 'Directrice');
+  assert.deepEqual(o.assessments[0].evidenceFiles, { x: [{ id: 'f1', name: 'pv.pdf', size: 1200, uploadedAt: '' }] });
+  const parsed = Storage.parseImport({ type: 'barometer-organization', org: o, files: [{ id: 'f1', data: 'JVBERi0=' }] });
+  assert.equal(parsed.files.length, 1);
+});

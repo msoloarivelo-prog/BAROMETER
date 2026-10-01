@@ -335,19 +335,67 @@
 
   // ------------------------------------------------------------------ profile
 
+  /** Age of the organisation computed from its year founded. */
+  App.orgAge = function (o) {
+    var y = Number(o.founded);
+    return y ? new Date().getFullYear() - y : null;
+  };
+
+  App.orgAgeText = function (o) {
+    var age = App.orgAge(o);
+    return age === null ? '' : App.t('profile.age', { n: age });
+  };
+
+  /** Evidence summary for reports: description and attached PDF names. */
+  App.evidenceText = function (a, cid) {
+    var files = (a.evidenceFiles[cid] || []).map(function (f) { return f.name; });
+    return [a.evidence[cid], files.length ? files.join(', ') : ''].filter(Boolean).join(' — ');
+  };
+
+  /** "Name, Title" for the focal point. */
+  App.focalText = function (o) { return [o.focalPoint, o.focalTitle].filter(Boolean).join(', '); };
+
+  /** "Region, Country". */
+  App.locationText = function (o) { return [o.region, o.country].filter(Boolean).join(', '); };
+
+  var COUNTRY_CODES = ('AF AL DZ AD AO AG AR AM AU AT AZ BS BH BD BB BY BE BZ BJ BT BO BA BW BR BN BG BF BI CV KH CM CA CF TD CL CN CO KM CG CD CR CI HR CU CY CZ ' +
+    'DK DJ DM DO EC EG SV GQ ER EE SZ ET FJ FI FR GA GM GE DE GH GR GD GT GN GW GY HT HN HU IS IN ID IR IQ IE IL IT JM JP JO KZ KE KI KW KG LA LV LB LS LR LY LI LT LU ' +
+    'MG MW MY MV ML MT MH MR MU MX FM MD MC MN ME MA MZ MM NA NR NP NL NZ NI NE NG KP MK NO OM PK PW PS PA PG PY PE PH PL PT QA RE RO RU RW KN LC VC WS SM ST SA SN RS SC ' +
+    'SL SG SK SI SB SO ZA KR SS ES LK SD SR SE CH SY TW TJ TZ TH TL TG TO TT TN TR TM TV UG UA AE GB US UY UZ VU VA VE VN YE YT ZM ZW').split(' ');
+
+  function countryDatalist() {
+    var names = [];
+    try {
+      var dn = new Intl.DisplayNames([I18n.getLang()], { type: 'region' });
+      names = COUNTRY_CODES.map(function (c) { return dn.of(c); });
+    } catch (e) { names = []; }
+    names.sort(function (x, y) { return x.localeCompare(y); });
+    return '<datalist id="country-list">' + names.map(function (n) { return '<option value="' + App.esc(n) + '">'; }).join('') + '</datalist>';
+  }
+
   App.views.profile = function () {
     var org = App.org();
     var o = org.organization;
     var a = App.assessment();
-    function field(id, type) {
+    function field(id, type, extra) {
       return '<label class="field"><span>' + App.esc(App.t('profile.' + id)) + '</span>' +
-        '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"></label>';
+        '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"' + (extra || '') + '></label>';
     }
+    var thisYear = new Date().getFullYear();
+    var years = '<option value="">—</option>';
+    for (var y = thisYear; y >= 1900; y--) years += '<option value="' + y + '"' + (String(y) === String(o.founded) ? ' selected' : '') + '>' + y + '</option>';
+    var fw = App.fw(a);
     App.setView(
       '<h1>' + App.esc(App.t('profile.title')) + '</h1>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.org')) + '</h2><div class="form-grid">' +
-        field('name') + field('acronym') + field('type') + field('region') + field('founded', 'number') + field('address') +
-        field('focalPoint') + field('phone', 'tel') + field('email', 'email') +
+        field('name') + field('acronym') + field('type') +
+        '<label class="field"><span>' + App.esc(App.t('profile.founded')) + '</span><select data-on="org-field" data-field="founded">' + years + '</select>' +
+          '<small class="muted" id="org-age">' + App.esc(App.orgAgeText(o)) + '</small></label>' +
+      '</div><h3>' + App.esc(App.t('profile.location')) + '</h3><div class="form-grid">' +
+        field('country', 'text', ' list="country-list" autocomplete="country-name"') + field('region') + field('address') +
+      '</div>' + countryDatalist() +
+      '<h3>' + App.esc(App.t('profile.contact')) + '</h3><div class="form-grid">' +
+        field('focalPoint') + field('focalTitle') + field('phone', 'tel') + field('email', 'email') +
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
         '<label class="field"><span>' + App.esc(App.t('profile.sequence')) + '</span><select data-on="assess-sequence">' +
@@ -358,6 +406,8 @@
         '<label class="field"><span>' + App.esc(App.t('profile.month')) + '</span><select data-on="assess-month">' +
           monthOptions(a) + '</select></label>' +
       '</div></section>' +
+      '<nav class="pager profile-next"><span></span><a class="btn primary" href="#assessment/' + fw.PILLARS[0].id + '">' +
+        App.esc(App.t('profile.next', { model: App.L(fw.shortName) })) + ' →</a></nav>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.history')) + '</h2>' +
         '<p class="muted">' + App.esc(App.t('profile.historyHelp')) + '</p>' +
         '<div class="table-wrap"><table class="table"><thead><tr><th>' + App.esc(App.t('header.assessment')) + '</th><th>' + App.esc(App.t('profile.progress')) +
@@ -461,24 +511,50 @@
   };
 
   /** Evidence (mandatory for OPI, optional otherwise) and facilitator verification. */
+  function evidenceFilesHtml(a, cid) {
+    var files = a.evidenceFiles[cid] || [];
+    return '<ul class="evidence-files" data-files="' + App.esc(cid) + '">' + files.map(function (f) {
+      return '<li><span class="pdf-icon">PDF</span><button type="button" class="link" data-click="evidence-open" data-file="' + App.esc(f.id) + '">' + App.esc(f.name) + '</button>' +
+        '<span class="muted small">' + App.esc(window.BarometerFiles.formatSize(f.size)) + '</span>' +
+        '<button type="button" class="btn small ghost danger" data-click="evidence-remove" data-id="' + App.esc(cid) + '" data-file="' + App.esc(f.id) + '" title="' + App.esc(App.t('delete')) + '">✕</button></li>';
+    }).join('') + '</ul>';
+  }
+
+  function hasEvidence(a, cid) { return !!(a.evidence[cid] || (a.evidenceFiles[cid] || []).length); }
+
+  /** Evidence: uploaded PDF files plus a short description; mandatory for OPI, optional otherwise. */
   function evidenceBlock(F, a, c) {
     var required = F.evidence === 'required';
     var val = a.evidence[c.id] || '';
-    var missing = required && a.answers[c.id] && !val;
-    var inner = '<textarea data-on="evidence" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('evidence.ph')) + '">' + App.esc(val) + '</textarea>' +
+    var missing = required && a.answers[c.id] && !hasEvidence(a, c.id);
+    var inner = evidenceFilesHtml(a, c.id) +
+      '<label class="btn small upload-btn">⤒ ' + App.esc(App.t('evidence.upload')) +
+        '<input type="file" accept=".pdf,application/pdf" multiple hidden data-on="evidence-upload" data-id="' + App.esc(c.id) + '"></label>' +
+      '<span class="muted small"> ' + App.esc(App.t('evidence.uploadHelp')) + '</span>' +
+      '<textarea data-on="evidence" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('evidence.ph')) + '">' + App.esc(val) + '</textarea>' +
       '<label class="verified"><input type="checkbox" data-on="verified" data-id="' + App.esc(c.id) + '"' + (a.verified[c.id] ? ' checked' : '') + '> ' + App.esc(App.t('evidence.verified')) + '</label>';
     if (required) {
-      return '<div class="evidence required' + (missing ? ' missing' : '') + '"><span class="evidence-label">' + App.esc(App.t('evidence.labelRequired')) + '</span>' + inner + '</div>';
+      return '<div class="evidence required' + (missing ? ' missing' : '') + '" data-evidence="' + App.esc(c.id) + '"><span class="evidence-label">' + App.esc(App.t('evidence.labelRequired')) + '</span>' + inner + '</div>';
     }
-    return '<details class="evidence"' + (val || a.verified[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('evidence.label')) + '</summary>' + inner + '</details>';
+    var count = (a.evidenceFiles[c.id] || []).length;
+    return '<details class="evidence" data-evidence="' + App.esc(c.id) + '"' + (hasEvidence(a, c.id) || a.verified[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('evidence.label')) +
+      (count ? ' (' + count + ' PDF)' : '') + '</summary>' + inner + '</details>';
+  }
+
+  function refreshEvidence(cid) {
+    var a = App.assessment();
+    var box = view.querySelector('[data-evidence="' + cid + '"]');
+    if (!box) return;
+    var list = box.querySelector('[data-files="' + cid + '"]');
+    if (list) list.outerHTML = evidenceFilesHtml(a, cid);
+    if (box.classList.contains('required')) box.classList.toggle('missing', !!a.answers[cid] && !hasEvidence(a, cid));
   }
 
   /** Name and description of the model, plus the OPI relevance warning. */
   App.modelBanner = function (F) {
     var html = '<div class="model-banner kind-' + F.kind + '"><strong>' + App.esc(App.L(F.name)) + '</strong> — ' + App.esc(App.L(F.description)) + '</div>';
     if (F.minYears) {
-      var founded = Number(App.org().organization.founded);
-      var age = founded ? new Date().getFullYear() - founded : null;
+      var age = App.orgAge(App.org().organization);
       html += '<div class="notice">' + App.esc(App.t('opi.notice')) +
         (age !== null && age < F.minYears ? ' <strong>' + App.esc(App.t('opi.tooYoung', { years: age })) + '</strong>' : '') +
         (age === null ? ' ' + App.esc(App.t('opi.noFounded')) : '') + '</div>';
@@ -677,6 +753,10 @@
 
   A['org-field'] = function (el) {
     App.org().organization[el.dataset.field] = el.value;
+    if (el.dataset.field === 'founded') {
+      var age = document.getElementById('org-age');
+      if (age) age.textContent = App.orgAgeText(App.org().organization);
+    }
     App.touch();
     if (el.dataset.field === 'name') App.renderHeader();
     App.persist();
@@ -725,10 +805,43 @@
 
   A.evidence = function (el) {
     App.assessment().evidence[el.dataset.id] = el.value;
-    var box = el.closest('.evidence');
-    if (box && box.classList.contains('required')) box.classList.toggle('missing', !el.value && !!App.assessment().answers[el.dataset.id]);
+    refreshEvidence(el.dataset.id);
     App.touch();
     App.persist();
+  };
+
+  A['evidence-upload'] = function (el) {
+    var a = App.assessment();
+    var cid = el.dataset.id;
+    var files = Array.prototype.slice.call(el.files || []);
+    el.value = '';
+    var errors = [];
+    Promise.all(files.map(function (file) {
+      return window.BarometerFiles.add(file).then(function (meta) {
+        (a.evidenceFiles[cid] = a.evidenceFiles[cid] || []).push(meta);
+      })['catch'](function (e) { errors.push(file.name + ' : ' + App.t('evidence.err.' + (e.message === 'too-large' ? 'size' : e.message === 'not-pdf' ? 'pdf' : 'store'))); });
+    })).then(function () {
+      App.touch();
+      App.persist(true);
+      refreshEvidence(cid);
+      if (errors.length) alert(errors.join('\n'));
+    });
+  };
+
+  A['evidence-open'] = function (el) {
+    window.BarometerFiles.view(el.dataset.file, { download: App.t('evidence.download'), close: App.t('evidence.close') })['catch'](function () { alert(App.t('evidence.err.missing')); });
+  };
+
+  A['evidence-remove'] = function (el) {
+    if (!confirm(App.t('evidence.confirmRemove'))) return;
+    var a = App.assessment();
+    var cid = el.dataset.id;
+    a.evidenceFiles[cid] = (a.evidenceFiles[cid] || []).filter(function (f) { return f.id !== el.dataset.file; });
+    if (!a.evidenceFiles[cid].length) delete a.evidenceFiles[cid];
+    window.BarometerFiles.remove(el.dataset.file)['catch'](function () {});
+    App.touch();
+    App.persist(true);
+    refreshEvidence(cid);
   };
 
   A.verified = function (el) {
@@ -814,19 +927,28 @@
   A['export-org'] = function () {
     var org = App.org();
     var date = new Date().toISOString().slice(0, 10);
-    App.download('barometer-' + App.slug(org.organization.acronym || org.organization.name) + '-' + date + '.json',
-      JSON.stringify(Store.exportOrg(org), null, 2), 'application/json');
+    window.BarometerFiles.exportFiles([org])['catch'](function () { return []; }).then(function (files) {
+      var data = Store.exportOrg(org);
+      data.files = files;
+      App.download('barometer-' + App.slug(org.organization.acronym || org.organization.name) + '-' + date + '.json',
+        JSON.stringify(data, null, 2), 'application/json');
+    });
   };
 
   A['import-files'] = function (el) {
     App.readJsonFiles(el.files, function (results) {
       var orgs = [];
+      var files = [];
       var errors = [];
       results.forEach(function (r) {
         if (r.error) { errors.push(r.file.name + ': ' + App.t('err.invalid')); return; }
-        try { orgs = orgs.concat(Store.parseImport(r.data).orgs); }
-        catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
+        try {
+          var parsed = Store.parseImport(r.data);
+          orgs = orgs.concat(parsed.orgs);
+          files = files.concat(parsed.files || []);
+        } catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
       });
+      if (files.length) window.BarometerFiles.importFiles(files)['catch'](function () { errors.push(App.t('evidence.err.store')); });
       if (orgs.length) {
         var res = Store.mergeOrgs(App.ws, orgs);
         App.ws.activeOrgId = orgs[orgs.length - 1].id;

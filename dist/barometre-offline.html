@@ -521,6 +521,17 @@ textarea { resize: vertical; }
 .evidence.required { padding: .55rem .7rem; border: 1px dashed #8a4f9e; border-radius: 8px; }
 .evidence.required.missing { border-color: var(--danger); background: var(--l1-bg); }
 .evidence-label { font-weight: 600; font-size: .82rem; color: #8a4f9e; }
+.pdf-viewer { position: fixed; inset: 0; z-index: 100; background: rgba(15, 20, 25, .7); display: flex; flex-direction: column; padding: 2vh 3vw; }
+.pdf-viewer-bar { display: flex; align-items: center; gap: .6rem; background: var(--surface); padding: .5rem .8rem; border-radius: 8px 8px 0 0; }
+.pdf-viewer-bar strong { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pdf-viewer iframe { flex: 1; width: 100%; border: 0; background: #fff; border-radius: 0 0 8px 8px; }
+.evidence-files { list-style: none; padding: 0; margin: .4rem 0; display: grid; gap: .3rem; }
+.evidence-files li { display: flex; align-items: center; gap: .5rem; }
+.pdf-icon { font-size: .65rem; font-weight: 700; color: #fff; background: #c94040; border-radius: 3px; padding: .1rem .3rem; }
+.btn.link, button.link { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; text-align: left; }
+.upload-btn { margin: .3rem 0; }
+.profile-next { margin: 0 0 1rem; }
+.card h3 { margin: 1.1rem 0 .6rem; font-size: .95rem; color: var(--muted); }
 .verified { display: inline-flex; align-items: center; gap: .4rem; margin-top: .35rem; font-size: .85rem; }
 .fac-model-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin: 0 0 1rem; }
 .portfolio tr.no-assessment td { color: var(--muted); }
@@ -921,7 +932,7 @@ textarea { resize: vertical; }
       'profile.type': 'Type d’organisation',
       'profile.region': 'Région / zone',
       'profile.address': 'Adresse',
-      'profile.focalPoint': 'Point focal',
+      'profile.focalPoint': 'Point focal (nom)',
       'profile.phone': 'Téléphone',
       'profile.email': 'E-mail',
       'profile.current': 'Diagnostic en cours',
@@ -932,7 +943,7 @@ textarea { resize: vertical; }
       'profile.progress': 'Avancement',
       'profile.index': 'Indice',
       'profile.share': 'Sauvegarde et transmission',
-      'profile.shareHelp': 'Les données restent dans ce navigateur. Exportez le fichier de l’organisation pour l’archiver ou le transmettre au facilitateur, qui l’importera dans son espace.',
+      'profile.shareHelp': 'Les données restent dans ce navigateur. Exportez le fichier de l’organisation (preuves PDF incluses) pour l’archiver ou le transmettre au facilitateur, qui l’importera dans son espace.',
       'profile.export': 'Exporter le fichier de l’organisation (.json)',
       'profile.import': 'Importer un fichier',
       'profile.deleteOrg': 'Supprimer cette organisation',
@@ -1060,6 +1071,21 @@ textarea { resize: vertical; }
       'fac.empty': 'Aucune donnée',
 
       'help.title': 'Aide',
+      'profile.country': 'Pays',
+      'profile.location': 'Localisation',
+      'profile.contact': 'Point focal et contacts',
+      'profile.focalTitle': 'Fonction / titre du point focal',
+      'profile.age': 'Âge de l’organisation : {n} an(s)',
+      'profile.next': 'Suivant : commencer le diagnostic {model}',
+      'evidence.upload': 'Joindre des preuves (PDF)',
+      'evidence.download': 'Télécharger',
+      'evidence.close': 'Fermer',
+      'evidence.uploadHelp': 'PDF uniquement, 10 Mo maximum par fichier.',
+      'evidence.err.pdf': 'ce fichier n’est pas un PDF',
+      'evidence.err.size': 'fichier trop volumineux (10 Mo maximum)',
+      'evidence.err.store': 'enregistrement impossible dans ce navigateur',
+      'evidence.err.missing': 'Fichier introuvable dans ce navigateur.',
+      'evidence.confirmRemove': 'Retirer ce fichier de preuve ?',
       'nav.plan': 'Plan d’action (CAP)',
       'kind.capacity': 'Capacités',
       'kind.performance': 'Performance',
@@ -1070,14 +1096,14 @@ textarea { resize: vertical; }
       'new.model': 'Modèle',
       'evidence.label': 'Preuves / sources de vérification',
       'evidence.labelRequired': 'Preuves (obligatoires pour l’OPI)',
-      'evidence.ph': 'Documents, données ou faits qui justifient le niveau choisi (rapports, PV, chiffres…)',
+      'evidence.ph': 'Description des preuves jointes ou référence (rapport annuel p. 12, PV du CA du…)',
       'evidence.verified': 'Preuve vérifiée par le facilitateur',
       'evidence.short': 'Preuve',
       'opi.notice': 'L’OPI mesure la performance, c’est-à-dire les résultats déjà obtenus : il suppose que l’organisation a mis en œuvre des activités dans le passé. Il n’est pas pertinent pour une organisation nouvelle (moins de 2 ans d’activités). Chaque niveau doit être justifié par des preuves.',
       'opi.tooYoung': 'Attention : l’organisation n’a que {years} an(s) d’existence d’après sa fiche.',
-      'opi.noFounded': 'Renseignez l’année de création dans la Fiche pour vérifier ce critère.',
+      'opi.noFounded': 'Renseignez l’année de création dans la Fiche pour vérifier ce critère (l’âge est calculé automatiquement).',
       'results.method.pillars': 'Indice global = moyenne des domaines (poids égaux)',
-      'profile.founded': 'Année de création',
+      'profile.founded': 'Année de création (calendrier)',
       'cap.title': 'Plan d’action pour le changement (CAP)',
       'cap.gap': 'Écart identifié',
       'cap.target': 'Niveau visé',
@@ -1226,7 +1252,7 @@ textarea { resize: vertical; }
       'profile.type': 'Type of organisation',
       'profile.region': 'Region / area',
       'profile.address': 'Address',
-      'profile.focalPoint': 'Focal point',
+      'profile.focalPoint': 'Focal point (name)',
       'profile.phone': 'Phone',
       'profile.email': 'E-mail',
       'profile.current': 'Current assessment',
@@ -1237,7 +1263,7 @@ textarea { resize: vertical; }
       'profile.progress': 'Progress',
       'profile.index': 'Index',
       'profile.share': 'Backup and sharing',
-      'profile.shareHelp': 'Data stays in this browser. Export the organisation file to archive it or send it to the facilitator, who will import it into their space.',
+      'profile.shareHelp': 'Data stays in this browser. Export the organisation file (PDF evidence included) to archive it or send it to the facilitator, who will import it into their space.',
       'profile.export': 'Export organisation file (.json)',
       'profile.import': 'Import a file',
       'profile.deleteOrg': 'Delete this organisation',
@@ -1365,6 +1391,21 @@ textarea { resize: vertical; }
       'fac.empty': 'No data',
 
       'help.title': 'Help',
+      'profile.country': 'Country',
+      'profile.location': 'Location',
+      'profile.contact': 'Focal point and contacts',
+      'profile.focalTitle': 'Focal point position / title',
+      'profile.age': 'Age of the organisation: {n} year(s)',
+      'profile.next': 'Next: start the {model} assessment',
+      'evidence.upload': 'Attach evidence (PDF)',
+      'evidence.download': 'Download',
+      'evidence.close': 'Close',
+      'evidence.uploadHelp': 'PDF only, 10 MB maximum per file.',
+      'evidence.err.pdf': 'this file is not a PDF',
+      'evidence.err.size': 'file too large (10 MB maximum)',
+      'evidence.err.store': 'cannot be saved in this browser',
+      'evidence.err.missing': 'File not found in this browser.',
+      'evidence.confirmRemove': 'Remove this evidence file?',
       'nav.plan': 'Change action plan (CAP)',
       'kind.capacity': 'Capacity',
       'kind.performance': 'Performance',
@@ -1375,14 +1416,14 @@ textarea { resize: vertical; }
       'new.model': 'Model',
       'evidence.label': 'Evidence / means of verification',
       'evidence.labelRequired': 'Evidence (required for OPI)',
-      'evidence.ph': 'Documents, data or facts supporting the level chosen (reports, minutes, figures…)',
+      'evidence.ph': 'Description of the attached evidence or reference (annual report p. 12, board minutes of…)',
       'evidence.verified': 'Evidence verified by the facilitator',
       'evidence.short': 'Evidence',
       'opi.notice': 'The OPI measures performance, i.e. results already achieved: it assumes the organisation has implemented activities in the past. It is not relevant for a new organisation (less than 2 years of activity). Every level must be backed by evidence.',
       'opi.tooYoung': 'Warning: according to its profile, the organisation is only {years} year(s) old.',
-      'opi.noFounded': 'Enter the year founded in the Profile to check this criterion.',
+      'opi.noFounded': 'Enter the year founded in the Profile to check this criterion (the age is calculated automatically).',
       'results.method.pillars': 'Global index = mean of domains (equal weights)',
-      'profile.founded': 'Year founded',
+      'profile.founded': 'Year founded (calendar)',
       'cap.title': 'Change action plan (CAP)',
       'cap.gap': 'Gap identified',
       'cap.target': 'Target level',
@@ -6912,7 +6953,7 @@ textarea { resize: vertical; }
   var MONTHS = 24;
   var STATUSES = ['planned', 'ongoing', 'done'];
   var PLAN_CATEGORIES = ['address', 'opportunity', 'maintain', 'other'];
-  var PROFILE_FIELDS = ['name', 'acronym', 'type', 'region', 'founded', 'address', 'focalPoint', 'phone', 'email'];
+  var PROFILE_FIELDS = ['name', 'acronym', 'type', 'country', 'region', 'founded', 'address', 'focalPoint', 'focalTitle', 'phone', 'email'];
   var MODEL_IDS = ['barometer', 'itoca', 'opi'];
   var PRIORITY_VALUES = ['essential', 'important', 'neutral'];
 
@@ -6972,6 +7013,7 @@ textarea { resize: vertical; }
       answers: {},
       comments: {},
       evidence: {},
+      evidenceFiles: {},
       verified: {},
       conclusionNote: '',
       plan: emptyPlan()
@@ -7080,6 +7122,13 @@ textarea { resize: vertical; }
     Object.keys(a.evidence || {}).forEach(function (k) {
       if (typeof a.evidence[k] === 'string') base.evidence[k] = a.evidence[k];
     });
+    Object.keys(a.evidenceFiles || {}).forEach(function (k) {
+      var list = Array.isArray(a.evidenceFiles[k]) ? a.evidenceFiles[k] : [];
+      var clean = list.filter(function (f) { return f && typeof f.id === 'string' && f.id; }).map(function (f) {
+        return { id: f.id, name: str(f.name) || 'evidence.pdf', size: Number(f.size) || 0, uploadedAt: str(f.uploadedAt) };
+      });
+      if (clean.length) base.evidenceFiles[k] = clean;
+    });
     Object.keys(a.verified || {}).forEach(function (k) {
       if (a.verified[k] === true) base.verified[k] = true;
     });
@@ -7123,12 +7172,13 @@ textarea { resize: vertical; }
    */
   function parseImport(data) {
     if (!data || typeof data !== 'object') throw new Error('invalid');
-    if (data.type === 'barometer-organization' && data.org) return { orgs: [normalizeOrg(data.org)], settings: null };
+    var files = Array.isArray(data.files) ? data.files : [];
+    if (data.type === 'barometer-organization' && data.org) return { orgs: [normalizeOrg(data.org)], settings: null, files: files };
     if (Array.isArray(data.orgs)) {
       var ws = normalizeWorkspace(data);
-      return { orgs: ws.orgs, settings: ws.settings };
+      return { orgs: ws.orgs, settings: ws.settings, files: files };
     }
-    return { orgs: [normalizeOrg(data)], settings: null };
+    return { orgs: [normalizeOrg(data)], settings: null, files: files };
   }
 
   /** Adds or replaces (same id) organisations in the workspace. */
@@ -7608,14 +7658,14 @@ textarea { resize: vertical; }
 
     var o1 = org('demo-org-1', {
       name: en ? 'Women Farmers Network (demo)' : 'Réseau des Femmes Agricultrices (démo)',
-      acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', region: 'Analamanga', founded: '2012',
+      acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', country: 'Madagascar', region: 'Analamanga', founded: '2012', focalTitle: en ? 'Executive director' : 'Directrice exécutive',
       address: 'Antananarivo', focalPoint: 'Hanta R.', phone: '+261 34 00 000 01', email: 'contact@example.org'
     }, [a0, a1, it1, it2, op1, a2]);
 
     // 2. Well-established NGO: mostly strong, a few opportunities.
     var o2 = org('demo-org-2', {
       name: en ? 'Green Coast NGO (demo)' : 'ONG Côte Verte (démo)',
-      acronym: 'OCV', type: en ? 'NGO' : 'ONG', region: 'Atsinanana', focalPoint: 'Jean-Marc T.'
+      acronym: 'OCV', type: en ? 'NGO' : 'ONG', country: 'Madagascar', region: 'Atsinanana', founded: '2004', focalPoint: 'Jean-Marc T.', focalTitle: en ? 'Programme coordinator' : 'Coordonnateur des programmes'
     }, [assessment(1, 2026, answers(function (e, i) { return [4, 4, 3, 4, 3][i % 5]; }), '2026-09')]);
 
     // 3. Community association: assessment in progress (partly answered).
@@ -7623,7 +7673,7 @@ textarea { resize: vertical; }
     F.allComponents().forEach(function (e) { if (e.pillar.id === 'fin') delete partial[e.component.id]; });
     var o3 = org('demo-org-3', {
       name: en ? 'Youth for Change Association (demo)' : 'Association Jeunes pour le Changement (démo)',
-      acronym: 'AJC', type: en ? 'Community association' : 'Association communautaire', region: 'Boeny', focalPoint: 'Fara N.'
+      acronym: 'AJC', type: en ? 'Community association' : 'Association communautaire', country: 'Madagascar', region: 'Boeny', founded: '2025', focalPoint: 'Fara N.', focalTitle: en ? 'President' : 'Présidente'
     }, [assessment(1, 2026, partial, '')]);
 
     return [o1, o2, o3];
@@ -7636,6 +7686,204 @@ textarea { resize: vertical; }
   } else {
     root.BarometerDemo = Demo;
   }
+})(this);
+
+</script>
+  <script>
+/* js/files.js */
+/*
+ * Evidence files (PDF) stored in the browser's IndexedDB.
+ *
+ * Assessments only keep metadata ({ id, name, size, uploadedAt } per
+ * indicator in `assessment.evidenceFiles`); the PDF content lives in
+ * IndexedDB, which allows much larger storage than localStorage.
+ * Organisation exports and workspace backups embed the files (base64) so
+ * they travel with the data to the facilitator.
+ */
+(function (root) {
+  'use strict';
+
+  var DB_NAME = 'barometre-files';
+  var STORE = 'files';
+  var MAX_SIZE = 10 * 1024 * 1024; // 10 MB per file
+  var dbPromise = null;
+
+  function open() {
+    if (dbPromise) return dbPromise;
+    dbPromise = new Promise(function (resolve, reject) {
+      if (!root.indexedDB) { reject(new Error('indexeddb-unavailable')); return; }
+      var req = root.indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(STORE, { keyPath: 'id' }); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+    return dbPromise;
+  }
+
+  function tx(mode, fn) {
+    return open().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var t = db.transaction(STORE, mode);
+        var store = t.objectStore(STORE);
+        var result = fn(store);
+        t.oncomplete = function () { resolve(result && result.result !== undefined ? result.result : result); };
+        t.onerror = function () { reject(t.error); };
+      });
+    });
+  }
+
+  function uid() { return 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+  /** Checks that a File is a PDF (extension/type and "%PDF" signature) and not too large. */
+  function validatePdf(file) {
+    return new Promise(function (resolve, reject) {
+      var looksPdf = /\.pdf$/i.test(file.name) || file.type === 'application/pdf';
+      if (!looksPdf) { reject(new Error('not-pdf')); return; }
+      if (file.size > MAX_SIZE) { reject(new Error('too-large')); return; }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var sig = new Uint8Array(reader.result);
+        if (String.fromCharCode(sig[0], sig[1], sig[2], sig[3]) !== '%PDF') reject(new Error('not-pdf'));
+        else resolve();
+      };
+      reader.onerror = function () { reject(new Error('not-pdf')); };
+      reader.readAsArrayBuffer(file.slice(0, 4));
+    });
+  }
+
+  /** Stores a PDF and returns its metadata. */
+  function add(file) {
+    return validatePdf(file).then(function () {
+      var meta = { id: uid(), name: file.name, size: file.size, uploadedAt: new Date().toISOString() };
+      var record = { id: meta.id, name: meta.name, size: meta.size, type: 'application/pdf', uploadedAt: meta.uploadedAt, data: file };
+      return tx('readwrite', function (s) { s.put(record); }).then(function () { return meta; });
+    });
+  }
+
+  function get(id) {
+    return tx('readonly', function (s) { return s.get(id); });
+  }
+
+  function remove(id) {
+    return tx('readwrite', function (s) { s['delete'](id); });
+  }
+
+  /**
+   * Shows a stored PDF in an in-page viewer (works offline and from file://,
+   * where opening blob URLs in a new tab is blocked) with a download button.
+   */
+  function view(id, labels) {
+    return get(id).then(function (rec) {
+      if (!rec) throw new Error('missing');
+      var url = URL.createObjectURL(new Blob([rec.data], { type: 'application/pdf' }));
+      var overlay = document.createElement('div');
+      overlay.className = 'pdf-viewer';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      var bar = document.createElement('div');
+      bar.className = 'pdf-viewer-bar';
+      var title = document.createElement('strong');
+      title.textContent = rec.name;
+      var dl = document.createElement('a');
+      dl.className = 'btn small';
+      dl.href = url;
+      dl.download = rec.name;
+      dl.textContent = '⤓ ' + labels.download;
+      var close = document.createElement('button');
+      close.className = 'btn small';
+      close.type = 'button';
+      close.textContent = '✕ ' + labels.close;
+      var frame = document.createElement('iframe');
+      frame.src = url;
+      frame.title = rec.name;
+      bar.appendChild(title);
+      bar.appendChild(dl);
+      bar.appendChild(close);
+      overlay.appendChild(bar);
+      overlay.appendChild(frame);
+      function done() {
+        overlay.remove();
+        URL.revokeObjectURL(url);
+        document.removeEventListener('keydown', onKey);
+      }
+      function onKey(e) { if (e.key === 'Escape') done(); }
+      close.addEventListener('click', done);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) done(); });
+      document.addEventListener('keydown', onKey);
+      document.body.appendChild(overlay);
+      close.focus();
+    });
+  }
+
+  function blobToBase64(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(String(reader.result).split(',')[1] || ''); };
+      reader.onerror = function () { reject(reader.error); };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  function base64ToBlob(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+
+  /** File ids referenced by organisations. */
+  function idsOf(orgs) {
+    var ids = [];
+    orgs.forEach(function (o) {
+      o.assessments.forEach(function (a) {
+        Object.keys(a.evidenceFiles || {}).forEach(function (cid) {
+          a.evidenceFiles[cid].forEach(function (f) { ids.push(f.id); });
+        });
+      });
+    });
+    return ids;
+  }
+
+  /** Embeds the referenced files (base64) for export. Missing files are skipped. */
+  function exportFiles(orgs) {
+    return Promise.all(idsOf(orgs).map(function (id) {
+      return get(id).then(function (rec) {
+        if (!rec) return null;
+        return blobToBase64(rec.data).then(function (b64) {
+          return { id: rec.id, name: rec.name, size: rec.size, uploadedAt: rec.uploadedAt, data: b64 };
+        });
+      })['catch'](function () { return null; });
+    })).then(function (list) { return list.filter(Boolean); });
+  }
+
+  /** Restores embedded files from an import. */
+  function importFiles(list) {
+    if (!Array.isArray(list) || !list.length) return Promise.resolve(0);
+    return tx('readwrite', function (s) {
+      list.forEach(function (f) {
+        if (!f || typeof f.id !== 'string' || typeof f.data !== 'string') return;
+        s.put({ id: f.id, name: String(f.name || 'evidence.pdf'), size: Number(f.size) || 0, type: 'application/pdf', uploadedAt: f.uploadedAt || '', data: base64ToBlob(f.data) });
+      });
+    }).then(function () { return list.length; });
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' Ko';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' Mo';
+  }
+
+  root.BarometerFiles = {
+    MAX_SIZE: MAX_SIZE,
+    add: add,
+    get: get,
+    remove: remove,
+    view: view,
+    exportFiles: exportFiles,
+    importFiles: importFiles,
+    idsOf: idsOf,
+    formatSize: formatSize
+  };
 })(this);
 
 </script>
@@ -8189,19 +8437,67 @@ textarea { resize: vertical; }
 
   // ------------------------------------------------------------------ profile
 
+  /** Age of the organisation computed from its year founded. */
+  App.orgAge = function (o) {
+    var y = Number(o.founded);
+    return y ? new Date().getFullYear() - y : null;
+  };
+
+  App.orgAgeText = function (o) {
+    var age = App.orgAge(o);
+    return age === null ? '' : App.t('profile.age', { n: age });
+  };
+
+  /** Evidence summary for reports: description and attached PDF names. */
+  App.evidenceText = function (a, cid) {
+    var files = (a.evidenceFiles[cid] || []).map(function (f) { return f.name; });
+    return [a.evidence[cid], files.length ? files.join(', ') : ''].filter(Boolean).join(' — ');
+  };
+
+  /** "Name, Title" for the focal point. */
+  App.focalText = function (o) { return [o.focalPoint, o.focalTitle].filter(Boolean).join(', '); };
+
+  /** "Region, Country". */
+  App.locationText = function (o) { return [o.region, o.country].filter(Boolean).join(', '); };
+
+  var COUNTRY_CODES = ('AF AL DZ AD AO AG AR AM AU AT AZ BS BH BD BB BY BE BZ BJ BT BO BA BW BR BN BG BF BI CV KH CM CA CF TD CL CN CO KM CG CD CR CI HR CU CY CZ ' +
+    'DK DJ DM DO EC EG SV GQ ER EE SZ ET FJ FI FR GA GM GE DE GH GR GD GT GN GW GY HT HN HU IS IN ID IR IQ IE IL IT JM JP JO KZ KE KI KW KG LA LV LB LS LR LY LI LT LU ' +
+    'MG MW MY MV ML MT MH MR MU MX FM MD MC MN ME MA MZ MM NA NR NP NL NZ NI NE NG KP MK NO OM PK PW PS PA PG PY PE PH PL PT QA RE RO RU RW KN LC VC WS SM ST SA SN RS SC ' +
+    'SL SG SK SI SB SO ZA KR SS ES LK SD SR SE CH SY TW TJ TZ TH TL TG TO TT TN TR TM TV UG UA AE GB US UY UZ VU VA VE VN YE YT ZM ZW').split(' ');
+
+  function countryDatalist() {
+    var names = [];
+    try {
+      var dn = new Intl.DisplayNames([I18n.getLang()], { type: 'region' });
+      names = COUNTRY_CODES.map(function (c) { return dn.of(c); });
+    } catch (e) { names = []; }
+    names.sort(function (x, y) { return x.localeCompare(y); });
+    return '<datalist id="country-list">' + names.map(function (n) { return '<option value="' + App.esc(n) + '">'; }).join('') + '</datalist>';
+  }
+
   App.views.profile = function () {
     var org = App.org();
     var o = org.organization;
     var a = App.assessment();
-    function field(id, type) {
+    function field(id, type, extra) {
       return '<label class="field"><span>' + App.esc(App.t('profile.' + id)) + '</span>' +
-        '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"></label>';
+        '<input type="' + (type || 'text') + '" data-on="org-field" data-field="' + id + '" value="' + App.esc(o[id]) + '"' + (extra || '') + '></label>';
     }
+    var thisYear = new Date().getFullYear();
+    var years = '<option value="">—</option>';
+    for (var y = thisYear; y >= 1900; y--) years += '<option value="' + y + '"' + (String(y) === String(o.founded) ? ' selected' : '') + '>' + y + '</option>';
+    var fw = App.fw(a);
     App.setView(
       '<h1>' + App.esc(App.t('profile.title')) + '</h1>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.org')) + '</h2><div class="form-grid">' +
-        field('name') + field('acronym') + field('type') + field('region') + field('founded', 'number') + field('address') +
-        field('focalPoint') + field('phone', 'tel') + field('email', 'email') +
+        field('name') + field('acronym') + field('type') +
+        '<label class="field"><span>' + App.esc(App.t('profile.founded')) + '</span><select data-on="org-field" data-field="founded">' + years + '</select>' +
+          '<small class="muted" id="org-age">' + App.esc(App.orgAgeText(o)) + '</small></label>' +
+      '</div><h3>' + App.esc(App.t('profile.location')) + '</h3><div class="form-grid">' +
+        field('country', 'text', ' list="country-list" autocomplete="country-name"') + field('region') + field('address') +
+      '</div>' + countryDatalist() +
+      '<h3>' + App.esc(App.t('profile.contact')) + '</h3><div class="form-grid">' +
+        field('focalPoint') + field('focalTitle') + field('phone', 'tel') + field('email', 'email') +
       '</div></section>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.current')) + '</h2><div class="form-grid">' +
         '<label class="field"><span>' + App.esc(App.t('profile.sequence')) + '</span><select data-on="assess-sequence">' +
@@ -8212,6 +8508,8 @@ textarea { resize: vertical; }
         '<label class="field"><span>' + App.esc(App.t('profile.month')) + '</span><select data-on="assess-month">' +
           monthOptions(a) + '</select></label>' +
       '</div></section>' +
+      '<nav class="pager profile-next"><span></span><a class="btn primary" href="#assessment/' + fw.PILLARS[0].id + '">' +
+        App.esc(App.t('profile.next', { model: App.L(fw.shortName) })) + ' →</a></nav>' +
       '<section class="card"><h2>' + App.esc(App.t('profile.history')) + '</h2>' +
         '<p class="muted">' + App.esc(App.t('profile.historyHelp')) + '</p>' +
         '<div class="table-wrap"><table class="table"><thead><tr><th>' + App.esc(App.t('header.assessment')) + '</th><th>' + App.esc(App.t('profile.progress')) +
@@ -8315,24 +8613,50 @@ textarea { resize: vertical; }
   };
 
   /** Evidence (mandatory for OPI, optional otherwise) and facilitator verification. */
+  function evidenceFilesHtml(a, cid) {
+    var files = a.evidenceFiles[cid] || [];
+    return '<ul class="evidence-files" data-files="' + App.esc(cid) + '">' + files.map(function (f) {
+      return '<li><span class="pdf-icon">PDF</span><button type="button" class="link" data-click="evidence-open" data-file="' + App.esc(f.id) + '">' + App.esc(f.name) + '</button>' +
+        '<span class="muted small">' + App.esc(window.BarometerFiles.formatSize(f.size)) + '</span>' +
+        '<button type="button" class="btn small ghost danger" data-click="evidence-remove" data-id="' + App.esc(cid) + '" data-file="' + App.esc(f.id) + '" title="' + App.esc(App.t('delete')) + '">✕</button></li>';
+    }).join('') + '</ul>';
+  }
+
+  function hasEvidence(a, cid) { return !!(a.evidence[cid] || (a.evidenceFiles[cid] || []).length); }
+
+  /** Evidence: uploaded PDF files plus a short description; mandatory for OPI, optional otherwise. */
   function evidenceBlock(F, a, c) {
     var required = F.evidence === 'required';
     var val = a.evidence[c.id] || '';
-    var missing = required && a.answers[c.id] && !val;
-    var inner = '<textarea data-on="evidence" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('evidence.ph')) + '">' + App.esc(val) + '</textarea>' +
+    var missing = required && a.answers[c.id] && !hasEvidence(a, c.id);
+    var inner = evidenceFilesHtml(a, c.id) +
+      '<label class="btn small upload-btn">⤒ ' + App.esc(App.t('evidence.upload')) +
+        '<input type="file" accept=".pdf,application/pdf" multiple hidden data-on="evidence-upload" data-id="' + App.esc(c.id) + '"></label>' +
+      '<span class="muted small"> ' + App.esc(App.t('evidence.uploadHelp')) + '</span>' +
+      '<textarea data-on="evidence" data-id="' + App.esc(c.id) + '" rows="2" placeholder="' + App.esc(App.t('evidence.ph')) + '">' + App.esc(val) + '</textarea>' +
       '<label class="verified"><input type="checkbox" data-on="verified" data-id="' + App.esc(c.id) + '"' + (a.verified[c.id] ? ' checked' : '') + '> ' + App.esc(App.t('evidence.verified')) + '</label>';
     if (required) {
-      return '<div class="evidence required' + (missing ? ' missing' : '') + '"><span class="evidence-label">' + App.esc(App.t('evidence.labelRequired')) + '</span>' + inner + '</div>';
+      return '<div class="evidence required' + (missing ? ' missing' : '') + '" data-evidence="' + App.esc(c.id) + '"><span class="evidence-label">' + App.esc(App.t('evidence.labelRequired')) + '</span>' + inner + '</div>';
     }
-    return '<details class="evidence"' + (val || a.verified[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('evidence.label')) + '</summary>' + inner + '</details>';
+    var count = (a.evidenceFiles[c.id] || []).length;
+    return '<details class="evidence" data-evidence="' + App.esc(c.id) + '"' + (hasEvidence(a, c.id) || a.verified[c.id] ? ' open' : '') + '><summary>' + App.esc(App.t('evidence.label')) +
+      (count ? ' (' + count + ' PDF)' : '') + '</summary>' + inner + '</details>';
+  }
+
+  function refreshEvidence(cid) {
+    var a = App.assessment();
+    var box = view.querySelector('[data-evidence="' + cid + '"]');
+    if (!box) return;
+    var list = box.querySelector('[data-files="' + cid + '"]');
+    if (list) list.outerHTML = evidenceFilesHtml(a, cid);
+    if (box.classList.contains('required')) box.classList.toggle('missing', !!a.answers[cid] && !hasEvidence(a, cid));
   }
 
   /** Name and description of the model, plus the OPI relevance warning. */
   App.modelBanner = function (F) {
     var html = '<div class="model-banner kind-' + F.kind + '"><strong>' + App.esc(App.L(F.name)) + '</strong> — ' + App.esc(App.L(F.description)) + '</div>';
     if (F.minYears) {
-      var founded = Number(App.org().organization.founded);
-      var age = founded ? new Date().getFullYear() - founded : null;
+      var age = App.orgAge(App.org().organization);
       html += '<div class="notice">' + App.esc(App.t('opi.notice')) +
         (age !== null && age < F.minYears ? ' <strong>' + App.esc(App.t('opi.tooYoung', { years: age })) + '</strong>' : '') +
         (age === null ? ' ' + App.esc(App.t('opi.noFounded')) : '') + '</div>';
@@ -8531,6 +8855,10 @@ textarea { resize: vertical; }
 
   A['org-field'] = function (el) {
     App.org().organization[el.dataset.field] = el.value;
+    if (el.dataset.field === 'founded') {
+      var age = document.getElementById('org-age');
+      if (age) age.textContent = App.orgAgeText(App.org().organization);
+    }
     App.touch();
     if (el.dataset.field === 'name') App.renderHeader();
     App.persist();
@@ -8579,10 +8907,43 @@ textarea { resize: vertical; }
 
   A.evidence = function (el) {
     App.assessment().evidence[el.dataset.id] = el.value;
-    var box = el.closest('.evidence');
-    if (box && box.classList.contains('required')) box.classList.toggle('missing', !el.value && !!App.assessment().answers[el.dataset.id]);
+    refreshEvidence(el.dataset.id);
     App.touch();
     App.persist();
+  };
+
+  A['evidence-upload'] = function (el) {
+    var a = App.assessment();
+    var cid = el.dataset.id;
+    var files = Array.prototype.slice.call(el.files || []);
+    el.value = '';
+    var errors = [];
+    Promise.all(files.map(function (file) {
+      return window.BarometerFiles.add(file).then(function (meta) {
+        (a.evidenceFiles[cid] = a.evidenceFiles[cid] || []).push(meta);
+      })['catch'](function (e) { errors.push(file.name + ' : ' + App.t('evidence.err.' + (e.message === 'too-large' ? 'size' : e.message === 'not-pdf' ? 'pdf' : 'store'))); });
+    })).then(function () {
+      App.touch();
+      App.persist(true);
+      refreshEvidence(cid);
+      if (errors.length) alert(errors.join('\n'));
+    });
+  };
+
+  A['evidence-open'] = function (el) {
+    window.BarometerFiles.view(el.dataset.file, { download: App.t('evidence.download'), close: App.t('evidence.close') })['catch'](function () { alert(App.t('evidence.err.missing')); });
+  };
+
+  A['evidence-remove'] = function (el) {
+    if (!confirm(App.t('evidence.confirmRemove'))) return;
+    var a = App.assessment();
+    var cid = el.dataset.id;
+    a.evidenceFiles[cid] = (a.evidenceFiles[cid] || []).filter(function (f) { return f.id !== el.dataset.file; });
+    if (!a.evidenceFiles[cid].length) delete a.evidenceFiles[cid];
+    window.BarometerFiles.remove(el.dataset.file)['catch'](function () {});
+    App.touch();
+    App.persist(true);
+    refreshEvidence(cid);
   };
 
   A.verified = function (el) {
@@ -8668,19 +9029,28 @@ textarea { resize: vertical; }
   A['export-org'] = function () {
     var org = App.org();
     var date = new Date().toISOString().slice(0, 10);
-    App.download('barometer-' + App.slug(org.organization.acronym || org.organization.name) + '-' + date + '.json',
-      JSON.stringify(Store.exportOrg(org), null, 2), 'application/json');
+    window.BarometerFiles.exportFiles([org])['catch'](function () { return []; }).then(function (files) {
+      var data = Store.exportOrg(org);
+      data.files = files;
+      App.download('barometer-' + App.slug(org.organization.acronym || org.organization.name) + '-' + date + '.json',
+        JSON.stringify(data, null, 2), 'application/json');
+    });
   };
 
   A['import-files'] = function (el) {
     App.readJsonFiles(el.files, function (results) {
       var orgs = [];
+      var files = [];
       var errors = [];
       results.forEach(function (r) {
         if (r.error) { errors.push(r.file.name + ': ' + App.t('err.invalid')); return; }
-        try { orgs = orgs.concat(Store.parseImport(r.data).orgs); }
-        catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
+        try {
+          var parsed = Store.parseImport(r.data);
+          orgs = orgs.concat(parsed.orgs);
+          files = files.concat(parsed.files || []);
+        } catch (e) { errors.push(r.file.name + ': ' + App.errMsg(e)); }
       });
+      if (files.length) window.BarometerFiles.importFiles(files)['catch'](function () { errors.push(App.t('evidence.err.store')); });
       if (orgs.length) {
         var res = Store.mergeOrgs(App.ws, orgs);
         App.ws.activeOrgId = orgs[orgs.length - 1].id;
@@ -9220,8 +9590,8 @@ textarea { resize: vertical; }
           '<div><dt>' + esc(t('new.model')) + '</dt><dd>' + esc(L(F.shortName)) + '</dd></div>' +
           '<div><dt>' + esc(t('header.assessment')) + '</dt><dd>' + esc(App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a)) + '</dd></div>' +
           '<div><dt>' + esc(t('report.date')) + '</dt><dd>' + esc(App.dateStr()) + '</dd></div>' +
-          (o.region ? '<div><dt>' + esc(t('profile.region')) + '</dt><dd>' + esc(o.region) + '</dd></div>' : '') +
-          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(o.focalPoint) + '</dd></div>' : '') +
+          (o.region || o.country ? '<div><dt>' + esc(t('profile.location')) + '</dt><dd>' + esc(App.locationText(o)) + '</dd></div>' : '') +
+          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(App.focalText(o)) + '</dd></div>' : '') +
         '</dl>' +
       '</div>' +
       '<h2 class="report-h">' + esc(t('report.overview')) + '</h2>' +
@@ -9273,7 +9643,7 @@ textarea { resize: vertical; }
         '<table class="report-table"><thead><tr>' + (F.flat ? '' : '<th>' + esc(t('report.aspect')) + '</th>') + '<th>' + esc(t('report.component')) + '</th><th>' + esc(t('score')) + '</th><th></th></tr></thead><tbody>';
       p.aspects.forEach(function (asp) {
         asp.components.forEach(function (c, j) {
-          var ev = a.evidence[c.id];
+          var ev = App.evidenceText(a, c.id);
           html += '<tr>' + (!F.flat && j === 0 ? '<td rowspan="' + asp.components.length + '" class="aspect-cell"><strong>' + esc(L(asp.name)) + '</strong><br><span class="muted">' + App.fmt(asp.score) + ' / 4</span></td>' : '') +
             '<td>' + esc(L(c.name)) + (ev ? '<br><span class="muted small">' + esc(t('evidence.short')) + ' : ' + esc(ev) + (a.verified[c.id] ? ' ✓' : '') + '</span>' : '') + '</td>' +
             '<td class="center">' + App.levelBadge(c.score) + '</td><td>' + (c.category ? App.catTag(c.category) : '') + '</td></tr>';
@@ -9284,7 +9654,7 @@ textarea { resize: vertical; }
     html += '<p class="muted small">' + esc(t(F.indexMethod === 'pillars' ? 'results.method.pillars' : 'results.method.' + r.indexMethod)) + '</p></section>';
 
     // ---------------------------------------------------------------- page 3: FFOM table
-    var hasNotes = F.allComponents().some(function (e) { return a.plan.challenges[e.component.id] || a.comments[e.component.id] || a.evidence[e.component.id]; });
+    var hasNotes = F.allComponents().some(function (e) { return a.plan.challenges[e.component.id] || a.comments[e.component.id] || App.evidenceText(a, e.component.id); });
     var ncol = hasNotes ? 5 : 4;
     html += '<section class="report-page">' + header(org, a, t('report.analysis')) +
       '<table class="report-table ffom-table' + (hasNotes ? ' with-notes' : '') + '"><colgroup><col class="c-comp"><col class="c-score"><col class="c-sit"><col class="c-target">' + (hasNotes ? '<col class="c-notes">' : '') + '</colgroup>' +
@@ -9298,7 +9668,8 @@ textarea { resize: vertical; }
       }
       groups[cat].forEach(function (it) {
         var c = it.component;
-        var notes = [a.plan.challenges[c.id], a.comments[c.id], a.evidence[c.id] ? t('evidence.short') + ' : ' + a.evidence[c.id] : ''].filter(Boolean).join(' — ');
+        var evText = App.evidenceText(a, c.id);
+        var notes = [a.plan.challenges[c.id], a.comments[c.id], evText ? t('evidence.short') + ' : ' + evText : ''].filter(Boolean).join(' — ');
         html += '<tr><td><strong>' + esc(L(c.name)) + '</strong><br><span class="muted small">' + esc(App.componentContext(F, it.pillar, it.aspect)) + '</span></td>' +
           '<td class="center">' + App.levelBadge(it.score) + '</td>' +
           '<td>' + esc(L(c.levels[it.score - 1])) + '</td>' +
@@ -9541,7 +9912,7 @@ textarea { resize: vertical; }
         }
         return '<tr' + (x.org.id === App.ws.activeOrgId ? ' class="current"' : '') + '>' +
           '<td><strong>' + esc(App.orgName(x.org)) + '</strong>' + (o.acronym ? ' <span class="muted">(' + esc(o.acronym) + ')</span>' : '') +
-            (o.region || o.type ? '<br><span class="muted small">' + esc([o.type, o.region].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
+            (o.region || o.country || o.type ? '<br><span class="muted small">' + esc([o.type, App.locationText(o)].filter(Boolean).join(' · ')) + '</span>' : '') + '</td>' +
           '<td>' + esc(App.assessmentLabel(x.assessment)) + '</td>' +
           '<td><div class="progress mini"><div style="width:' + Math.round(x.scores.completion * 100) + '%"></div></div><span class="small">' + x.scores.answered + '/' + x.scores.totalComponents + '</span></td>' +
           '<td class="nowrap"><strong>' + App.fmt(x.scores.index, 2) + '</strong>' +
@@ -9639,14 +10010,14 @@ textarea { resize: vertical; }
 
   A['fac-export-csv'] = function () {
     var fm = facModel();
-    var header = [t('profile.name'), t('profile.acronym'), t('profile.type'), t('profile.region'), t('fac.latest'),
+    var header = [t('profile.name'), t('profile.acronym'), t('profile.type'), t('profile.country'), t('profile.region'), t('fac.latest'),
       t('profile.progress'), t('profile.index')].concat(F.PILLARS.map(function (p) { return L(p.name); }))
       .concat([t('cats.maintain'), t('cats.opportunity'), t('cats.address'), t('plan.activities'), t('status.done')]);
     var rows = [header];
     portfolio(fm.id).forEach(function (x) {
       if (!x.assessment) return;
       var o = x.org.organization;
-      rows.push([App.orgName(x.org), o.acronym, o.type, o.region, App.assessmentLabel(x.assessment),
+      rows.push([App.orgName(x.org), o.acronym, o.type, o.country, o.region, App.assessmentLabel(x.assessment),
         x.scores.answered + '/' + x.scores.totalComponents, App.num(x.scores.index)]
         .concat(x.scores.pillars.map(function (p) { return App.num(p.score); }))
         .concat([x.scores.counts.maintain, x.scores.counts.opportunity, x.scores.counts.address, x.plan.total, x.plan.done]));
@@ -9657,8 +10028,12 @@ textarea { resize: vertical; }
   A['fac-print'] = function () { window.print(); };
 
   A['fac-backup'] = function () {
-    App.download('barometer-workspace-' + new Date().toISOString().slice(0, 10) + '.json',
-      JSON.stringify(Store.exportWorkspace(App.ws), null, 2), 'application/json');
+    window.BarometerFiles.exportFiles(App.ws.orgs)['catch'](function () { return []; }).then(function (files) {
+      var data = Store.exportWorkspace(App.ws);
+      data.files = files;
+      App.download('barometer-workspace-' + new Date().toISOString().slice(0, 10) + '.json',
+        JSON.stringify(data, null, 2), 'application/json');
+    });
   };
 
   A['fac-restore'] = function (el) {
@@ -9668,6 +10043,7 @@ textarea { resize: vertical; }
         if (r.error) throw new Error('invalid');
         var ws = Store.normalizeWorkspace(r.data);
         if (!confirm(t('fac.confirmRestore'))) return;
+        if (Array.isArray(r.data.files)) window.BarometerFiles.importFiles(r.data.files)['catch'](function () {});
         App.ws = ws;
         App.persist(true);
         App.render();
@@ -9925,7 +10301,7 @@ textarea { resize: vertical; }
           '<div><dt>' + esc(t('evo.period')) + '</dt><dd>' + esc(range) + '</dd></div>' +
           '<div><dt>' + esc(t('evo.assessments')) + '</dt><dd>' + p.list.length + '</dd></div>' +
           '<div><dt>' + esc(t('report.date')) + '</dt><dd>' + esc(App.dateStr()) + '</dd></div>' +
-          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(o.focalPoint) + '</dd></div>' : '') +
+          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(App.focalText(o)) + '</dd></div>' : '') +
         '</dl></div>' +
       '<div class="report-kpis">' +
         '<div class="report-kpi"><span>' + esc(t('evo.first')) + '</span><strong>' + App.fmt(first, 2) + '<small> / 4</small></strong><em>' + esc(App.periodLabel(p.list[0])) + '</em></div>' +

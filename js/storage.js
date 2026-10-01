@@ -22,7 +22,7 @@
   var MONTHS = 24;
   var STATUSES = ['planned', 'ongoing', 'done'];
   var PLAN_CATEGORIES = ['address', 'opportunity', 'maintain', 'other'];
-  var PROFILE_FIELDS = ['name', 'acronym', 'type', 'region', 'founded', 'address', 'focalPoint', 'phone', 'email'];
+  var PROFILE_FIELDS = ['name', 'acronym', 'type', 'country', 'region', 'founded', 'address', 'focalPoint', 'focalTitle', 'phone', 'email'];
   var MODEL_IDS = ['barometer', 'itoca', 'opi'];
   var PRIORITY_VALUES = ['essential', 'important', 'neutral'];
 
@@ -82,6 +82,7 @@
       answers: {},
       comments: {},
       evidence: {},
+      evidenceFiles: {},
       verified: {},
       conclusionNote: '',
       plan: emptyPlan()
@@ -190,6 +191,13 @@
     Object.keys(a.evidence || {}).forEach(function (k) {
       if (typeof a.evidence[k] === 'string') base.evidence[k] = a.evidence[k];
     });
+    Object.keys(a.evidenceFiles || {}).forEach(function (k) {
+      var list = Array.isArray(a.evidenceFiles[k]) ? a.evidenceFiles[k] : [];
+      var clean = list.filter(function (f) { return f && typeof f.id === 'string' && f.id; }).map(function (f) {
+        return { id: f.id, name: str(f.name) || 'evidence.pdf', size: Number(f.size) || 0, uploadedAt: str(f.uploadedAt) };
+      });
+      if (clean.length) base.evidenceFiles[k] = clean;
+    });
     Object.keys(a.verified || {}).forEach(function (k) {
       if (a.verified[k] === true) base.verified[k] = true;
     });
@@ -233,12 +241,13 @@
    */
   function parseImport(data) {
     if (!data || typeof data !== 'object') throw new Error('invalid');
-    if (data.type === 'barometer-organization' && data.org) return { orgs: [normalizeOrg(data.org)], settings: null };
+    var files = Array.isArray(data.files) ? data.files : [];
+    if (data.type === 'barometer-organization' && data.org) return { orgs: [normalizeOrg(data.org)], settings: null, files: files };
     if (Array.isArray(data.orgs)) {
       var ws = normalizeWorkspace(data);
-      return { orgs: ws.orgs, settings: ws.settings };
+      return { orgs: ws.orgs, settings: ws.settings, files: files };
     }
-    return { orgs: [normalizeOrg(data)], settings: null };
+    return { orgs: [normalizeOrg(data)], settings: null, files: files };
   }
 
   /** Adds or replaces (same id) organisations in the workspace. */

@@ -103,14 +103,14 @@
 
     var o1 = org('demo-org-1', {
       name: en ? 'Women Farmers Network (demo)' : 'Réseau des Femmes Agricultrices (démo)',
-      acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', region: 'Analamanga', founded: '2012',
+      acronym: 'RFA', type: en ? 'Network of associations' : 'Réseau d’associations', country: 'Madagascar', region: 'Analamanga', founded: '2012', focalTitle: en ? 'Executive director' : 'Directrice exécutive',
       address: 'Antananarivo', focalPoint: 'Hanta R.', phone: '+261 34 00 000 01', email: 'contact@example.org'
     }, [a0, a1, it1, it2, op1, a2]);
 
     // 2. Well-established NGO: mostly strong, a few opportunities.
     var o2 = org('demo-org-2', {
       name: en ? 'Green Coast NGO (demo)' : 'ONG Côte Verte (démo)',
-      acronym: 'OCV', type: en ? 'NGO' : 'ONG', region: 'Atsinanana', focalPoint: 'Jean-Marc T.'
+      acronym: 'OCV', type: en ? 'NGO' : 'ONG', country: 'Madagascar', region: 'Atsinanana', founded: '2004', focalPoint: 'Jean-Marc T.', focalTitle: en ? 'Programme coordinator' : 'Coordonnateur des programmes'
     }, [assessment(1, 2026, answers(function (e, i) { return [4, 4, 3, 4, 3][i % 5]; }), '2026-09')]);
 
     // 3. Community association: assessment in progress (partly answered).
@@ -118,7 +118,7 @@
     F.allComponents().forEach(function (e) { if (e.pillar.id === 'fin') delete partial[e.component.id]; });
     var o3 = org('demo-org-3', {
       name: en ? 'Youth for Change Association (demo)' : 'Association Jeunes pour le Changement (démo)',
-      acronym: 'AJC', type: en ? 'Community association' : 'Association communautaire', region: 'Boeny', focalPoint: 'Fara N.'
+      acronym: 'AJC', type: en ? 'Community association' : 'Association communautaire', country: 'Madagascar', region: 'Boeny', founded: '2025', focalPoint: 'Fara N.', focalTitle: en ? 'President' : 'Présidente'
     }, [assessment(1, 2026, partial, '')]);
 
     return [o1, o2, o3];

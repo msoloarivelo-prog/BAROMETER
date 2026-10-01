@@ -10,6 +10,15 @@ Organisational assessment tool with three models, all bilingual (FR/EN):
 
 All models share the same engine: 1–4 levels, strengths/opportunities/weaknesses, a pre-filled **Change Action Plan (CAP)**, progress over time (within one model), individual and progress reports in PDF, and the facilitator portfolio. OPI is only relevant for organisations with at least 2 years of activity; its level descriptions are our own wording in the spirit of Pact's OPI and should be validated.
 
+### Evidence files (PDF)
+
+Each indicator can have PDF evidence attached (10 MB max per file; the PDF signature is checked).
+- The files are stored in the browser's IndexedDB. Assessments keep only the file names and sizes.
+- Files open in a built-in viewer with a download button.
+- They are embedded in organisation exports and workspace backups, so the facilitator receives them on import.
+- The reports list the attached file names.
+- For OPI, an indicator counts as evidenced when it has a description or at least one PDF.
+
 ### Change Action Plan (CAP)
 
 The CAP follows the CAP template:

@@ -229,7 +229,7 @@
           '<div><dt>' + esc(t('evo.period')) + '</dt><dd>' + esc(range) + '</dd></div>' +
           '<div><dt>' + esc(t('evo.assessments')) + '</dt><dd>' + p.list.length + '</dd></div>' +
           '<div><dt>' + esc(t('report.date')) + '</dt><dd>' + esc(App.dateStr()) + '</dd></div>' +
-          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(o.focalPoint) + '</dd></div>' : '') +
+          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(App.focalText(o)) + '</dd></div>' : '') +
         '</dl></div>' +
       '<div class="report-kpis">' +
         '<div class="report-kpi"><span>' + esc(t('evo.first')) + '</span><strong>' + App.fmt(first, 2) + '<small> / 4</small></strong><em>' + esc(App.periodLabel(p.list[0])) + '</em></div>' +

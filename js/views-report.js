@@ -125,8 +125,8 @@
           '<div><dt>' + esc(t('new.model')) + '</dt><dd>' + esc(L(F.shortName)) + '</dd></div>' +
           '<div><dt>' + esc(t('header.assessment')) + '</dt><dd>' + esc(App.sequenceLabel(a.sequence) + ' — ' + App.periodLabel(a)) + '</dd></div>' +
           '<div><dt>' + esc(t('report.date')) + '</dt><dd>' + esc(App.dateStr()) + '</dd></div>' +
-          (o.region ? '<div><dt>' + esc(t('profile.region')) + '</dt><dd>' + esc(o.region) + '</dd></div>' : '') +
-          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(o.focalPoint) + '</dd></div>' : '') +
+          (o.region || o.country ? '<div><dt>' + esc(t('profile.location')) + '</dt><dd>' + esc(App.locationText(o)) + '</dd></div>' : '') +
+          (o.focalPoint ? '<div><dt>' + esc(t('profile.focalPoint')) + '</dt><dd>' + esc(App.focalText(o)) + '</dd></div>' : '') +
         '</dl>' +
       '</div>' +
       '<h2 class="report-h">' + esc(t('report.overview')) + '</h2>' +
@@ -178,7 +178,7 @@
         '<table class="report-table"><thead><tr>' + (F.flat ? '' : '<th>' + esc(t('report.aspect')) + '</th>') + '<th>' + esc(t('report.component')) + '</th><th>' + esc(t('score')) + '</th><th></th></tr></thead><tbody>';
       p.aspects.forEach(function (asp) {
         asp.components.forEach(function (c, j) {
-          var ev = a.evidence[c.id];
+          var ev = App.evidenceText(a, c.id);
           html += '<tr>' + (!F.flat && j === 0 ? '<td rowspan="' + asp.components.length + '" class="aspect-cell"><strong>' + esc(L(asp.name)) + '</strong><br><span class="muted">' + App.fmt(asp.score) + ' / 4</span></td>' : '') +
             '<td>' + esc(L(c.name)) + (ev ? '<br><span class="muted small">' + esc(t('evidence.short')) + ' : ' + esc(ev) + (a.verified[c.id] ? ' ✓' : '') + '</span>' : '') + '</td>' +
             '<td class="center">' + App.levelBadge(c.score) + '</td><td>' + (c.category ? App.catTag(c.category) : '') + '</td></tr>';
@@ -189,7 +189,7 @@
     html += '<p class="muted small">' + esc(t(F.indexMethod === 'pillars' ? 'results.method.pillars' : 'results.method.' + r.indexMethod)) + '</p></section>';
 
     // ---------------------------------------------------------------- page 3: FFOM table
-    var hasNotes = F.allComponents().some(function (e) { return a.plan.challenges[e.component.id] || a.comments[e.component.id] || a.evidence[e.component.id]; });
+    var hasNotes = F.allComponents().some(function (e) { return a.plan.challenges[e.component.id] || a.comments[e.component.id] || App.evidenceText(a, e.component.id); });
     var ncol = hasNotes ? 5 : 4;
     html += '<section class="report-page">' + header(org, a, t('report.analysis')) +
       '<table class="report-table ffom-table' + (hasNotes ? ' with-notes' : '') + '"><colgroup><col class="c-comp"><col class="c-score"><col class="c-sit"><col class="c-target">' + (hasNotes ? '<col class="c-notes">' : '') + '</colgroup>' +
@@ -203,7 +203,8 @@
       }
       groups[cat].forEach(function (it) {
         var c = it.component;
-        var notes = [a.plan.challenges[c.id], a.comments[c.id], a.evidence[c.id] ? t('evidence.short') + ' : ' + a.evidence[c.id] : ''].filter(Boolean).join(' — ');
+        var evText = App.evidenceText(a, c.id);
+        var notes = [a.plan.challenges[c.id], a.comments[c.id], evText ? t('evidence.short') + ' : ' + evText : ''].filter(Boolean).join(' — ');
         html += '<tr><td><strong>' + esc(L(c.name)) + '</strong><br><span class="muted small">' + esc(App.componentContext(F, it.pillar, it.aspect)) + '</span></td>' +
           '<td class="center">' + App.levelBadge(it.score) + '</td>' +
           '<td>' + esc(L(c.levels[it.score - 1])) + '</td>' +
